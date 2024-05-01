@@ -1,0 +1,17 @@
+:root {
+    --teal: #008080; 
+}
+
+
+
+button.custom-bg {
+    background-color: var(--teal);
+    border: 1px solid var(--teal);
+    color: white; 
+}
+
+
+button.custom-bg:hover {
+    background-color: #006666; 
+    border-color: #005555;
+}

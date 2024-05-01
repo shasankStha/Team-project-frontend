@@ -1,0 +1,109 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+  padding-top: 15vh;
+}
+
+.container {
+  display: flex;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  max-width: 1000px;
+  width: 100%;
+  margin-top: 100px;
+  margin-bottom: 20px;
+
+  overflow: hidden;
+}
+
+.form-container {
+  padding: 20px;
+  width: 50%;
+}
+
+.form-container h2 {
+  margin-bottom: 10px;
+}
+
+.form-container p,
+.form-container a {
+  font-size: 14px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+select {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.inline-fields {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.inline-fields > div,
+.inline-fields > input,
+.inline-fields > select {
+  flex: 1;
+  margin-right: 10px;
+}
+
+/* This is to make sure the last element doesn't have a margin-right */
+.inline-fields > div:last-child,
+.inline-fields > input:last-child,
+.inline-fields > select:last-child {
+  margin-right: 0;
+}
+
+/* Centered text */
+.center-text {
+  text-align: center;
+}
+
+button {
+  padding: 10px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #555;
+}
+
+.image-container {
+  background: url("../images/fish.jpg") center/cover no-repeat;
+  width: 50%;
+}
+
+.terms-label {
+  display: flex;
+  align-items: center;
+  /* This will vertically align the checkbox and text */
+  margin-bottom: 10px;
+  /* Add some margin if needed */
+}

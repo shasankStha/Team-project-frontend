@@ -1,0 +1,113 @@
+:root {
+  --primary-color: black;
+  --secondary-color: #f5f7f6;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: var(--primary-color);
+}
+
+body {
+  font-family: "Rubik", sans-serif;
+  font-weight: 300;
+  background: var(--secondary-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+section {
+  display: flex;
+  width: 80%;
+  max-width: 1200px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.form-image {
+  flex: 1;
+  background: url("../images/fish.jpg") center/cover no-repeat;
+  min-height: 500px;
+}
+
+.form-content {
+  flex: 1;
+  padding: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.form-intro {
+  font-size: 28px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.form-introDesc {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+form {
+  width: 100%;
+  max-width: 350px;
+}
+
+.inputBx {
+  margin-bottom: 24px;
+}
+
+.inputBx input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+.inputBx input[type="submit"] {
+  background: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 16px;
+  transition: background 0.3s ease;
+}
+
+.inputBx label {
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.inputBx input[type="checkbox"] {
+  vertical-align: middle;
+  margin: 0;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.inputBx label span {
+  margin-left: -4px;
+}
+
+.inputBx input[type="submit"]:hover {
+  background: #333;
+}
+
+.forgot {
+  display: block;
+  text-align: center;
+  margin-top: 16px;
+}
