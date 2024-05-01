@@ -97,7 +97,7 @@ if (isset($_POST['signUpBtn'])) {
     //Closing oracle connection
     oci_close($connection);
 
-    echo "<script>window.location.href = '../login.php';</script>";
+    echo "<script>window.location.href = '../login/login.php';</script>";
 }
 ?>
 

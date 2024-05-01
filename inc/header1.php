@@ -20,6 +20,7 @@
         padding: 10px;
         position: relative;
         /* position: sticky;  Sticks header1 at the top */
+        /* position: sticky; */
         top: 0;
         left: 0;
         width: 100%;

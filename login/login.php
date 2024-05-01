@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/customerlogin.css">
+    <link rel="stylesheet" href="../css/login.css">
     <title>Customer Login - CleckShopHub</title>
 
 </head>
@@ -73,13 +73,13 @@ if (isset($_POST['btnSignInLogin'])) {
 
 
     if ($role == "C")
-        echo "<script>window.location.href = 'index.php';</script>";
+        echo "<script>window.location.href = '../index.php';</script>";
     elseif ($role == "T")
         // Add trader dashboard
-        echo "<script>window.location.href = 'index.php';</script>";
+        echo "<script>window.location.href = '../index.php';</script>";
     elseif ($role == "A")
         // Add admin dashboard
-        echo "<script>window.location.href = 'index.php';</script>";
+        echo "<script>window.location.href = '../index.php';</script>";
 
     oci_close($connection);
 }

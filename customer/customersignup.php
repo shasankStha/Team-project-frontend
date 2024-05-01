@@ -87,7 +87,7 @@ if (isset($_POST['signUp'])) {
     $sql = "insert into customer values('$user_id','$address',to_date('$dob','dd/mm/yyyy'),'$gender',null,1)";
     $stid = oci_parse($connection, $sql);
     oci_execute($stid);
-    echo "<script>window.location.href = '../login.php';</script>";
+    echo "<script>window.location.href = '../login/login.php';</script>";
     oci_close($connection);
 }
 
