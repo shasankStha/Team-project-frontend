@@ -206,7 +206,7 @@ session_start();
     <div class="sub-navbar">
         <a href="../index.php">Home</a>
         <div class="user-icon">
-            <a href="#">Categories</a>
+            <a href="#">Shop</a>
             <div class="dropdown-menu">
                 <a href="../shops/shoppage.php">Fishmonger</a>
                 <a href="../shops/shoppage.php">Butcher</a>
