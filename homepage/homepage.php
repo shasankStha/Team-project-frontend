@@ -14,7 +14,19 @@
 </head>
 
 <body>
-    <?php require('../inc/header.php'); ?>
+    <?php
+    session_start();
+
+    $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
+
+    if ($isLoggedIn) {
+        include('../inc/loggedin_header.php');
+    } else {
+        include('../inc/header.php');
+    }
+
+    ?>
+
 
     <!-- Swiper-->
     <div class="container-fluid">

@@ -176,11 +176,20 @@
             <!-- Icons -->
             <div class="icon-container">
                 <?php
-                // Display login/register links if user is not logged in
-                echo '<a href="../login/login.php" style="text-decoration: none; color: black;">Login</a>';
-                echo '<a href="../customer/customersignup.php" style="text-decoration: none; color: black;">Register</a>';
-                ?>
+                // Display icons if user is logged in
+                echo '<div class="user-icon">
+                    <img src="../images/user.png" alt="User" style="width: 24px; height: 24px; border-radius: 50%;">
+                    <div class="dropdown-menu">
+                        <a href="../userprofile/userprofile.php">Profile</a>
+                        <a href="../logout/logout.php">Logout</a>
+                    </div>
+                </div>';
 
+                echo '<div class="icons" style="display:flex; justify-content:space-evenly; padding-right: 50px;">
+                    <a href="notifications.php" class="icon"><img src="../images/notifications.png" alt=""></a>
+                    <a href="cart.php" class="icon"><img src="../images/cart1.png" alt="Cart"></a>
+                </div>'
+                ?>
 
             </div>
         </div>
