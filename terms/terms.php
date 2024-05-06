@@ -17,8 +17,8 @@
         }
 
         header {
-            
-            
+
+
             padding: 10px 20px;
             text-align: center;
         }
@@ -72,7 +72,18 @@
 
 <body>
 
-    <?php require('../inc/header.php'); ?>
+    <?php
+    include('../connection.php');
+    session_start();
+
+    $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
+
+    if ($isLoggedIn) {
+        include('../inc/loggedin_header.php');
+    } else {
+        include('../inc/header.php');
+    }
+    ?>
     <header>
         <h1>Terms and Conditions</h1>
     </header>
@@ -91,7 +102,7 @@
         <section>
             <h2>Privacy Policy</h2>
             <p>Before continuing to use our website, we advise you to read our privacy policy regarding our collection of user data. This will help you better understand our practices.</p>
-            
+
         </section>
 
         <section>

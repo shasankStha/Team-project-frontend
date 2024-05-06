@@ -12,9 +12,18 @@
 </head>
 
 <body class="bg-light">
+    <?php
+    include('../connection.php');
+    session_start();
 
-    <?php include('../connection.php');
-    require('../inc/header.php'); ?>
+    $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
+
+    if ($isLoggedIn) {
+        include('../inc/loggedin_header.php');
+    } else {
+        include('../inc/header.php');
+    }
+    ?>
 
     <div class="my-2 px-4">
         <h2 class="fw-bold text-center">CONTACT US</h2>

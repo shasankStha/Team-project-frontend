@@ -11,7 +11,18 @@
 </head>
 
 <body>
-    <?php require ('../inc/header.php'); ?>
+    <?php
+    include('../connection.php');
+    session_start();
+
+    $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
+
+    if ($isLoggedIn) {
+        include('../inc/loggedin_header.php');
+    } else {
+        include('../inc/header.php');
+    }
+    ?>
     <div class="main-container">
         <div class="container">
             <div class="left-section">
@@ -223,8 +234,8 @@
             </div>
         </div>
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                document.getElementById('heart').addEventListener('click', function () {
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('heart').addEventListener('click', function() {
                     this.classList.toggle('fas');
                     this.classList.toggle('far');
                     this.classList.toggle('favorited'); // Toggles the red color
@@ -232,25 +243,25 @@
             });
 
             //quantity selector 
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
                 var quantityInput = document.getElementById('quantity');
                 var minusButton = document.querySelector('.quantity-control.minus');
                 var plusButton = document.querySelector('.quantity-control.plus');
 
-                minusButton.addEventListener('click', function () {
+                minusButton.addEventListener('click', function() {
                     var currentValue = parseInt(quantityInput.value);
                     if (currentValue > 1) {
                         quantityInput.value = currentValue - 1;
                     }
                 });
 
-                plusButton.addEventListener('click', function () {
+                plusButton.addEventListener('click', function() {
                     var currentValue = parseInt(quantityInput.value);
                     quantityInput.value = currentValue + 1;
                 });
             });
         </script>
-        <?php require ('../inc/footer.php'); ?>
+        <?php require('../inc/footer.php'); ?>
 </body>
 
 </html>

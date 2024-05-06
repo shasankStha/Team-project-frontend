@@ -11,7 +11,7 @@
 </head>
 
 <body style="display: flex; flex-direction: column;">
-    <?php 
+    <?php
     session_start();
     include("../connection.php");
     require('../inc/header1.php');
@@ -74,21 +74,17 @@ if (isset($_POST['btnSignInLogin'])) {
     }
 
 
-    if ($role == "C"){
+    if ($role == "C") {
         $_SESSION["user"] = $username;
         $_SESSION["loggedinUser"] = TRUE;
 
         echo "<script>window.location.href = '../index.php';</script>";
-    }  
-
-    elseif ($role == "T"){
+    } elseif ($role == "T") {
         // Add trader dashboard
         echo "<script>window.location.href = '../index.php';</script>";
-    }
-
-    elseif ($role == "A"){
+    } elseif ($role == "A") {
         // Add admin dashboard
-        echo "<script>window.location.href = '../index.php';</script>";
+        echo "<script>window.location.href = '../dashboardheader.php';</script>";
     }
 
     oci_close($connection);

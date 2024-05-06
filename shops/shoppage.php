@@ -12,7 +12,18 @@
 </head>
 
 <body>
-  <?php require ('../inc/header.php'); ?>
+  <?php
+  include('../connection.php');
+  session_start();
+
+  $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
+
+  if ($isLoggedIn) {
+    include('../inc/loggedin_header.php');
+  } else {
+    include('../inc/header.php');
+  }
+  ?>
   <div class="shop-name">
     <h1>Shop Name</h1>
   </div>
@@ -169,50 +180,82 @@
           </a>
         </div>
 
-        
 
-       
+
+
 
         <!-- Repeat for other products -->
       </div>
     </div>
   </div>
-  <?php require ('../inc/footer.php'); ?>
+  <?php require('../inc/footer.php'); ?>
   <script>
-    document.addEventListener("DOMContentLoaded", (event) =>
-      function toggleFavorite(element) {
-        const heartIcon = element.querySelector("i");
-        if (heartIcon.classList.contains("far")) {
-          heartIcon.classList.remove("far");
-          heartIcon.classList.add("fas");
-          // Optional: Add logic to handle the action of marking as favorite
-        } else {
-          heartIcon.classList.remove("fas");
-          heartIcon.classList.add("far");
-          // Optional: Add logic to handle the action of removing from favorites
-        }
+    document.addEventListener("DOMContentLoaded", (event) => {
+      const ratingContainers = document.querySelectorAll(".product-rating");
 
-        // Example: Update the favorite status in the database using AJAX
-        const productId = element.getAttribute("data-product-id"); // Assuming you have a product ID attribute
-        const isFavorite = heartIcon.classList.contains("fas");
-        updateFavoriteStatus(productId, isFavorite);
+      ratingContainers.forEach((container) => {
+        const stars = container.querySelectorAll(".star");
+        stars.forEach((star) => {
+          star.addEventListener("click", function() {
+            setRating(star, container);
+          });
+        });
+      });
+
+      function setRating(selectedStar, container) {
+        const ratingValue = selectedStar.getAttribute("data-value");
+        updateStars(ratingValue, container);
       }
 
-  function updateFavoriteStatus(productId, isFavorite) {
-        // AJAX request to a PHP script that updates the product's favorite status
-        fetch("update_favorite_status.php", {
+      function updateStars(rating, container) {
+        const stars = container.querySelectorAll(".star");
+        stars.forEach((star) => {
+          if (star.getAttribute("data-value") <= rating) {
+            star.classList.add("fas");
+            star.classList.remove("far");
+          } else {
+            star.classList.add("far");
+            star.classList.remove("fas");
+          }
+        });
+      }
+    });
+    // for heart icon js
+
+    function toggleFavorite(element) {
+      const heartIcon = element.querySelector("i");
+      if (heartIcon.classList.contains("far")) {
+        heartIcon.classList.remove("far");
+        heartIcon.classList.add("fas");
+        // Optional: Add logic to handle the action of marking as favorite
+      } else {
+        heartIcon.classList.remove("fas");
+        heartIcon.classList.add("far");
+        // Optional: Add logic to handle the action of removing from favorites
+      }
+
+      // Example: Update the favorite status in the database using AJAX
+      const productId = element.getAttribute("data-product-id"); // Assuming you have a product ID attribute
+      const isFavorite = heartIcon.classList.contains("fas");
+      updateFavoriteStatus(productId, isFavorite);
+    }
+
+    function updateFavoriteStatus(productId, isFavorite) {
+      // AJAX request to a PHP script that updates the product's favorite status
+      fetch("update_favorite_status.php", {
           method: "POST",
           body: JSON.stringify({
             productId: productId,
             isFavorite: isFavorite,
           }),
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json"
+          },
         })
-          .then((response) => response.json())
-          .then((data) => console.log(data.message))
-          .catch((error) => console.error("Error:", error));
-      }
-});
+        .then((response) => response.json())
+        .then((data) => console.log(data.message))
+        .catch((error) => console.error("Error:", error));
+    }
   </script>
 </body>
 

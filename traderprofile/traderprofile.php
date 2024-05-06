@@ -8,7 +8,7 @@
     <title>Trader profile</title>
     <link rel="stylesheet" href="../css/traderprofile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
+
 </head>
 
 </style>
@@ -16,7 +16,18 @@
 </head>
 
 <body>
-    <?php require('../inc/header.php'); ?>
+    <?php
+    include('../connection.php');
+    session_start();
+
+    $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
+
+    if ($isLoggedIn) {
+        include('../inc/loggedin_header.php');
+    } else {
+        include('../inc/header.php');
+    }
+    ?>
 
     <!-- Side Bar-->
     <div class="container">

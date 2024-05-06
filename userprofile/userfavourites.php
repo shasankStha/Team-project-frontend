@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../css/userfavourites.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-    
+
 </head>
 
 </style>
@@ -18,7 +18,18 @@
 </head>
 
 <body>
-    <?php require('../inc/header.php'); ?>
+    <?php
+    include('../connection.php');
+    session_start();
+
+    $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
+
+    if ($isLoggedIn) {
+        include('../inc/loggedin_header.php');
+    } else {
+        include('../inc/header.php');
+    }
+    ?>
 
     <!-- Side Bar-->
     <div class="container">
@@ -30,7 +41,7 @@
             <a href="usermycarts.php">My carts</a>
             <a href="userchangepassword.php">Change Password</a>
             <a href="../contactus/contactus.php">Contact Us</a>
-            <a href="logout.php">Log out</a>
+            <a href="../logout/logout.php">Log out</a>
         </div>
 
         <div class="main-content">

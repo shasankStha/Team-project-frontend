@@ -6,11 +6,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Us</title>
   <link rel="stylesheet" href="../css/aboutus.css">
-  
+
 </head>
 
 <body>
-  <?php require('../inc/header.php'); ?>
+  <?php
+  session_start();
+
+  $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
+
+  if ($isLoggedIn) {
+    include('../inc/loggedin_header.php');
+  } else {
+    include('../inc/header.php');
+  }
+
+  ?>
   <header class="header">
     <h1>About Us</h1>
     <p>Dedicated to providing your family with the freshest organic produce, straight from our local farms to your table.</p>

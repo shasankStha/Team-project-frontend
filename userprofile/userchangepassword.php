@@ -4,17 +4,28 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php require ('../inc/links.php'); ?>
+    <?php require('../inc/links.php'); ?>
     <title>User profile</title>
     <link rel="stylesheet" href="../css/userchangepassword.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
+
 
 
 </head>
 
 <body>
-    <?php require ('../inc/header.php'); ?>
+    <?php
+    include('../connection.php');
+    session_start();
+
+    $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
+
+    if ($isLoggedIn) {
+        include('../inc/loggedin_header.php');
+    } else {
+        include('../inc/header.php');
+    }
+    ?>
 
     <!-- Side Bar-->
     <div class="container">
@@ -25,7 +36,7 @@
             <a href="usermycarts.php">My carts</a>
             <a href="userchangepassword.php">Change Password</a>
             <a href="../contactus/contactus.php">Contact Us</a>
-            <a href="logout.php">Log out</a>
+            <a href="../logout/logout.php">Log out</a>
         </div>
 
 
@@ -43,8 +54,7 @@
                     </div>
                     <div class="form-group">
                         <label for="confirm-password">Confirm Password</label>
-                        <input type="password" id="confirm-password" name="confirm_password" class="form-control"
-                            required>
+                        <input type="password" id="confirm-password" name="confirm_password" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <p>Password must:</p>
@@ -61,7 +71,7 @@
             </div>
         </div>
     </div>
-    <?php require ('../inc/footer.php'); ?>
+    <?php require('../inc/footer.php'); ?>
 
 </body>
 
