@@ -12,17 +12,8 @@
 <body>
 
     <?php
-    include('../connection.php');
-    session_start();
-
-    $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
-
-    if ($isLoggedIn) {
-        include('../inc/loggedin_header.php');
-    } else {
-        include('../inc/header.php');
-    }
-    ?>
+    include("../connection.php");
+    include '../inc/header1.php'; ?>
 
     <div class="container">
         <div class="form-container">
