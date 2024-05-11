@@ -1,6 +1,7 @@
 <?php require('../inc/links.php');
 ?>
-
+<link href='https://unpkg.com/css.gg@2.0.0/icons/css/trash.css' rel='stylesheet'>
+<script src="script.js" defer></script>
 <style>
     * {
         font-family: 'Poppins', sans-serif;
@@ -156,6 +157,225 @@
         color: white;
         /* White text for dropdown items on hover */
     }
+
+    /*-----------for cart----------*/
+    
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    header {
+      background-color: #f0f0f0;
+      text-align: center;
+    }
+
+    main {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .cart-summary {
+      flex-basis: 45%;
+      background-color: #fff;
+      padding: 10px;
+      border: 1px solid #ddd;
+      margin: 10px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .cart-summary p {
+      font-weight: bold;
+      text-align: right;
+    }
+
+    button[type="submit"] {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Styles for the overlay */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(135, 134, 134, 0.5); /* Semi-transparent overlay */
+      z-index: 9999;
+    }
+
+    /* Styles for the review box */
+    .review-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      width: 30%;
+      max-height: 80%;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+
+    .clear_cart {
+      color: #e44c4c;
+      cursor: pointer;
+      border: 1px solid #686666;
+      padding: 5px;
+      margin: 0;
+      display: flex;
+      justify-content: flex-end;
+      border-radius: 5px;
+      position: absolute;
+      left: 23em;
+      margin-right: 25px;
+
+
+    }
+
+    .clear_cart h5 {
+      text-align: right;
+    }
+
+    .counter {
+      font-weight: bold;
+      margin-top: 5px;
+      width: 15%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #d9d9d9;
+      border-radius: 5px;
+      background-color: #d9d9d9;
+      margin-left: 95px;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      width: 30px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #202020;
+      cursor: pointer;
+    }
+
+   
+    .gg-trash{
+      color: #e44c4c;
+      cursor: pointer;
+      text-align: right;
+      margin-right: 5px;
+      margin-left: 20em;
+      margin-bottom: 60px;
+      margin-top: -3em;
+
+
+    }
+
+    .title {
+      color: #202020;
+      text-align: center;
+      padding-bottom: 10px; 
+      font-size: 20px;
+      margin-right: 7em;
+      margin-top: 25px;
+    }
+
+    .prices {
+      text-align: right;
+      font-weight: bold;
+      margin-right: 25px;
+      font-size: 18px;
+    }
+
+    .image_box {
+      width: 20%;
+      text-align: left;
+      height: 20%;
+      margin-top: 20px;
+    }
+
+    .image_box img {
+      max-width: 100%;
+    }
+
+    .about {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .box {
+      margin-top: 50px;
+      border: 1px solid black;
+      border-radius: 5px;
+      width: 100%;
+      height:9em;
+    }
+
+    .checkout {
+      float: right;
+      margin-right: 5%;
+      width: 35%;
+    }
+
+    .total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .Subtotal {
+      font-weight: 600;
+    }
+
+    .total-amount {
+      float: right;
+    }
+
+    .button {
+      margin-top: 8px;
+      width: 100%;
+      height: 30px;
+      border: none;
+      background: linear-gradient(to bottom right, #5ed5b9, #01f9ec);
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-right: 5em;
+    }
+    
+    
+  .close-button{
+    color: red;
+    cursor: pointer;
+    font-size: 30px;  
+  }
+  .exit{
+    text-align: right;
+  }
+   
 </style>
 <div>
     <nav class="navbar" style="display: flex; justify-content:space-between sticky-top;">
@@ -187,14 +407,91 @@
 
                 echo '<div class="icons" style="display:flex; justify-content:space-evenly; padding-right: 50px;">
                     <a href="notifications.php" class="icon"><img src="../images/notifications.png" alt=""></a>
-                    <a href="cart.php" class="icon"><img src="../images/cart1.png" alt="Cart"></a>
+                    <a href="#" class="icon"><img src="../images/cart1.png" alt="Cart" onclick="togglePopup(event)"></a>
                 </div>'
                 ?>
 
             </div>
         </div>
     </nav>
+<!--for cart-->
+<div class="overlay" onclick="closePopup()">
+      <div class="review-box" onclick="stopPropagation(event)">
 
+          <div class="exit">  
+            <div>
+              <span class="close-button" onclick="closePopup()">&times;</span>
+          
+            </div>
+          </div>
+
+        <div class="cart_summary">
+          <h1>Your Cart</h1>
+          
+          <h5 class="clear_cart">Clear cart</h5>
+        </div>
+
+        <div class="box">
+          <div class="about">
+            <div class="image_box">
+              <img src="apple_juice.jpg">
+            </div>
+            <div>
+              <b><div class="title">Product Name</div></b>
+              <div class="prices">$3.99</div>
+             
+            </div>
+          </div>
+          
+
+        <div class="counter">
+          <div class="btn">-</div>
+          <div class="count">3</div>
+          <div class="btn">+</div>
+        </div>
+        <i class="gg-trash"></i>
+        </div>
+
+
+        <div class="box">
+          <div class="about">
+            <div class="image_box">
+              <img src="apple_juice.jpg">
+            </div>
+            <div>
+              <b><div class="title">Product Name</div></b>
+              <div class="prices">$2.99</div>
+              
+            </div>
+          </div>
+          
+
+        <div class="counter">
+          <div class="btn">-</div>
+          <div class="count">2</div>
+          <div class="btn">+</div>
+        </div>
+        <i class="gg-trash"></i>
+          </div>
+
+
+        
+        <hr> 
+      <div class="checkout">
+        <div class="total">
+          <div class="Subtotal">Sub-Total:</div>
+          <div class="total-amount">$6.18</div>
+        </div>
+        
+        <a href="order_confirmation.html"><button class="button">Checkout</button></a>
+ </div>
+        
+      </div>
+
+      
+    </div>
+
+<!--cart end-->
     <div class="sub-navbar">
         <a href="../index.php">Home</a>
         <div class="user-icon">
