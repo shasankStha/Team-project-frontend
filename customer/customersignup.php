@@ -58,40 +58,47 @@
 
 
 <?php
+$error_message = '';
+
 if (isset($_POST['signUp'])) {
     $firstName = $_POST['first_name'];
     $lastName = $_POST['last_name'];
     $address = $_POST['address'];
     $contact = $_POST['contact_number'];
-    $username = $_POST['username'];
-    $gender = $_POST['gender'];
-    $confirmpassword = $_POST['confirm_password'];
     $email = $_POST['email'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['confirm_password'];
     $dob = date('d/m/Y', strtotime($_POST['date_of_birth']));
+    $gender = $_POST['gender'];
 
-
-    $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
-    VALUES (null, '$username', '$confirmpassword', '$email', '$firstName', '$lastName', '$contact', 'C', SYSDATE, null)";
-    $stid = oci_parse($connection, $sql);
-    oci_execute($stid);
-
-    $sql = "select user_id from \"USER\" where username = '$username'";
-    $stid = oci_parse($connection, $sql);
-    oci_execute($stid);
-    $user_id = null;
-    if ($row = oci_fetch_assoc($stid)) {
-        $user_id = $row['USER_ID'];
+    // Check if passwords match
+    if ($password != $confirmPassword) {
+        $error_message = 'Passwords do not match.';
+        echo "<script>alert('$error_message');</script>";
     } else {
-        echo "User not found";
+
+        $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
+        VALUES (null, '$username', '$password', '$email', '$firstName', '$lastName', '$contact', 'C', SYSDATE, null)";
+        $stid = oci_parse($connection, $sql);
+        oci_execute($stid);
+
+        $sql = "select user_id from \"USER\" where username = '$username'";
+        $stid = oci_parse($connection, $sql);
+        oci_execute($stid);
+        if ($row = oci_fetch_assoc($stid)) {
+            $user_id = $row['USER_ID'];
+        }
+
+        $sql = "insert into customer values('$user_id','$address',to_date('$dob','dd/mm/yyyy'),'$gender',null,1)";
+        $stid = oci_parse($connection, $sql);
+        oci_execute($stid);
+        oci_close($connection);
+
+
+        echo "<script>window.location.href = '../login/login.php';</script>";
     }
-    $sql = "insert into customer values('$user_id','$address',to_date('$dob','dd/mm/yyyy'),'$gender',null,1)";
-    $stid = oci_parse($connection, $sql);
-    oci_execute($stid);
-    echo "<script>window.location.href = '../login/login.php';</script>";
-    oci_close($connection);
 }
-
-
 ?>
 
 </html>

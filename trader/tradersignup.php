@@ -40,12 +40,14 @@
             </form>
         </div>
         <div class="image-container">
-            <!-- Image container content -->
         </div>
     </div>
 
 </body>
+
 <?php
+$error_message = '';
+
 if (isset($_POST['signUp'])) {
     $firstName = $_POST['first_name'];
     $lastName = $_POST['last_name'];
@@ -53,22 +55,27 @@ if (isset($_POST['signUp'])) {
     $contact = $_POST['contact_number'];
     $email = $_POST['email'];
     $username = $_POST['username'];
-    $confirmpassword = $_POST['confirm_password'];
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['confirm_password'];
 
+    // Check if passwords match
+    if ($password !== $confirmPassword) {
+        $error_message = 'Passwords do not match.';
+        echo "<script>alert('$error_message');</script>";
+    } else {
+        $_SESSION['traderSignupData'] = array(
+            'firstname' => $firstName,
+            'lastname' => $lastName,
+            'address' => $address,
+            'contact' => $contact,
+            'email' => $email,
+            'username' => $username,
+            'password' => $confirmPassword
+        );
 
-    $_SESSION['traderSignupData'] = array(
-        'firstname' => $firstName,
-        'lastname' => $lastName,
-        'address' => $address,
-        'contact' => $contact,
-        'email' => $email,
-        'username' => $username,
-        'password' => $confirmpassword
-
-    );
-    echo "<script>window.location.href = '../shops/shopdetails.php';</script>";
+        echo "<script>window.location.href = '../shops/shopdetails.php';</script>";
+    }
 }
-
 ?>
 
 </html>
