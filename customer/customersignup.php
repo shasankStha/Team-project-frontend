@@ -10,11 +10,48 @@
 </head>
 
 <body>
-
     <?php
     include("../connection.php");
-    include '../inc/header1.php'; ?>
+    include '../inc/header1.php';
 
+    $error_message = '';
+
+    if (isset($_POST['signUp'])) {
+        $firstName = $_POST['first_name'];
+        $lastName = $_POST['last_name'];
+        $address = $_POST['address'];
+        $contact = $_POST['contact_number'];
+        $email = $_POST['email'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $confirmPassword = $_POST['confirm_password'];
+        $dob = date('d/m/Y', strtotime($_POST['date_of_birth']));
+        $gender = $_POST['gender'];
+
+        if ($password != $confirmPassword) {
+            $error_message = 'Password and Confirm Password do not match.';
+        } else {
+            $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
+            VALUES (null, '$username', '$password', '$email', '$firstName', '$lastName', '$contact', 'C', SYSDATE, null)";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+
+            $sql = "select user_id from \"USER\" where username = '$username'";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+            if ($row = oci_fetch_assoc($stid)) {
+                $user_id = $row['USER_ID'];
+            }
+
+            $sql = "insert into customer values('$user_id','$address',to_date('$dob','dd/mm/yyyy'),'$gender',null,1)";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+            oci_close($connection);
+
+            echo "<script>window.location.href = '../login/login.php';</script>";
+        }
+    }
+    ?>
     <div class="container">
         <div class="form-container">
             <h2>Welcome to CleckShopHub,<br> Buy with Us</h2>
@@ -39,6 +76,7 @@
                 </div>
                 <input type="password" name="password" placeholder="Password" required>
                 <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                <div><?php if (!empty($error_message)) echo "<p class='error'>$error_message</p>"; ?></div>
                 <label for="terms" class="terms-label">
                     <input type="checkbox" name="terms" id="terms" required>
                     I accept the <a href="../terms/terms.php">Terms and Conditions</a>.
@@ -53,52 +91,6 @@
         <div class="image-container">
         </div>
     </div>
-
 </body>
-
-
-<?php
-$error_message = '';
-
-if (isset($_POST['signUp'])) {
-    $firstName = $_POST['first_name'];
-    $lastName = $_POST['last_name'];
-    $address = $_POST['address'];
-    $contact = $_POST['contact_number'];
-    $email = $_POST['email'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $confirmPassword = $_POST['confirm_password'];
-    $dob = date('d/m/Y', strtotime($_POST['date_of_birth']));
-    $gender = $_POST['gender'];
-
-    // Check if passwords match
-    if ($password != $confirmPassword) {
-        $error_message = 'Passwords do not match.';
-        echo "<script>alert('$error_message');</script>";
-    } else {
-
-        $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
-        VALUES (null, '$username', '$password', '$email', '$firstName', '$lastName', '$contact', 'C', SYSDATE, null)";
-        $stid = oci_parse($connection, $sql);
-        oci_execute($stid);
-
-        $sql = "select user_id from \"USER\" where username = '$username'";
-        $stid = oci_parse($connection, $sql);
-        oci_execute($stid);
-        if ($row = oci_fetch_assoc($stid)) {
-            $user_id = $row['USER_ID'];
-        }
-
-        $sql = "insert into customer values('$user_id','$address',to_date('$dob','dd/mm/yyyy'),'$gender',null,1)";
-        $stid = oci_parse($connection, $sql);
-        oci_execute($stid);
-        oci_close($connection);
-
-
-        echo "<script>window.location.href = '../login/login.php';</script>";
-    }
-}
-?>
 
 </html>
