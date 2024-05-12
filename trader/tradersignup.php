@@ -22,16 +22,40 @@
             <br>
             <form method="post">
                 <div class="inline-fields">
-                    <input type="text" name="first_name" placeholder="First Name" required>
-                    <input type="text" name="last_name" placeholder="Last Name" required>
+                    <input type="text" name="first_name" placeholder="First Name" required value=<?php
+                                                                                                    if (isset($_POST['first_name'])) {
+                                                                                                        echo  $_POST['first_name'];
+                                                                                                    }
+                                                                                                    ?>>
+                    <input type="text" name="last_name" placeholder="Last Name" required value=<?php
+                                                                                                if (isset($_POST['last_name'])) {
+                                                                                                    echo  $_POST['last_name'];
+                                                                                                }
+                                                                                                ?>>
                 </div>
-                <input type="text" name="address" placeholder="Address" required>
-                <input type="text" name="contact_number" placeholder="Contact Number" required>
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="text" name="username" placeholder="Username" required>
+                <input type="text" name="address" placeholder="Address" required value=<?php
+                                                                                        if (isset($_POST['address'])) {
+                                                                                            echo  $_POST['address'];
+                                                                                        }
+                                                                                        ?>>
+                <input type="text" name="contact_number" placeholder="Contact Number" required value=<?php
+                                                                                                        if (isset($_POST['contact_number'])) {
+                                                                                                            echo  $_POST['contact_number'];
+                                                                                                        }
+                                                                                                        ?>>
+                <input type="email" name="email" placeholder="Email" required value=<?php
+                                                                                    if (isset($_POST['email'])) {
+                                                                                        echo  $_POST['email'];
+                                                                                    }
+                                                                                    ?>>
+                <input type="text" name="username" placeholder="Username" required value=<?php
+                                                                                            if (isset($_POST['username'])) {
+                                                                                                echo  $_POST['username'];
+                                                                                            }
+                                                                                            ?>>
                 <input type="password" name="password" placeholder="Password" required>
                 <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-
+                <div class="error" style="color: red;"><?php if (!empty($error_message)) echo "<p class='error'>$error_message</p>"; ?></div>
                 <button type="submit" name='signUp'>Next</button>
                 <br>
                 <div class="center-text">
@@ -60,8 +84,7 @@ if (isset($_POST['signUp'])) {
 
     // Check if passwords match
     if ($password !== $confirmPassword) {
-        $error_message = 'Passwords do not match.';
-        echo "<script>alert('$error_message');</script>";
+        $error_message = 'Password and Confirm Password do not match !!!.';
     } else {
         $_SESSION['traderSignupData'] = array(
             'firstname' => $firstName,

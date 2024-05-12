@@ -79,7 +79,7 @@
 <nav class="navbar shadow-sm">
     <!-- Logo -->
     <div class="navbar-brand">
-        <a href="index.php">
+        <a href="../index.php">
             <img src="../images/logo/white.png" alt="Logo" style="height: 50px;">
         </a>
     </div>

@@ -29,26 +29,50 @@
         $gender = $_POST['gender'];
 
         if ($password != $confirmPassword) {
-            $error_message = 'Password and Confirm Password do not match.';
+            $error_message = 'Password and Confirm Password do not match !!!.';
         } else {
-            $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
-            VALUES (null, '$username', '$password', '$email', '$firstName', '$lastName', '$contact', 'C', SYSDATE, null)";
+            $sql = "select count(*) from \"USER\" where username = '$username'";
             $stid = oci_parse($connection, $sql);
             oci_execute($stid);
-
-            $sql = "select user_id from \"USER\" where username = '$username'";
-            $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
+            $count = null;
             if ($row = oci_fetch_assoc($stid)) {
-                $user_id = $row['USER_ID'];
+                $count = $row['COUNT(*)'];
             }
+            if ($count != 0) {
+                #error message
+                echo "<script>alert('Username')</script>";
+            } else {
+                $sql = "select count(*) from \"USER\" where email = '$email'";
+                $stid = oci_parse($connection, $sql);
+                oci_execute($stid);
+                $count = null;
+                if ($row = oci_fetch_assoc($stid)) {
+                    $count = $row['COUNT(*)'];
+                }
+                if ($count != 0) {
+                    #error message
+                    echo "<script>alert('Email')</script>";
+                } else {
+                    $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
+            VALUES (null, '$username', '$password', '$email', '$firstName', '$lastName', '$contact', 'C', SYSDATE, null)";
+                    $stid = oci_parse($connection, $sql);
+                    oci_execute($stid);
 
-            $sql = "insert into customer values('$user_id','$address',to_date('$dob','dd/mm/yyyy'),'$gender',null,1)";
-            $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-            oci_close($connection);
+                    $sql = "select user_id from \"USER\" where username = '$username'";
+                    $stid = oci_parse($connection, $sql);
+                    oci_execute($stid);
+                    if ($row = oci_fetch_assoc($stid)) {
+                        $user_id = $row['USER_ID'];
+                    }
 
-            echo "<script>window.location.href = '../login/login.php';</script>";
+                    $sql = "insert into customer values('$user_id','$address',to_date('$dob','dd/mm/yyyy'),'$gender',null,1)";
+                    $stid = oci_parse($connection, $sql);
+                    oci_execute($stid);
+                    oci_close($connection);
+
+                    echo "<script>window.location.href = '../login/login.php';</script>";
+                }
+            }
         }
     }
     ?>
@@ -58,25 +82,53 @@
             <p>Want to become a seller? <a href="../trader/tradersignup.php">Click here</a></p>
             <form method="post">
                 <div class="inline-fields">
-                    <input type="text" name="first_name" placeholder="First Name" required>
-                    <input type="text" name="last_name" placeholder="Last Name" required>
+                    <input type="text" name="first_name" placeholder="First Name" required value=<?php
+                                                                                                    if (isset($_POST['first_name'])) {
+                                                                                                        echo  $_POST['first_name'];
+                                                                                                    }
+                                                                                                    ?>>
+                    <input type="text" name="last_name" placeholder="Last Name" required value=<?php
+                                                                                                if (isset($_POST['last_name'])) {
+                                                                                                    echo  $_POST['last_name'];
+                                                                                                }
+                                                                                                ?>>
                 </div>
-                <input type="text" name="address" placeholder="Address" required>
-                <input type="text" name="contact_number" placeholder="Contact Number" required>
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="text" name="username" placeholder="Username" required>
+                <input type="text" name="address" placeholder="Address" required value=<?php
+                                                                                        if (isset($_POST['address'])) {
+                                                                                            echo  $_POST['address'];
+                                                                                        }
+                                                                                        ?>>
+                <input type="text" name="contact_number" placeholder="Contact Number" required value=<?php
+                                                                                                        if (isset($_POST['contact_number'])) {
+                                                                                                            echo  $_POST['contact_number'];
+                                                                                                        }
+                                                                                                        ?>>
+                <input type="email" name="email" placeholder="Email" required value=<?php
+                                                                                    if (isset($_POST['email'])) {
+                                                                                        echo  $_POST['email'];
+                                                                                    }
+                                                                                    ?>>
+                <input type="text" name="username" placeholder="Username" required value=<?php
+                                                                                            if (isset($_POST['username'])) {
+                                                                                                echo  $_POST['username'];
+                                                                                            }
+                                                                                            ?>>
                 <div class="inline-fields">
-                    <input type="date" name="date_of_birth" placeholder="Date of Birth" required>
+                    <input type="date" name="date_of_birth" placeholder="Date of Birth" required value=<?php
+                                                                                                        if (isset($_POST['date_of_birth'])) {
+                                                                                                            echo  $_POST['date_of_birth'];
+                                                                                                        }
+                                                                                                        ?>>
                     <select name="gender">
                         <option value="" disabled selected>Gender</option>
-                        <option value="M">Male</option>
-                        <option value="F">Female</option>
-                        <option value="O">Other</option>
+                        <option value="M" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "M") ? "selected" : "" ?>>Male</option>
+                        <option value="F" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "F") ? "selected" : "" ?>></option>>Female</option>
+                        <option value="O" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "O") ? "selected" : "" ?>></option>>Other</option>
                     </select>
                 </div>
                 <input type="password" name="password" placeholder="Password" required>
                 <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-                <div><?php if (!empty($error_message)) echo "<p class='error'>$error_message</p>"; ?></div>
+                <div class="error" style="color: red;"><?php if (!empty($error_message)) echo "<p class='error'>$error_message</p>"; ?></div>
                 <label for="terms" class="terms-label">
                     <input type="checkbox" name="terms" id="terms" required>
                     I accept the <a href="../terms/terms.php">Terms and Conditions</a>.
