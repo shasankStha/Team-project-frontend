@@ -11,6 +11,7 @@
 
 <body>
     <?php
+    session_start();
     include("../connection.php");
     include '../inc/header1.php'; ?>
     <?php
@@ -72,7 +73,6 @@
                             'username' => $username,
                             'password' => $confirmPassword
                         );
-
                         echo "<script>window.location.href = '../shops/shopdetails.php';</script>";
                     }
                 }

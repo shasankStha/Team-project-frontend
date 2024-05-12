@@ -12,16 +12,9 @@
 <body>
 
     <?php
-    include('../connection.php');
     session_start();
-
-    $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
-
-    if ($isLoggedIn) {
-        include('../inc/loggedin_header.php');
-    } else {
-        include('../inc/header.php');
-    }
+    include('../connection.php');
+    include('../inc/header1.php');
     ?>
 
     <div class="container">
@@ -57,6 +50,7 @@
 <?php
 if (!isset($_SESSION['traderSignupData'])) {
     // Redirect to tradersignup.php if data is not present
+    echo "<script>alert('test')</script>";
     echo "<script>window.location.href = '../trader/tradersignup.php';</script>";
 }
 
