@@ -236,22 +236,22 @@
 
 
     .clear_cart {
+      font-size:15px;
       color: #e44c4c;
       cursor: pointer;
       border: 1px solid #686666;
       padding: 5px;
       margin: 0;
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
       border-radius: 5px;
       position: absolute;
-      left: 23em;
-      margin-right: 25px;
-
-
+      left: 20em;
+      margin-right: 30px;
+      right:15px;
     }
 
-    .clear_cart h5 {
+    .clear_cart h4 {
       text-align: right;
     }
 
@@ -428,7 +428,7 @@
         <div class="cart_summary">
           <h1>Your Cart</h1>
           
-          <h5 class="clear_cart">Clear cart</h5>
+          <h4 class="clear_cart">Clear cart</h5>
         </div>
 
         <div class="box">
@@ -444,11 +444,12 @@
           </div>
           
 
-        <div class="counter">
-          <div class="btn">-</div>
-          <div class="count">3</div>
-          <div class="btn">+</div>
-        </div>
+          <div class="counter">
+    <div class="btn" onclick="decrementItem(this)">-</div> <!-- Add onclick attribute -->
+    <div class="count">3</div>
+    <div class="btn">+</div>
+</div>
+
         <i class="gg-trash"></i>
         </div>
 
