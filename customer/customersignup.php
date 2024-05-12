@@ -15,6 +15,9 @@
     include '../inc/header1.php';
 
     $error_message = '';
+    $error_message1 = '';
+    $error_message2 = '';
+    $error_message2 = '';
 
     if (isset($_POST['signUp'])) {
         $firstName = $_POST['first_name'];
@@ -39,8 +42,7 @@
                 $count = $row['COUNT(*)'];
             }
             if ($count != 0) {
-                #error message
-                echo "<script>alert('Username')</script>";
+                $error_message1 = 'Username Alredy Exists !!!.';
             } else {
                 $sql = "select count(*) from \"USER\" where email = '$email'";
                 $stid = oci_parse($connection, $sql);
@@ -50,27 +52,37 @@
                     $count = $row['COUNT(*)'];
                 }
                 if ($count != 0) {
-                    #error message
-                    echo "<script>alert('Email')</script>";
+                    $error_message2 = 'Email Already Exists !!!.';
                 } else {
-                    $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
-            VALUES (null, '$username', '$password', '$email', '$firstName', '$lastName', '$contact', 'C', SYSDATE, null)";
+                    $sql = "select count(*) from \"USER\" where contact_number = '$contact'";
                     $stid = oci_parse($connection, $sql);
                     oci_execute($stid);
-
-                    $sql = "select user_id from \"USER\" where username = '$username'";
-                    $stid = oci_parse($connection, $sql);
-                    oci_execute($stid);
+                    $count = null;
                     if ($row = oci_fetch_assoc($stid)) {
-                        $user_id = $row['USER_ID'];
+                        $count = $row['COUNT(*)'];
                     }
+                    if ($count != 0) {
+                        $error_message3 = 'Contact Number Already Exists !!!.';
+                    } else {
+                        $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
+            VALUES (null, '$username', '$password', '$email', '$firstName', '$lastName', '$contact', 'C', SYSDATE, null)";
+                        $stid = oci_parse($connection, $sql);
+                        oci_execute($stid);
 
-                    $sql = "insert into customer values('$user_id','$address',to_date('$dob','dd/mm/yyyy'),'$gender',null,1)";
-                    $stid = oci_parse($connection, $sql);
-                    oci_execute($stid);
-                    oci_close($connection);
+                        $sql = "select user_id from \"USER\" where username = '$username'";
+                        $stid = oci_parse($connection, $sql);
+                        oci_execute($stid);
+                        if ($row = oci_fetch_assoc($stid)) {
+                            $user_id = $row['USER_ID'];
+                        }
 
-                    echo "<script>window.location.href = '../login/login.php';</script>";
+                        $sql = "insert into customer values('$user_id','$address',to_date('$dob','dd/mm/yyyy'),'$gender',null,1)";
+                        $stid = oci_parse($connection, $sql);
+                        oci_execute($stid);
+                        oci_close($connection);
+
+                        echo "<script>window.location.href = '../login/login.php';</script>";
+                    }
                 }
             }
         }
@@ -103,16 +115,19 @@
                                                                                                             echo  $_POST['contact_number'];
                                                                                                         }
                                                                                                         ?>>
+                <div class="error" style="color: red;"><?php if (!empty($error_message3)) echo "<p class='error'>$error_message3</p>"; ?></div>
                 <input type="email" name="email" placeholder="Email" required value=<?php
                                                                                     if (isset($_POST['email'])) {
                                                                                         echo  $_POST['email'];
                                                                                     }
                                                                                     ?>>
+                <div class="error" style="color: red;"><?php if (!empty($error_message2)) echo "<p class='error'>$error_message2</p>"; ?></div>
                 <input type="text" name="username" placeholder="Username" required value=<?php
                                                                                             if (isset($_POST['username'])) {
                                                                                                 echo  $_POST['username'];
                                                                                             }
                                                                                             ?>>
+                <div class="error" style="color: red; text-align: left;"><?php if (!empty($error_message1)) echo "<p class='error'>$error_message1</p>"; ?></div>
                 <div class="inline-fields">
                     <input type="date" name="date_of_birth" placeholder="Date of Birth" required value=<?php
                                                                                                         if (isset($_POST['date_of_birth'])) {
