@@ -65,6 +65,7 @@
                         $error_message3 = 'Contact Number Already Exists !!!.';
                     } else {
                         $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
+                        
             VALUES (null, '$username', '$password', '$email', '$firstName', '$lastName', '$contact', 'C', SYSDATE, null)";
                         $stid = oci_parse($connection, $sql);
                         oci_execute($stid);

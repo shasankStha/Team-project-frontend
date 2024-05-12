@@ -10,10 +10,78 @@
 </head>
 
 <body>
-
     <?php
     include("../connection.php");
     include '../inc/header1.php'; ?>
+    <?php
+    $error_message = '';
+    $error_message1 = '';
+    $error_message2 = '';
+    $error_message2 = '';
+
+    if (isset($_POST['signUp'])) {
+        $firstName = $_POST['first_name'];
+        $lastName = $_POST['last_name'];
+        $address = $_POST['address'];
+        $contact = $_POST['contact_number'];
+        $email = $_POST['email'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $confirmPassword = $_POST['confirm_password'];
+
+        // Check if passwords match
+        if ($password != $confirmPassword) {
+            $error_message = 'Password and Confirm Password do not match !!!.';
+        } else {
+            $sql = "select count(*) from \"USER\" where username = '$username'";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+            $count = null;
+            if ($row = oci_fetch_assoc($stid)) {
+                $count = $row['COUNT(*)'];
+            }
+            if ($count != 0) {
+                $error_message1 = 'Username Alredy Exists !!!.';
+            } else {
+                $sql = "select count(*) from \"USER\" where email = '$email'";
+                $stid = oci_parse($connection, $sql);
+                oci_execute($stid);
+                $count = null;
+                if ($row = oci_fetch_assoc($stid)) {
+                    $count = $row['COUNT(*)'];
+                }
+                if ($count != 0) {
+                    $error_message2 = 'Email Already Exists !!!.';
+                } else {
+                    $sql = "select count(*) from \"USER\" where contact_number = '$contact'";
+                    $stid = oci_parse($connection, $sql);
+                    oci_execute($stid);
+                    $count = null;
+                    if ($row = oci_fetch_assoc($stid)) {
+                        $count = $row['COUNT(*)'];
+                    }
+                    if ($count != 0) {
+                        $error_message3 = 'Contact Number Already Exists !!!.';
+                    } else {
+                        $_SESSION['traderSignupData'] = array(
+                            'firstname' => $firstName,
+                            'lastname' => $lastName,
+                            'address' => $address,
+                            'contact' => $contact,
+                            'email' => $email,
+                            'username' => $username,
+                            'password' => $confirmPassword
+                        );
+
+                        echo "<script>window.location.href = '../shops/shopdetails.php';</script>";
+                    }
+                }
+            }
+        }
+    }
+    ?>
+
+
 
     <div class="container">
         <div class="form-container">
@@ -43,16 +111,20 @@
                                                                                                             echo  $_POST['contact_number'];
                                                                                                         }
                                                                                                         ?>>
+                <div class="error" style="color: red;"><?php if (!empty($error_message3)) echo "<p class='error'>$error_message3</p>"; ?>
+                </div>
                 <input type="email" name="email" placeholder="Email" required value=<?php
                                                                                     if (isset($_POST['email'])) {
                                                                                         echo  $_POST['email'];
                                                                                     }
                                                                                     ?>>
+                <div class="error" style="color: red;"><?php if (!empty($error_message2)) echo "<p class='error'>$error_message2</p>"; ?></div>
                 <input type="text" name="username" placeholder="Username" required value=<?php
                                                                                             if (isset($_POST['username'])) {
                                                                                                 echo  $_POST['username'];
                                                                                             }
                                                                                             ?>>
+                <div class="error" style="color: red;"><?php if (!empty($error_message1)) echo "<p class='error'>$error_message1</p>"; ?></div>
                 <input type="password" name="password" placeholder="Password" required>
                 <input type="password" name="confirm_password" placeholder="Confirm Password" required>
                 <div class="error" style="color: red;"><?php if (!empty($error_message)) echo "<p class='error'>$error_message</p>"; ?></div>
@@ -69,36 +141,5 @@
 
 </body>
 
-<?php
-$error_message = '';
-
-if (isset($_POST['signUp'])) {
-    $firstName = $_POST['first_name'];
-    $lastName = $_POST['last_name'];
-    $address = $_POST['address'];
-    $contact = $_POST['contact_number'];
-    $email = $_POST['email'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $confirmPassword = $_POST['confirm_password'];
-
-    // Check if passwords match
-    if ($password !== $confirmPassword) {
-        $error_message = 'Password and Confirm Password do not match !!!.';
-    } else {
-        $_SESSION['traderSignupData'] = array(
-            'firstname' => $firstName,
-            'lastname' => $lastName,
-            'address' => $address,
-            'contact' => $contact,
-            'email' => $email,
-            'username' => $username,
-            'password' => $confirmPassword
-        );
-
-        echo "<script>window.location.href = '../shops/shopdetails.php';</script>";
-    }
-}
-?>
 
 </html>
