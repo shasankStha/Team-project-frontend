@@ -484,7 +484,7 @@
           <div class="total-amount">$6.18</div>
         </div>
         
-        <a href="order_confirmation.html"><button class="button">Checkout</button></a>
+        <a href="order_confirmation.php"><button class="button">Checkout</button></a>
  </div>
         
       </div>
