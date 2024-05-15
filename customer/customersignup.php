@@ -68,6 +68,7 @@
                     if ($count != 0) {
                         $error_message3 = 'Contact Number Already Exists !!!.';
                     } else {
+                        include('../test/file.php');
                         $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
                         
             VALUES (null, '$username', '$password', '$email', '$firstName', '$lastName', '$contact', 'C', SYSDATE, null)";
@@ -142,8 +143,8 @@
                     <select name="gender">
                         <option value="" disabled selected>Gender</option>
                         <option value="M" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "M") ? "selected" : "" ?>>Male</option>
-                        <option value="F" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "F") ? "selected" : "" ?>></option>>Female</option>
-                        <option value="O" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "O") ? "selected" : "" ?>></option>>Other</option>
+                        <option value="F" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "F") ? "selected" : "" ?>>Female</option>
+                        <option value="O" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "O") ? "selected" : "" ?>>Other</option>
                     </select>
                 </div>
                 <input type="password" name="password" placeholder="Password" required>
