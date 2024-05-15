@@ -12,15 +12,15 @@
 
 <body>
     <?php
-    include('../connection.php');
+    include ('../connection.php');
     session_start();
 
     $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
 
     if ($isLoggedIn) {
-        include('../inc/loggedin_header.php');
+        include ('../inc/loggedin_header.php');
     } else {
-        include('../inc/header.php');
+        include ('../inc/header.php');
     }
     ?>
     <div class="main-container">
@@ -165,77 +165,85 @@
         <div class="similar-products-container">
             <!-- Product Item -->
             <div class="similar-product-item">
-                <a href="../products/productspage.php" class="text-decoration-none text-dark">
-                    <div class="similar-product-image">
+
+                <div class="similar-product-image">
+                    <a href="../products/productspage.php" class="text-decoration-none text-dark">
                         <img src="../images/fish.jpg" alt="Product 1">
-                    </div>
-                    <div class="similar-product-info">
-                        <h3 class="similar-product-name">Product Name 1</h3>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="far fa-star"></i>
-                        <p class="similar-product-price">$19.99</p>
-                        <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
-                    </div>
-                </a>
+                </div>
+                <div class="similar-product-info">
+                    <h3 class="similar-product-name">Product Name 1</h3>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <p class="similar-product-price">$19.99</p>
+                    </a>
+                    <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
+                </div>
+
             </div>
             <div class="similar-product-item">
-                <a href="../products/productspage.php" class="text-decoration-none text-dark">
-                    <div class="similar-product-image">
+
+                <div class="similar-product-image">
+                    <a href="../products/productspage.php" class="text-decoration-none text-dark">
                         <img src="../images/fish.jpg" alt="Product 1">
-                    </div>
-                    <div class="similar-product-info">
-                        <h3 class="similar-product-name">Product Name 1</h3>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="far fa-star"></i>
-                        <p class="similar-product-price">$19.99</p>
-                        <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
-                    </div>
-                </a>
+                </div>
+                <div class="similar-product-info">
+                    <h3 class="similar-product-name">Product Name 1</h3>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <p class="similar-product-price">$19.99</p>
+                    </a>
+                    <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
+                </div>
+
             </div>
             <div class="similar-product-item">
-                <a href="../products/productspage.php" class="text-decoration-none text-dark">
-                    <div class="similar-product-image">
+
+                <div class="similar-product-image">
+                    <a href="../products/productspage.php" class="text-decoration-none text-dark">
                         <img src="../images/fish.jpg" alt="Product 1">
-                    </div>
-                    <div class="similar-product-info">
-                        <h3 class="similar-product-name">Product Name 1</h3>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="far fa-star"></i>
-                        <p class="similar-product-price">$19.99</p>
-                        <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
-                    </div>
-                </a>
+                </div>
+                <div class="similar-product-info">
+                    <h3 class="similar-product-name">Product Name 1</h3>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <p class="similar-product-price">$19.99</p>
+                    </a>
+                    <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
+                </div>
+
             </div>
             <div class="similar-product-item">
-                <a href="../products/productspage.php" class="text-decoration-none text-dark">
-                    <div class="similar-product-image">
+
+                <div class="similar-product-image">
+                    <a href="../products/productspage.php" class="text-decoration-none text-dark">
                         <img src="../images/fish.jpg" alt="Product 1">
-                    </div>
-                    <div class="similar-product-info">
-                        <h3 class="similar-product-name">Product Name 1</h3>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="far fa-star"></i>
-                        <p class="similar-product-price">$19.99</p>
-                        <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
-                    </div>
-                </a>
+                </div>
+                <div class="similar-product-info">
+                    <h3 class="similar-product-name">Product Name 1</h3>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <p class="similar-product-price">$19.99</p>
+                    </a>
+                    <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
+                </div>
+
             </div>
         </div>
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                document.getElementById('heart').addEventListener('click', function() {
+            document.addEventListener('DOMContentLoaded', function () {
+                document.getElementById('heart').addEventListener('click', function () {
                     this.classList.toggle('fas');
                     this.classList.toggle('far');
                     this.classList.toggle('favorited'); // Toggles the red color
@@ -243,25 +251,25 @@
             });
 
             //quantity selector 
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 var quantityInput = document.getElementById('quantity');
                 var minusButton = document.querySelector('.quantity-control.minus');
                 var plusButton = document.querySelector('.quantity-control.plus');
 
-                minusButton.addEventListener('click', function() {
+                minusButton.addEventListener('click', function () {
                     var currentValue = parseInt(quantityInput.value);
                     if (currentValue > 1) {
                         quantityInput.value = currentValue - 1;
                     }
                 });
 
-                plusButton.addEventListener('click', function() {
+                plusButton.addEventListener('click', function () {
                     var currentValue = parseInt(quantityInput.value);
                     quantityInput.value = currentValue + 1;
                 });
             });
         </script>
-        <?php require('../inc/footer.php'); ?>
+        <?php require ('../inc/footer.php'); ?>
 </body>
 
 </html>

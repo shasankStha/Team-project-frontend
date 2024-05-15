@@ -52,16 +52,14 @@
     display: flex;
     justify-content: space-around;
     background-color: #2b2f33;
-    /* Dark background for sub-navbar */
     color: white;
-    /* Change text color to white */
     padding: 10px 0;
     margin-bottom: 20px;
   }
 
   .sub-navbar a {
     color: white;
-    /* Change link color to white */
+
     text-decoration: none;
     transition: all 0.3s ease;
     display: inline-block;
@@ -74,7 +72,6 @@
     box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
     background-color: #f0f0f0;
     color: black;
-    /* Text color on hover */
     border-radius: 30px;
   }
 
@@ -83,7 +80,6 @@
     box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
     background-color: #f0f0f0;
     color: black;
-    /* Text color on hover */
     border-radius: 30px;
   }
 
@@ -106,12 +102,10 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    /* Revert icon colors to black */
     color: black;
-    /* Ensure anchor tag inherits black color for icons */
   }
 
-  /* Specify the styles for the icons so they appear black */
+
   .icon-container img {
     filter: none;
     height: 24px;
@@ -138,7 +132,6 @@
 
   .dropdown-menu a {
     color: black;
-    /* Text color for dropdown links */
     padding: 12px 16px;
     text-decoration: none;
     display: block;
@@ -150,12 +143,10 @@
 
   .user-icon .dropdown-menu {
     background-color: #2b2f33;
-    /* Match the sub-navbar background */
   }
 
   .user-icon:hover .dropdown-menu a {
     color: white;
-    /* White text for dropdown items on hover */
   }
 
   /*-----------for cart----------*/

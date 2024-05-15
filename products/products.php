@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Results - CleckShopHub</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/products.css">
 
@@ -14,15 +16,15 @@
 
 <body class="overflow-x-hidden">
     <?php
-    include('../connection.php');
+    include ('../connection.php');
     session_start();
 
     $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
 
     if ($isLoggedIn) {
-        include('../inc/loggedin_header.php');
+        include ('../inc/loggedin_header.php');
     } else {
-        include('../inc/header.php');
+        include ('../inc/header.php');
     }
     ?>
 
@@ -31,7 +33,7 @@
         <!-- Sidebar -->
         <div class="sidebar-box w-1/4 px-0">
             <div class="px-4 mt-2 flex gap-6">
-                <div class="w-1/4 px-0">
+                <div class="w-3/4 px-0">
                     <div class="mt-3">
                         <h1>Categories</h1>
                         <div class="mt-3">
@@ -101,8 +103,9 @@
             </div>
             <div class=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
                 <div>
-                    <a href="../products/productspage.php" class="text-decoration-none text-dark">
-                        <div class="card border-0 shadow product-item">
+                    <div class="card border-0 shadow product-item">
+                        <a href="../products/productspage.php" class="text-decoration-none text-dark">
+
                             <div class="product-image">
                                 <img src="../images/img_slider.jpg" class="card-img-top" alt="Product Name">
                             </div>
@@ -116,177 +119,170 @@
                                     <i class="far fa-star"></i>
                                 </div>
                                 <div class="product-price">20$</div>
-                                <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
+
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                        <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
+                    </div>
+
                 </div>
 
-                <div>
+                <div class="card border-0 shadow product-item">
                     <a href="../products/productspage.php" class="text-decoration-none text-dark">
-                        <div class="card border-0 shadow product-item">
-                            <div class="product-image">
-                                <img src="../images/img_slider.jpg" class="card-img-top" alt="Product Name">
-                            </div>
-                            <div class="product-info">
-                                <h3 class="product-name">Product Name</h3>
-                                <div class="product-rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                </div>
-                                <div class="product-price">20$</div>
-                                <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
-                            </div>
-                        </div>
-                    </a>
-                </div>
 
-                <div>
-                    <a href="../products/productspage.php" class="text-decoration-none text-dark">
-                        <div class="card border-0 shadow product-item">
-                            <div class="product-image">
-                                <img src="../images/img_slider.jpg" class="card-img-top" alt="Product Name">
-                            </div>
-                            <div class="product-info">
-                                <h3 class="product-name">Product Name</h3>
-                                <div class="product-rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                </div>
-                                <div class="product-price">20$</div>
-                                <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
-                            </div>
+                        <div class="product-image">
+                            <img src="../images/img_slider.jpg" class="card-img-top" alt="Product Name">
                         </div>
-                    </a>
-                </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Product Name</h3>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <div class="product-price">20$</div>
 
-                <div>
-                    <a href="../products/productspage.php" class="text-decoration-none text-dark">
-                        <div class="card border-0 shadow product-item">
-                            <div class="product-image">
-                                <img src="../images/img_slider.jpg" class="card-img-top" alt="Product Name">
-                            </div>
-                            <div class="product-info">
-                                <h3 class="product-name">Product Name</h3>
-                                <div class="product-rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                </div>
-                                <div class="product-price">20$</div>
-                                <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
-                            </div>
                         </div>
                     </a>
+                    <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
                 </div>
-
-                <div>
+                <div class="card border-0 shadow product-item">
                     <a href="../products/productspage.php" class="text-decoration-none text-dark">
-                        <div class="card border-0 shadow product-item">
-                            <div class="product-image">
-                                <img src="../images/img_slider.jpg" class="card-img-top" alt="Product Name">
+
+                        <div class="product-image">
+                            <img src="../images/img_slider.jpg" class="card-img-top" alt="Product Name">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Product Name</h3>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
                             </div>
-                            <div class="product-info">
-                                <h3 class="product-name">Product Name</h3>
-                                <div class="product-rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                </div>
-                                <div class="product-price">20$</div>
-                                <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
-                            </div>
+                            <div class="product-price">20$</div>
+
                         </div>
                     </a>
+                    <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
                 </div>
-
-                <div>
+                <div class="card border-0 shadow product-item">
                     <a href="../products/productspage.php" class="text-decoration-none text-dark">
-                        <div class="card border-0 shadow product-item">
-                            <div class="product-image">
-                                <img src="../images/img_slider.jpg" class="card-img-top" alt="Product Name">
+
+                        <div class="product-image">
+                            <img src="../images/img_slider.jpg" class="card-img-top" alt="Product Name">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Product Name</h3>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
                             </div>
-                            <div class="product-info">
-                                <h3 class="product-name">Product Name</h3>
-                                <div class="product-rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                </div>
-                                <div class="product-price">20$</div>
-                                <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
-                            </div>
+                            <div class="product-price">20$</div>
+
                         </div>
                     </a>
+                    <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
                 </div>
-
-                <div>
+                <div class="card border-0 shadow product-item">
                     <a href="../products/productspage.php" class="text-decoration-none text-dark">
-                        <div class="card border-0 shadow product-item">
-                            <div class="product-image">
-                                <img src="../images/img_slider.jpg" class="card-img-top" alt="Product Name">
+
+                        <div class="product-image">
+                            <img src="../images/img_slider.jpg" class="card-img-top" alt="Product Name">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Product Name</h3>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
                             </div>
-                            <div class="product-info">
-                                <h3 class="product-name">Product Name</h3>
-                                <div class="product-rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                </div>
-                                <div class="product-price">20$</div>
-                                <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
-                            </div>
+                            <div class="product-price">20$</div>
+
                         </div>
                     </a>
+                    <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
                 </div>
-
-                <div>
+                <div class="card border-0 shadow product-item">
                     <a href="../products/productspage.php" class="text-decoration-none text-dark">
-                        <div class="card border-0 shadow product-item">
-                            <div class="product-image">
-                                <img src="../images/img_slider.jpg" class="card-img-top" alt="Product Name">
+
+                        <div class="product-image">
+                            <img src="../images/img_slider.jpg" class="card-img-top" alt="Product Name">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Product Name</h3>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
                             </div>
-                            <div class="product-info">
-                                <h3 class="product-name">Product Name</h3>
-                                <div class="product-rating">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                </div>
-                                <div class="product-price">20$</div>
-                                <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
-                            </div>
+                            <div class="product-price">20$</div>
+
                         </div>
                     </a>
+                    <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
+                </div>
+                <div class="card border-0 shadow product-item">
+                    <a href="../products/productspage.php" class="text-decoration-none text-dark">
+
+                        <div class="product-image">
+                            <img src="../images/img_slider.jpg" class="card-img-top" alt="Product Name">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Product Name</h3>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <div class="product-price">20$</div>
+
+                        </div>
+                    </a>
+                    <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
+                </div>
+                <div class="card border-0 shadow product-item">
+                    <a href="../products/productspage.php" class="text-decoration-none text-dark">
+
+                        <div class="product-image">
+                            <img src="../images/img_slider.jpg" class="card-img-top" alt="Product Name">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Product Name</h3>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <div class="product-price">20$</div>
+
+                        </div>
+                    </a>
+                    <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
                 </div>
             </div>
-
-            <!-- ... -->
-
         </div>
-        <!-- Products -->
-    </div>
     </div>
 
 
-    <?php require('../inc/footer.php'); ?>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <?php require ('../inc/footer.php'); ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
     <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
     <script src="../js/carousel.js"></script>
 </body>
