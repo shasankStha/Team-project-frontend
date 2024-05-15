@@ -34,7 +34,7 @@
         if ($password != $confirmPassword) {
             $error_message = 'Password and Confirm Password do not match !!!.';
         } else if (strlen($confirmPassword) < 8 || strlen($confirmPassword) > 32) {
-            $errormessage = "Password should be 8 to 32 character long.<br>";
+            $error_message = "Password should be 8 to 32 character long.<br>";
         } else if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/', $_POST['password'])) {
             $error_message = "Password should contain an uppercase,<br>Number<br>and a special character<br>";
         } else {
