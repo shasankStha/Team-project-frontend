@@ -270,7 +270,7 @@
     margin-bottom: 30px;
   }
 
-  .btn {
+  .btn1 {
     width: 30px;
     height: 20px;
     display: flex;
@@ -448,9 +448,9 @@
 
 
         <div class="counter">
-          <div class="btn" onclick="decrementItem(this)">-</div> <!-- Add onclick attribute -->
+          <div class="btn1" onclick="decrementItem(this)">-</div> <!-- Add onclick attribute -->
           <div class="count">3</div>
-          <div class="btn">+</div>
+          <div class="btn1">+</div>
         </div>
 
         <i class="gg-trash"></i>
@@ -473,9 +473,9 @@
 
 
         <div class="counter">
-          <div class="btn">-</div>
+          <div class="btn1">-</div>
           <div class="count">2</div>
-          <div class="btn">+</div>
+          <div class="btn1">+</div>
         </div>
         <i class="gg-trash"></i>
       </div>

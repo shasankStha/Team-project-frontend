@@ -142,8 +142,8 @@
                     <select name="gender">
                         <option value="" disabled selected>Gender</option>
                         <option value="M" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "M") ? "selected" : "" ?>>Male</option>
-                        <option value="F" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "F") ? "selected" : "" ?>></option>>Female</option>
-                        <option value="O" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "O") ? "selected" : "" ?>></option>>Other</option>
+                        <option value="F" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "F") ? "selected" : "" ?>>Female</option>
+                        <option value="O" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "O") ? "selected" : "" ?>>Other</option>
                     </select>
                 </div>
                 <input type="password" name="password" placeholder="Password" required>

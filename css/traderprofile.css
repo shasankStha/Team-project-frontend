@@ -12,6 +12,7 @@ body {
     gap: 60px;
     /* Gap between sidebar and profile form */
     margin-left: 0;
+    width: 70% !important;
 }
 
 .sidebar {
