@@ -154,38 +154,36 @@
                         rerum fugit impedit omnis eos.</p>
                 </div>
             </div>
-            <div class="button-container" style="text-align: center;">
-            <div class="button-container" style="text-align: center;">
+            
             <button class="popup-button" onclick="toggleReviewPopup(event)">More Review</button>
-    <div class="overlay" onclick="closeReviewPopup()">
-      <div class="review-box" onclick="stopReviewPropagation(event)">
-        <span class="close-button" onclick="closeReviewPopup()">&times;</span>
-        <h1>More Review</h1>
+            <div class="overlay" onclick="closeReviewPopup()"></div>
+            <div class="review-popup-box" id="review-popup" >
+                 <span class="close-button" onclick="closeReviewPopup()">&times;</span>
+        <h1 class="more-review-title">More Review</h1><br>
         <div class="username-container">
           <img src="user_profile.jpg" class="profile-pic" alt="Profile Picture">
-          <h3 class="username">Username1</h3>
+          <h5 class="username">Username1</h5>
         </div>
-        <b><p class="date">Date:00/00/00</p></b>
+        <b><p class="dates">Date:00/00/00</p></b>
         <div class="review-border">
-          <h4>Review</h4>
           <p class="review-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tempor nulla eu odio vehicula eleifend.</p>
         </div><br>
         <div class="username-container">
           <img src="user_profile.jpg" class="profile-pic" alt="Profile Picture">
-          <h3 class="username">Username2</h3>
+          <h5 class="username">Username2</h5>
         </div>
-        <b><p class="date">Date:00/00/00</p></b>
+        <b><p class="dates">Date:00/00/00</p></b>
         <div class="review-border">
-          <h4>Review</h4>
+          
           <p class="review-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tempor nulla eu odio vehicula eleifend.</p>
         </div>
         <br>
-        <h3>Write a Review</h3>
+        <h3>Write a Review</h3><br>
         <div class="username-container">
           <img src="user_profile.jpg" class="profile-pic" alt="Profile Picture">
-          <h3 class="username">Username3</h3>
+          <h5 class="username">Username3</h5>
         </div>
-        <b><p class="date">Date:00/00/00</p></b>
+        <b><p class="dates">Date:00/00/00</p></b>
         <textarea class="review-input" placeholder="Write your review here..."></textarea>
         <button class="submit-button">Submit</button>
       </div>
@@ -308,24 +306,24 @@
 
 //-------------for more review--------------------//
 
-            // Function to toggle the popup
-    function toggleReviewPopup(event) {
-        closeCartPopup();
-      var overlay = document.querySelector('.overlay');
-      overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
-      event.stopPropagation(); // Prevent click event from propagating to overlay
-    }
+function toggleReviewPopup(event) {
+    console.log("Toggling review popup...");
+    var overlay = document.getElementById('review-popup');
+    overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+    event.stopPropagation(); // Prevent click event from propagating to overlay
+}
 
-    // Function to close the popup
-    function closeReviewPopup() {
-      var overlay = document.querySelector('.overlay');
-      overlay.style.display = 'none';
-    }
+function closeReviewPopup() {
+    console.log("Closing review popup...");
+    var overlay = document.getElementById('review-popup');
+    overlay.style.display = 'none';
+}
 
-    // Function to stop event propagation
-    function stopReviewPropagation(event) {
-      event.stopPropagation();
-    }
+function stopReviewPropagation(event) {
+    console.log("Stopping event propagation...");
+    event.stopPropagation();
+}
+
         </script>
         <?php require ('../inc/footer.php'); ?>
 </body>

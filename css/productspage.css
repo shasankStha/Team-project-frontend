@@ -657,8 +657,9 @@ html {
     cursor: pointer;
   }
   /* Styles for the review box */
-  .review-box {
-    position:absolute;
+  .review-popup-box {
+    display: none;
+    position: fixed;    
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -670,6 +671,10 @@ html {
     max-height: 80%;
     overflow-y: auto; 
     text-align: left; 
+    
+  }
+  .more-review-title{
+    text-align: center;
   }
 
   /* Styles for the profile picture */
