@@ -155,8 +155,44 @@
                 </div>
             </div>
             <div class="button-container" style="text-align: center;">
-                <a href="../reviews/reviews.php" class="btn btn-primary mt-4" style="text-align: center;">More
-                    Reviews</a>
+            <div class="button-container" style="text-align: center;">
+            <button class="popup-button" onclick="togglePopup(event)">More Review</button>
+    <div class="overlay" onclick="closePopup()">
+      <div class="review-box" onclick="stopPropagation(event)">
+        <span class="close-button" onclick="closePopup()">&times;</span>
+        <h1>More Reviews</h1>
+        <div class="username-container">
+          <img src="user_profile.jpg" class="profile-pic" alt="Profile Picture">
+          <h3 class="username">Username1</h3>
+        </div>
+        <b><p class="date">Date:00/00/00</p></b>
+        <div class="review-border">
+          <h4>Review</h4>
+          <p class="review-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tempor nulla eu odio vehicula eleifend.</p>
+        </div><br>
+        <div class="username-container">
+          <img src="user_profile.jpg" class="profile-pic" alt="Profile Picture">
+          <h3 class="username">Username2</h3>
+        </div>
+        <b><p class="date">Date:00/00/00</p></b>
+        <div class="review-border">
+          <h4>Review</h4>
+          <p class="review-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tempor nulla eu odio vehicula eleifend.</p>
+        </div>
+        <br>
+        <h3>Write a Review</h3>
+        <div class="username-container">
+          <img src="user_profile.jpg" class="profile-pic" alt="Profile Picture">
+          <h3 class="username">Username3</h3>
+        </div>
+        <b><p class="date">Date:00/00/00</p></b>
+        <textarea class="review-input" placeholder="Write your review here..."></textarea>
+        <button class="submit-button">Submit</button>
+      </div>
+    </div>
+                
+            </div>
+        </div>
             </div>
         </div>
     </div>
@@ -260,6 +296,27 @@
                     quantityInput.value = currentValue + 1;
                 });
             });
+
+
+//-------------for more review--------------------//
+
+            // Function to toggle the popup
+    function togglePopup(event) {
+      var overlay = document.querySelector('.overlay');
+      overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+      event.stopPropagation(); // Prevent click event from propagating to overlay
+    }
+
+    // Function to close the popup
+    function closePopup() {
+      var overlay = document.querySelector('.overlay');
+      overlay.style.display = 'none';
+    }
+
+    // Function to stop event propagation
+    function stopPropagation(event) {
+      event.stopPropagation();
+    }
         </script>
         <?php require('../inc/footer.php'); ?>
 </body>
