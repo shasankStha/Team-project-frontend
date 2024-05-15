@@ -508,7 +508,7 @@
   </div>
 </div>
 
-<script>
+<script>//----------for cart popup-----------//
   // Function to toggle the popup
   function toggleCartPopup(event) {
     var overlay = document.querySelector('.overlay');

@@ -160,7 +160,7 @@
     <div class="overlay" onclick="closeReviewPopup()">
       <div class="review-box" onclick="stopReviewPropagation(event)">
         <span class="close-button" onclick="closeReviewPopup()">&times;</span>
-        <h1>More Reviews</h1>
+        <h1>More Review</h1>
         <div class="username-container">
           <img src="user_profile.jpg" class="profile-pic" alt="Profile Picture">
           <h3 class="username">Username1</h3>
