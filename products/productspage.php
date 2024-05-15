@@ -157,7 +157,7 @@
             
             <button class="popup-button" onclick="toggleReviewPopup(event)">More Review</button>
             <div class="overlay" onclick="closeReviewPopup()"></div>
-            <div class="review-popup-box" id="review-popup" >
+            <div class="review-popup-box" id="review-popup" onclick="stopPropagation(event)">
                  <span class="close-button" onclick="closeReviewPopup()">&times;</span>
         <h1 class="more-review-title">More Review</h1><br>
         <div class="username-container">
@@ -312,6 +312,14 @@ function toggleReviewPopup(event) {
     overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
     event.stopPropagation(); // Prevent click event from propagating to overlay
 }
+// Function to toggle the display of overlay and review popup box
+function togglePopup() {
+  var overlay = document.getElementById('overlay');
+  var popup = document.getElementById('reviewPopup');
+  overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+  popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+}
+
 
 function closeReviewPopup() {
     console.log("Closing review popup...");
@@ -319,10 +327,19 @@ function closeReviewPopup() {
     overlay.style.display = 'none';
 }
 
-function stopReviewPropagation(event) {
+function stopPropagation(event) {
     console.log("Stopping event propagation...");
     event.stopPropagation();
 }
+// Select the submit button
+var submitButton = document.querySelector('.submit-button');
+
+// Add click event listener to the submit button
+submitButton.addEventListener('click', function () {
+    // Show alert popup when the button is clicked
+    alert("Thank you for your review");
+});
+
 
         </script>
         <?php require ('../inc/footer.php'); ?>
