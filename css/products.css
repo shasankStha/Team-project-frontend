@@ -5,6 +5,9 @@
     margin-right: 1rem;
     background-color: #2b2f33;
     color: #fff;
+    width: 25%;
+    max-width: 300px;
+    /* Adjust this value based on your design needs */
 }
 
 .sidebar a {
@@ -79,4 +82,16 @@
     background-color: #218838;
 }
 
+.price-range-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
+.price-range-block label {
+    flex-grow: 1;
+}
+
+.price-range-block input[type="checkbox"] {
+    flex-shrink: 0;
+}

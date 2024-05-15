@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -84,7 +83,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="#">Products</a>
+                            <a class="nav-link text-white" href="products.php">Products</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="#">Settings</a>
