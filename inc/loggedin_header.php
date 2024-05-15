@@ -408,7 +408,7 @@
 
         echo '<div class="icons" style="display:flex; justify-content:space-evenly; padding-right: 50px;">
                     <a href="notifications.php" class="icon"><img src="../images/notifications.png" alt=""></a>
-                    <a href="#" class="icon"><img src="../images/cart1.png" alt="Cart" onclick="togglePopup(event)"></a>
+                    <a href="#" class="icon"><img src="../images/cart1.png" alt="Cart" onclick="toggleCartPopup(event)"></a>
                 </div>'
         ?>
 
@@ -416,12 +416,12 @@
     </div>
   </nav>
   <!--for cart-->
-  <div class="overlay" onclick="closePopup()">
+  <div class="overlay" onclick="closeCartPopup()">
     <div class="review-box" onclick="stopPropagation(event)">
 
       <div class="exit">
         <div>
-          <span class="close-button" onclick="closePopup()">&times;</span>
+          <span class="close-button" onclick="closeCartPopup()">&times;</span>
 
         </div>
       </div>
@@ -449,7 +449,7 @@
 
         <div class="counter">
           <div class="btn1" onclick="decrementItem(this)">-</div> <!-- Add onclick attribute -->
-          <div class="count">3</div>
+          <div class="count">1</div>
           <div class="btn1">+</div>
         </div>
 
@@ -467,6 +467,7 @@
               <div class="title">Product Name</div>
             </b>
             <div class="prices">$2.99</div>
+            
 
           </div>
         </div>
@@ -486,7 +487,7 @@
       <div class="checkout">
         <div class="total">
           <div class="Subtotal">Sub-Total:</div>
-          <div class="total-amount">$6.18</div>
+          <div class="total-amount">$0.00</div>
         </div>
 
         <a href="order_confirmation.php"><button class="button">Checkout</button></a>
@@ -518,14 +519,14 @@
 
 <script>
   // Function to toggle the popup
-  function togglePopup(event) {
+  function toggleCartPopup(event) {
     var overlay = document.querySelector('.overlay');
     overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
     event.stopPropagation(); // Prevent click event from propagating to overlay
   }
 
   // Function to close the popup
-  function closePopup() {
+  function closeCartPopup() {
     var overlay = document.querySelector('.overlay');
     overlay.style.display = 'none';
   }
@@ -559,23 +560,10 @@
 
     // Update the count element with the new count
     countElement.textContent = currentCount;
+
+    // Recalculate the total amount
+    calculateTotal();
   }
-
-  // Attach event listeners to all counter elements
-  const counters = document.querySelectorAll('.counter');
-  counters.forEach(counter => {
-    const decreaseButton = counter.querySelector('.btn:nth-child(1)');
-    const increaseButton = counter.querySelector('.btn:nth-child(3)');
-
-    // Attach event listeners to the decrease and increase buttons
-    decreaseButton.addEventListener('click', function() {
-      updateCount(this, -1);
-    });
-
-    increaseButton.addEventListener('click', function() {
-      updateCount(this, 1);
-    });
-  });
 
   // Function to remove an item from the cart
   function removeItem(event) {
@@ -593,13 +581,10 @@
         itemBox.remove();
       }
     }
-  }
 
-  // Attach event listeners to all trash bin icons
-  const trashIcons = document.querySelectorAll('.gg-trash');
-  trashIcons.forEach(trashIcon => {
-    trashIcon.addEventListener('click', removeItem);
-  });
+    // Recalculate the total amount
+    calculateTotal();
+  }
 
   // Function to clear the cart
   function clearCart() {
@@ -625,11 +610,74 @@
     if (cartIsEmpty) {
       alert("Your cart is empty.");
     }
+
+    // Recalculate the total amount
+    calculateTotal();
   }
 
-  // Attach an event listener to the "Clear cart" element
-  const clearCartElement = document.querySelector('.clear_cart');
-  if (clearCartElement) {
+  // Function to calculate the total amount
+  // Function to calculate the total amount
+function calculateTotal() {
+    let subtotal = 0;
+
+    // Get all cart items
+    const cartItems = document.querySelectorAll('.box');
+    const subtotalElement = document.querySelector('.total-amount');
+
+    cartItems.forEach(item => {
+        const countElement = item.querySelector('.count');
+        const priceElement = item.querySelector('.prices');
+
+        console.log("Count Element:", countElement);
+        console.log("Price Element:", priceElement);
+
+        const count = parseInt(countElement.textContent);
+        const priceText = priceElement.textContent.trim();
+        console.log("Price Text:", priceText);
+        
+        const price = parseFloat(priceText.replace('$', ''));
+
+        console.log("Count:", count);
+        console.log("Price:", price);
+
+        subtotal += count * price;
+    });
+
+    console.log("Subtotal:", subtotal);
+
+    // Update the subtotal element with the calculated total
+    subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+}
+
+// Attach event listeners to all counter elements
+const counters = document.querySelectorAll('.counter');
+counters.forEach(counter => {
+    const decreaseButton = counter.querySelector('.btn1:nth-child(1)');
+    const increaseButton = counter.querySelector('.btn1:nth-child(3)');
+
+    // Attach event listeners to the decrease and increase buttons
+    decreaseButton.addEventListener('click', function() {
+        updateCount(this, -1);
+    });
+
+    increaseButton.addEventListener('click', function() {
+        updateCount(this, 1);
+    });
+});
+
+// Attach event listeners to all trash bin icons
+const trashIcons = document.querySelectorAll('.gg-trash');
+trashIcons.forEach(trashIcon => {
+    trashIcon.addEventListener('click', removeItem);
+});
+
+// Attach an event listener to the "Clear cart" element
+const clearCartElement = document.querySelector('.clear_cart');
+if (clearCartElement) {
     clearCartElement.addEventListener('click', clearCart);
-  }
+}
+
+// Initialize total amount on page load
+calculateTotal();
+
 </script>

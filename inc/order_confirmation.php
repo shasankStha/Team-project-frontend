@@ -1,3 +1,7 @@
+<?php require('../inc/links.php');
+
+    include('../connection.php');
+    ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

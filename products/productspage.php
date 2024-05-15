@@ -156,10 +156,10 @@
             </div>
             <div class="button-container" style="text-align: center;">
             <div class="button-container" style="text-align: center;">
-            <button class="popup-button" onclick="togglePopup(event)">More Review</button>
-    <div class="overlay" onclick="closePopup()">
-      <div class="review-box" onclick="stopPropagation(event)">
-        <span class="close-button" onclick="closePopup()">&times;</span>
+            <button class="popup-button" onclick="toggleReviewPopup(event)">More Review</button>
+    <div class="overlay" onclick="closeReviewPopup()">
+      <div class="review-box" onclick="stopReviewPropagation(event)">
+        <span class="close-button" onclick="closeReviewPopup()">&times;</span>
         <h1>More Reviews</h1>
         <div class="username-container">
           <img src="user_profile.jpg" class="profile-pic" alt="Profile Picture">
@@ -301,20 +301,21 @@
 //-------------for more review--------------------//
 
             // Function to toggle the popup
-    function togglePopup(event) {
+    function toggleReviewPopup(event) {
+        closeCartPopup();
       var overlay = document.querySelector('.overlay');
       overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
       event.stopPropagation(); // Prevent click event from propagating to overlay
     }
 
     // Function to close the popup
-    function closePopup() {
+    function closeReviewPopup() {
       var overlay = document.querySelector('.overlay');
       overlay.style.display = 'none';
     }
 
     // Function to stop event propagation
-    function stopPropagation(event) {
+    function stopReviewPropagation(event) {
       event.stopPropagation();
     }
         </script>
