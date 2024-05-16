@@ -43,9 +43,13 @@
             header("Location: ../index.php");
             exit;
         } elseif ($role == "T") {
-            header("Location: ../index.php");
+            $_SESSION["trader"] = $username;
+            $_SESSION["loggedinUser"] = TRUE;
+            header("Location: ../traderdashboard");
             exit;
         } elseif ($role == "A") {
+            $_SESSION["admin"] = $username;
+            $_SESSION["loggedinUser"] = TRUE;
             header("Location: ../dashboardheader.php");
             exit;
         }
