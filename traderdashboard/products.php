@@ -7,35 +7,41 @@
     <?php
     include ("traderdashboardheader.php");
     ?>
-
+    <?php require ('inc/links.php') ?>
 </head>
 
 <body>
-    <form method="POST" enctype="multipart/form-data" name="productForm">
-        <fieldset>
-            <legend>Add Product</legend>
-            <label>Product Name:</label>
-            <input type="text" name="pName">
-            <br>
-            <label>Price:</label>
-            <input type="text" name="pPrice">
-            <br>
-            <label>Category:</label>
-            <select name="pCategory">
-                <option>--Select category--</option>
-                <option value="Fish Monger">Fish Monger</option>
-                <option value="Butchery">Butchery</option>
-                <option value="Bakery">Bakery</option>
-            </select>
-            <br>
-            <label>Image file:</label>
-            <input type="text" name="imgName" placeholder="Image Name">
-            <input type="file" name="pImage">
-            <br>
-            <input type="submit" value="Add" name="submitProduct">
-        </fieldset>
-    </form>
+    <div class="container-fluid" id="main-content">
+        <div class="row">
+            <div class="col-lg-10 ms-auto p-4 overflow-hidden">
+                <form method="POST" enctype="multipart/form-data" name="productForm">
+                    <fieldset>
+                        <legend>Add Product</legend>
+                        <label>Product Name:</label>
+                        <input type="text" name="pName">
+                        <br>
+                        <label>Price:</label>
+                        <input type="text" name="pPrice">
+                        <br>
+                        <label>Category:</label>
+                        <select name="pCategory">
+                            <option>--Select category--</option>
+                            <option value="Fish Monger">Fish Monger</option>
+                            <option value="Butchery">Butchery</option>
+                            <option value="Bakery">Bakery</option>
+                        </select>
+                        <br>
+                        <label>Image file:</label>
+                        <input type="text" name="imgName" placeholder="Image Name">
+                        <input type="file" name="pImage">
+                        <br>
+                        <input type="submit" value="Add" name="submitProduct">
+                    </fieldset>
+                </form>
+            </div>
+        </div>
 
+    </div>
     <?php
     if (isset($_POST['submitProduct'])) {
         $pName = $_POST['pName'];
@@ -68,7 +74,7 @@
                 echo "<img src=productsImages/$imgName width=200px height=200px>";
             }
 
-            
+
         }
     }
     ?>

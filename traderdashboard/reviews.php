@@ -4,19 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Revies</title>
+    <title>Trader Panel - Reviews</title>
     <?php require ('inc/links.php') ?>
 
 </head>
 
 <body>
-    <?php require ('admindashboardheader.php') ?>
+    <?php require ('traderdashboardheader.php') ?>
     <div class="container-fluid" id="main-content">
         <div class="row">
             <div class="col-lg-10 ms-auto p-4 overflow-hidden">
                 <h3 class="mb-4">Reviews</h3>
 
-                <!--general settings-->
+
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Card title</h5>

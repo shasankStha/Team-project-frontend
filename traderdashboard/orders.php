@@ -10,12 +10,12 @@
 </head>
 <body class="bg-light">
 
-  <?php require('admindashboardheader.php'); ?>
+  <?php require('traderdashboardheader.php'); ?>
 
   <div class="container-fluid" id="main-content">
     <div class="row">
       <div class="col-lg-10 ms-auto p-4 overflow-hidden">
-        <h3 class="mb-4">USERS</h3>
+        <h3 class="mb-4">ORDER HISTORY</h3>
 
         <div class="card border-0 shadow-sm mb-4">
           <div class="card-body">
@@ -27,14 +27,11 @@
                   <tr class="bg-dark text-light">
                     <th scope="col">S.N</th>
                     <th scope="col">Name</th>
-                    <th scope="col">Username</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Phone no.</th>
-                    <th scope="col">DOB</th>
+
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
-                <tbody id="users-data">
+                <tbody id="">
                 </tbody>
               </table>
             </div>
