@@ -10,9 +10,17 @@
 </head>
 
 <body>
-
     <?php
     session_start();
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\Exception;
+
+    require 'phpmailer/src/Exception.php';
+    require 'phpmailer/src/PHPMailer.php';
+    require 'phpmailer/src/SMTP.php';
+    ?>
+
+    <?php
     include('../connection.php');
     include('../inc/header1.php');
     ?>
@@ -48,59 +56,113 @@
 </body>
 
 <?php
-if (!isset($_SESSION['traderSignupData'])) {
-    // Redirect to tradersignup.php if data is not present
-    echo "<script>alert('test')</script>";
-    echo "<script>window.location.href = '../trader/tradersignup.php';</script>";
-}
-
-if (isset($_POST['signUpBtn'])) {
-    $firstname = $_SESSION['traderSignupData']['firstname'];
-    $lastname = $_SESSION['traderSignupData']['lastname'];
-    $address = $_SESSION['traderSignupData']['address'];
-    $contact = $_SESSION['traderSignupData']['contact'];
-    $email = $_SESSION['traderSignupData']['email'];
-    $username = $_SESSION['traderSignupData']['username'];
-    $confirmpassword = $_SESSION['traderSignupData']['password'];
-    $shopname = $_POST['shop_name'];
-    $contactnumber = $_POST['contact_number'];
-    $location = $_POST['location'];
-    $description = $_POST['description'];
-
-    //Insert in User table
-    $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
-        VALUES (null, '$username', '$confirmpassword', '$email', '$firstname', '$lastname', '$contact', 'T', SYSDATE, null)";
-    $stid = oci_parse($connection, $sql);
-    oci_execute($stid);
-
-    //Getting user_id
-    $sql = "select user_id from \"USER\" where username = '$username'";
-    $stid = oci_parse($connection, $sql);
-    oci_execute($stid);
-    $user_id = null;
-    if ($row = oci_fetch_assoc($stid)) {
-        $user_id = $row['USER_ID'];
-    } else {
-        echo "User not found";
+    if (!isset($_SESSION['traderSignupData'])) {
+        // Redirect to tradersignup.php if data is not present
+        echo "<script>alert('Traders details not captured.')</script>";
+        echo "<script>window.location.href = '../trader/tradersignup.php';</script>";
+        exit();
     }
 
-    //Adding data in trader table
-    $sql = "INSERT INTO TRADER VALUES ('$user_id', '$address', 0)";
-    $stid = oci_parse($connection, $sql);
-    oci_execute($stid);
+    $otp = rand(100000, 999999);
 
-    //Adding data in shop table
-    $sql = "INSERT INTO SHOP VALUES (null, '$shopname','$description','$location',null,'$contactnumber', '$user_id')";
-    $stid = oci_parse($connection, $sql);
-    oci_execute($stid);
+    if (isset($_POST['signUpBtn'])) {
+        $email = $_SESSION['traderSignupData']['email'];
+        $shopname = $_POST['shop_name'];
+        $contactnumber = $_POST['contact_number'];
+        $location = $_POST['location'];
+        $description = $_POST['description'];
+        $_SESSION['shop_data'] = $_POST;
 
-    //Destroying the session global variable
-    unset($_SESSION['trader_signup_data']);
-    //Closing oracle connection
-    oci_close($connection);
+        $mail = new PHPMailer(true);
 
-    echo "<script>window.location.href = '../login/login.php';</script>";
-}
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'biliyasmjh@gmail.com';
+        $mail->Password = 'jcgc haqe czjx qimw';
+        $mail->SMTPSecure = 'ssl';
+        $mail->Port = 465;
+
+        $mail->setFrom('biliyasmjh@gmail.com');
+
+        $mail->addAddress($email);
+
+        $mail->isHTML(true);
+
+        $mail->Subject = "OTP verification code.";
+
+        $message = "This is your OTP verification code $otp";
+        $mail->Body = $message;
+
+        if ($mail->send()) {
+            $_SESSION['otp'] = $otp;
+            echo "OTP sent to your email. Please enter the OTP to verify.";
+            echo "<form method='POST'>
+                <input type='text' name='otp' placeholder='Enter OTP' required>
+                <button type='submit' name='verifyOtp'>Submit</button>
+            </form>";
+        } 
+        else {
+            $error_message = "Email cannot be sent";
+        }
+    }
+
+    if (isset($_POST['verifyOtp'])) {
+        $enteredOtp = $_POST['otp'];
+        echo "<script>alert(Entered otp: $enteredOtp $otp)</script>";
+        if ($enteredOtp == $_SESSION['otp']) {
+            $firstname = $_SESSION['traderSignupData']['firstname'];
+            $lastname = $_SESSION['traderSignupData']['lastname'];
+            $address = $_SESSION['traderSignupData']['address'];
+            $contact = $_SESSION['traderSignupData']['contact'];
+            $email = $_SESSION['traderSignupData']['email'];
+            $username = $_SESSION['traderSignupData']['username'];
+            $confirmpassword = $_SESSION['traderSignupData']['password'];
+            
+            $shop_data = $_SESSION['shop_data'];
+            $shopname = $shop_data['shop_name'];
+            $contactnumber = $shop_data['contact_number'];
+            $location = $shop_data['location'];
+            $description = $shop_data['description'];
+
+
+            //Insert in User table
+            $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
+            VALUES (null, '$username', '$confirmpassword', '$email', '$firstname', '$lastname', '$contact', 'T', SYSDATE, null)";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+
+            //Getting user_id
+            $sql = "select user_id from \"USER\" where username = '$username'";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+            $user_id = null;
+            if ($row = oci_fetch_assoc($stid)) {
+                $user_id = $row['USER_ID'];
+            } else {
+                echo "User not found";
+            }
+
+            //Adding data in trader table
+            $sql = "INSERT INTO TRADER VALUES ('$user_id', '$address', 0)";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+
+            //Adding data in shop table
+            $sql = "INSERT INTO SHOP VALUES (null, '$shopname','$description','$location',null,'$contactnumber', '$user_id')";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+
+            //Destroying the session global variable
+            unset($_SESSION['traderSignupData']);
+            //Closing oracle connection
+            oci_close($connection);
+
+            echo "<script>window.location.href = '../login/login.php';</script>";
+        } 
+        else {
+            echo "OTP did not match.";
+        }
+    }
 ?>
-
 </html>

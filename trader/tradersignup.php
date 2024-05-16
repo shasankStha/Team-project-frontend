@@ -34,7 +34,7 @@
         if ($password != $confirmPassword) {
             $error_message = 'Password and Confirm Password do not match !!!.';
         } else if (strlen($confirmPassword) < 8 || strlen($confirmPassword) > 32) {
-            $error_message = "Password should be 8 to 32 character long.<br>";
+            $errormessage = "Password should be 8 to 32 character long.<br>";
         } else if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/', $_POST['password'])) {
             $error_message = "Password should contain an uppercase,<br>Number<br>and a special character<br>";
         } else {
@@ -67,7 +67,8 @@
                     }
                     if ($count != 0) {
                         $error_message3 = 'Contact Number Already Exists !!!.';
-                    } else {
+                    } 
+                    else {
                         $_SESSION['traderSignupData'] = array(
                             'firstname' => $firstName,
                             'lastname' => $lastName,
@@ -77,6 +78,7 @@
                             'username' => $username,
                             'password' => $confirmPassword
                         );
+                        echo "<script>alert('everything is runned.')</script>";
                         echo "<script>window.location.href = '../shops/shopdetails.php';</script>";
                     }
                 }
