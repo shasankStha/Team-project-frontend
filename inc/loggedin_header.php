@@ -368,6 +368,52 @@
   .exit {
     text-align: right;
   }
+
+
+
+  /*-----------------for notification dropdown-------------------*/
+  /* Dropdown menu for notifications */
+.notifications-dropdown {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    min-height:200px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    overflow:hidden;
+    overflow-x: auto; /* Add horizontal scrollbar if content exceeds width */
+    right:0;
+}
+
+.notifications-dropdown a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+/* Show the dropdown menu on hover */
+.notifications-icon:hover .notifications-dropdown {
+    display: block;
+}
+
+.badge {
+            background-color: red;
+            color: white;
+            width: 20px;
+            height: 20px;
+            padding: 4px 8px;
+            border-radius: 100%;
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            margin-top:2em;
+            margin-right:10em;
+            margin-top:2.2em;
+        }
+
 </style>
 <div>
   <nav class="navbar" style="display: flex; justify-content:space-between sticky-top;">
@@ -397,8 +443,22 @@
                     </div>
                 </div>';
 
-        echo '<div class="icons" style="display:flex; justify-content:space-evenly; padding-right: 50px;">
-                    <a href="notifications.php" class="icon"><img src="../images/notifications.png" alt=""></a>
+                echo '<div class="icons" style="display:flex; justify-content:space-evenly; padding-right: 50px;">
+                <div class="notifications-icon">
+                    <a href="#" class="icon"><img src="../images/notifications.png" alt=""></a>
+                    <span class="badge">!</span>
+                    <div class="dropdown-menu notifications-dropdown">
+                        <a href="#">Notification 1 </a>
+                        <a href="#">Notification 2 </a>
+                        <a href="#">Notification 3</a>
+                    </div>
+                </div>
+              
+                    
+
+
+
+
                     <a href="#" class="icon"><img src="../images/cart1.png" alt="Cart" onclick="toggleCartPopup(event)"></a>
                 </div>'
         ?>
@@ -674,5 +734,6 @@ if (clearCartElement) {
 
 // Initialize total amount on page load
 calculateTotal();
+
 
 </script>
