@@ -129,7 +129,7 @@ require 'phpmailer/src/SMTP.php';
                         $mail->send();
 
                         if ($mail) {
-                            
+
                             // Display the popup
                             echo "<div id='popup' class='popup'>
                                     <div class='popup-content'>
@@ -260,14 +260,14 @@ require 'phpmailer/src/SMTP.php';
     </div>
 
 
-<script>
-    //-----------popup for OTP verification---------------//
-    // JavaScript to display the popup
-    document.addEventListener('DOMContentLoaded', function() {
-        // Show the popup
-        document.getElementById('popup').style.display = 'block';
-    });
-</script>
+    <script>
+        //-----------popup for OTP verification---------------//
+        // JavaScript to display the popup
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show the popup
+            document.getElementById('popup').style.display = 'block';
+        });
+    </script>
 </body>
 
 </html>

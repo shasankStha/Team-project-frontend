@@ -67,8 +67,7 @@
                     }
                     if ($count != 0) {
                         $error_message3 = 'Contact Number Already Exists !!!.';
-                    } 
-                    else {
+                    } else {
                         $_SESSION['traderSignupData'] = array(
                             'firstname' => $firstName,
                             'lastname' => $lastName,
@@ -78,7 +77,6 @@
                             'username' => $username,
                             'password' => $confirmPassword
                         );
-                        echo "<script>alert('everything is runned.')</script>";
                         echo "<script>window.location.href = '../shops/shopdetails.php';</script>";
                     }
                 }
