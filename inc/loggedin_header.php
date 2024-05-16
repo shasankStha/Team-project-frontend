@@ -446,7 +446,7 @@
                 echo '<div class="icons" style="display:flex; justify-content:space-evenly; padding-right: 50px;">
                 <div class="notifications-icon">
                     <a href="#" class="icon"><img src="../images/notifications.png" alt=""></a>
-                    <span class="badge">3</span>
+                    <span class="badge">!</span>
                     <div class="dropdown-menu notifications-dropdown">
                         <a href="#">Notification 1 </a>
                         <a href="#">Notification 2 </a>
