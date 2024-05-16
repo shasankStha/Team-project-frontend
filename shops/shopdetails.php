@@ -96,12 +96,16 @@
 
         if ($mail->send()) {
             $_SESSION['otp'] = $otp;
-            echo "OTP sent to your email. Please enter the OTP to verify.";
-            echo "<form method='POST'>
-                <input type='text' name='otp' placeholder='Enter OTP' required>
-                <button type='submit' name='verifyOtp'>Submit</button>
-            </form>";
-        } 
+            echo "<div id='popup' class='popup'>
+            <div class='popup-content'>
+                <form method='POST'><p>Please enter the OTP to verify.</p>
+
+                    <input type='text' name='otp' placeholder='Enter OTP' required>
+                    <button type='submit' name='verifyOtp'>Submit</button>
+                </form>
+            </div>
+          </div>";
+}
         else {
             $error_message = "Email cannot be sent";
         }
@@ -165,4 +169,12 @@
         }
     }
 ?>
+<script>
+    //-----------popup for OTP verification---------------//
+    // JavaScript to display the popup
+    document.addEventListener('DOMContentLoaded', function() {
+        // Show the popup
+        document.getElementById('popup').style.display = 'block';
+    });
+</script>
 </html>
