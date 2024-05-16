@@ -32,8 +32,9 @@
       border: 3px solid black;
       align-items: center;
       width:700px;
-      height:335px;
+      height:355px;
       margin: 50px auto;
+      margin-top:10em;
 
 
     }
@@ -41,7 +42,7 @@
       align-items: center;
       background-color: white;
       width: 500px;
-      height: 210px;
+      height: 150px;
       border: 1px solid black;
       padding: 30px 50px;
       margin: 20px auto;
@@ -49,7 +50,7 @@
       
     }
     .button {
-      margin-top: 20px;
+      margin-top:4em;
     }
     .button a {
       display: inline-block;
@@ -74,7 +75,7 @@
     .order_info hr {
       margin-left: -40px; /* Adjust the negative margin to center the line */
       border: 1px solid rgb(149, 147, 147); 
-      width: 37.5em;
+      width: 32em;
     }
  
       
@@ -95,11 +96,13 @@
       <hr>
       <p>Total Amount: [total amount]</p>
     </div>
-    </div>
     <div class="button">
       <a href="customer_dashboard.html">Continue Shopping</a>
     </div>
     </div>
+    
+    </div>
+    
   
 </body>
 </html>
