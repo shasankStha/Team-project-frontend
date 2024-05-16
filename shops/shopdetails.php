@@ -84,7 +84,7 @@ if (isset($_POST['signUpBtn'])) {
     $mail->SMTPSecure = 'ssl';
     $mail->Port = 465;
 
-    $mail->setFrom('biliyasmjh@gmail.com');
+    $mail->setFrom('cleckshophub@gmail.com');
 
     $mail->addAddress($email);
 
