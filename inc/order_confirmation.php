@@ -97,7 +97,7 @@
       <p>Total Amount: [total amount]</p>
     </div>
     <div class="button">
-      <a href="customer_dashboard.html">Continue Shopping</a>
+      <a href="../homepage/homepage.php">Continue Shopping</a>
     </div>
     </div>
     
