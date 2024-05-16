@@ -168,26 +168,25 @@ if (isset($_POST['verifyOtp'])) {
         $user_id = null;
         if ($row = oci_fetch_assoc($stid)) {
             $user_id = $row['USER_ID'];
+            //Adding data in trader table
+            $sql = "INSERT INTO TRADER VALUES ('$user_id', '$address', 0)";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+
+            //Adding data in shop table
+            $sql = "INSERT INTO SHOP VALUES (null, '$shopname','$description','$location',null,'$contactnumber', '$user_id')";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+
+            //Destroying the session global variable
+            unset($_SESSION['traderSignupData']);
+            //Closing oracle connection
+            oci_close($connection);
+
+            echo "<script>window.location.href = '../login/login.php';</script>";
         } else {
             echo "User not found";
         }
-
-        //Adding data in trader table
-        $sql = "INSERT INTO TRADER VALUES ('$user_id', '$address', 0)";
-        $stid = oci_parse($connection, $sql);
-        oci_execute($stid);
-
-        //Adding data in shop table
-        $sql = "INSERT INTO SHOP VALUES (null, '$shopname','$description','$location',null,'$contactnumber', '$user_id')";
-        $stid = oci_parse($connection, $sql);
-        oci_execute($stid);
-
-        //Destroying the session global variable
-        unset($_SESSION['traderSignupData']);
-        //Closing oracle connection
-        oci_close($connection);
-
-        echo "<script>window.location.href = '../login/login.php';</script>";
     } else {
         echo "OTP did not match.";
     }
