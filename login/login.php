@@ -43,10 +43,10 @@
             header("Location: ../index.php");
             exit;
         } elseif ($role == "T") {
-            header("Location: ../traderdashboard");
+            header("Location: ../index.php");
             exit;
         } elseif ($role == "A") {
-            header("Location: ../admin");
+            header("Location: ../dashboardheader.php");
             exit;
         }
 
