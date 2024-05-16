@@ -406,6 +406,7 @@
       </div>
     </div>
   </nav>
+  
   <!--for cart-->
   <div class="overlay" onclick="closeCartPopup()">
     <div class="review-box" onclick="stopPropagation(event)">
@@ -469,6 +470,7 @@
           <div class="count">2</div>
           <div class="btn1">+</div>
         </div>
+
         <i class="gg-trash"></i>
       </div>
 
@@ -551,6 +553,8 @@
 
     // Update the count element with the new count
     countElement.textContent = currentCount;
+
+    
 
     // Recalculate the total amount
     calculateTotal();
