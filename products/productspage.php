@@ -156,7 +156,7 @@
             </div>
             
             <button class="popup-button" onclick="toggleReviewPopup(event)">More Review</button>
-            <div class="overlay" onclick="closeReviewPopup()"></div>
+            <div class="overlay" id="overlay" onclick="closeReviewPopup()" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; height: 100%; width: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.5);"></div>
             <div class="review-popup-box" id="review-popup" onclick="stopPropagation(event)">
                  <span class="close-button" onclick="closeReviewPopup()">&times;</span>
         <h1 class="more-review-title">More Review</h1><br>
@@ -319,6 +319,8 @@ function togglePopup() {
   overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
   popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
 }
+
+
 
 
 function closeReviewPopup() {
