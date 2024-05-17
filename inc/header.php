@@ -1,196 +1,216 @@
-<?php require('../inc/links.php');
-?>
+<!DOCTYPE html>
+<html lang="en">
 
-<style>
-    * {
-        font-family: 'Poppins', sans-serif;
-    }
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .h-font {
-        font-family: 'Merienda', cursive;
-    }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            padding: 10px 20px;
+        }
 
-    body {
-        margin: 0;
-        padding: 0;
-    }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
 
-    .navbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background-color: white;
-        padding: 10px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 1000;
-    }
+        .logo img {
+            width: 200px;
+        }
 
-    .navbar-brand {
-        display: flex;
-        align-items: center;
-    }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            margin-right: 50px;
+        }
 
-    .login a::after {
-        content: "";
-        width: 0%;
-        height: 2px;
-        display: block;
-        background-color: orange;
-        margin: auto;
-        transition: 0.3s;
-    }
+        .search-bar input {
+            padding: 8px;
+            margin-right: 5px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            flex-grow: 1;
+        }
 
-    .login a:hover::after {
-        width: 100%;
-    }
+        .search-button {
+            padding: 6px 10px;
+            background: transparent;
+            border: none;
+            color: black;
+            cursor: pointer;
+        }
 
-    .sub-navbar {
-        display: flex;
-        justify-content: space-around;
-        background-color: #2b2f33;
-        /* Dark background for sub-navbar */
-        color: white;
-        /* Change text color to white */
-        padding: 10px 0;
-        margin-bottom: 20px;
-    }
+        .search-button i {
+            font-size: 16px;
+        }
 
-    .sub-navbar a {
-        color: white;
-        /* Change link color to white */
-        text-decoration: none;
-        transition: all 0.3s ease;
-        display: inline-block;
-        margin: 0 5px;
-        padding: 8px 16px;
-    }
+        .menu {
+            display: flex;
+            align-items: center;
+        }
 
-    .sub-navbar a:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
-        background-color: #f0f0f0;
-        color: black;
-        /* Text color on hover */
-        border-radius: 30px;
-    }
+        .menu a {
+            color: black;
+            padding: 10px;
+            text-decoration: none;
+            font-size: 16px;
+            margin-left: 10px;
+            transition: color 0.3s;
+        }
 
-    .icon-container a:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
-        background-color: #f0f0f0;
-        color: black;
-        /* Text color on hover */
-        border-radius: 30px;
-    }
+        .menu a:hover {
+            color: white;
+            background-color: black;
+            border-radius: 20px;
+        }
 
-    .search-container {
-        display: flex;
-        justify-content: center;
-        flex-grow: 1;
-        margin-right: -100px;
-        margin-left: 15px;
-    }
+        .toggle-button {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
 
-    .search-bar {
-        width: 50%;
-        padding: 8px;
-        border: 1px solid black;
-        border-radius: 20px;
-    }
+        .toggle-button .bar {
+            height: 3px;
+            width: 25px;
+            background-color: black;
+            margin: 3px 0;
+        }
 
-    .icon-container {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        /* Revert icon colors to black */
-        color: black;
-        /* Ensure anchor tag inherits black color for icons */
-    }
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 10px;
+            }
 
-    /* Specify the styles for the icons so they appear black */
-    .icon-container img {
-        filter: none;
-        height: 24px;
-        width: 24px;
-    }
+            .logo img {
+                width: 100px;
+            }
 
-    .icon-container .icon {
-        padding-right: 20px;
-    }
+            .search-bar {
+                display: none;
+                margin-right: 20px;
+            }
 
-    .icon-container .cart-icon {
-        margin-left: 20px;
-    }
+            .menu {
+                width: 100%;
+                display: none;
+                flex-direction: column;
+                align-items: center;
+            }
 
-    .dropdown-menu {
-        display: flex;
-        flex-direction: row;
-        position: absolute;
-        background-color: #f9f9f9;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-        z-index: 1;
-    }
+            .menu.active,
+            .search-bar.active {
+                display: flex;
+            }
 
-    .dropdown-menu a {
-        color: black;
-        /* Text color for dropdown links */
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-    }
+            .toggle-button {
+                display: flex;
+                position: absolute;
+                right: 10px;
+                top: 10px;
+            }
+        }
 
-    .user-icon:hover .dropdown-menu {
-        display: block;
-    }
+        .sub-navbar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #2b2f33;
+            color: white;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
 
-    .user-icon .dropdown-menu {
-        background-color: #2b2f33;
-        /* Match the sub-navbar background */
-    }
+        .sub-navbar a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 0 5px;
+            padding: 8px 16px;
+        }
 
-    .user-icon:hover .dropdown-menu a {
-        color: white;
-        /* White text for dropdown items on hover */
-    }
-</style>
-<div>
-    <nav class="navbar" style="display: flex; justify-content:space-between sticky-top;">
-        <!-- Logo -->
-        <div>
-            <a class="navbar-brand" href="../index.php">
-                <img src="../Images/logo/just_logo.png" style="height: 50px;">
-            </a>
+        .sub-navbar a:hover {
+            background-color: #f0f0f0;
+            color: black;
+            border-radius: 30px;
+        }
+
+        .user-icon {
+            position: relative;
+            display: inline-block;
+        }
+
+        #dropdown-menu {
+            display: none;
+            /* Make sure it's not visible until hovered */
+            flex-direction: column;
+            position: absolute;
+            background-color: #2b2f33;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            /* z-index: 1; */
+        }
+
+        .user-icon:hover #dropdown-menu {
+            display: flex;
+            position: fixed;
+            /* Display dropdown on hover */
+        }
+
+        #dropdown-menu a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        #dropdown-menu a:hover {
+            background-color: #f0f0f0;
+            color: black;
+            border-radius: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="../Images/Logo/just_logo.png" alt="CleckShopHub">
         </div>
-
-
-        <div class="search_and_icons" style="display: flex; align-items:center;">
-            <!-- SearchBox -->
-            <div class="search-container" style="width: 900px; padding-left: 300px;">
-                <input class="search-bar" type="text" placeholder="Search..." style="border-radius: 20px;">
+        <div class="toggle-button">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <div class="menu">
+            <div class="search-bar">
+                <input type="text" placeholder="Search...">
+                <button class="search-button"><i class="fa fa-search"></i></button>
             </div>
-
-            <!-- Icons -->
-            <div class="icon-container">
-                <?php
-                // Display login/register links if user is not logged in
-                echo '<a href="../login/login.php" style="text-decoration: none; color: black;">Login</a>';
-                echo '<a href="../customer/customersignup.php" style="text-decoration: none; color: black;">Register</a>';
-                ?>
-
-
-            </div>
+            <a href="#login">Login</a>
+            <a href="#register">Register</a>
         </div>
     </nav>
-
     <div class="sub-navbar">
         <a href="../index.php">Home</a>
         <div class="user-icon">
             <a href="#">Shop</a>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu" id="dropdown-menu">
                 <a href="../shops/shoppage.php">Fishmonger</a>
                 <a href="../shops/shoppage.php">Butcher</a>
                 <a href="../shops/shoppage.php">Greengrocer</a>
@@ -198,8 +218,15 @@
                 <a href="../shops/shoppage.php">Delicatessen</a>
             </div>
         </div>
-
         <a href="../contactus/contactus.php">Contact us</a>
         <a href="../aboutus/aboutus.php">About us</a>
     </div>
-</div>
+    <script>
+        document.querySelector('.toggle-button').addEventListener('click', function() {
+            document.querySelector('.menu').classList.toggle('active');
+            document.querySelector('.search-bar').classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>
