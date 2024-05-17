@@ -39,6 +39,7 @@
 
         if ($role == "C") {
             $_SESSION["user"] = $username;
+            $_SESSION['userID'] = $user_id;
             $_SESSION["loggedinUser"] = TRUE;
             header("Location: ../index.php");
             exit;
