@@ -191,12 +191,12 @@
 
       <form id="loginForm" method="POST">
         <div id="PasswordInputBx" class="inputBx form-group">
-          <label for="Newpassword">Password</label>
+          <label for="Newpassword">New Password</label>
           <input type="password" id="password" name="password" class="form-control" required>
         </div>
 
         <div id="PasswordInputBx" class="inputBx form-group">
-          <label for="Confirmpassword">Confirm Password</label>
+          <label for="Confirmpassword">Confirm New Password</label>
           <input type="password" id="password" name="confirmpassword" class="form-control" required>
         </div>
     </div>

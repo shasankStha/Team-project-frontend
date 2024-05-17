@@ -9,6 +9,8 @@
     <?php
     session_start();
     include("traderdashboardheader.php");
+
+    include("../connection.php");
     ?>
     <?php require('inc/links.php') ?>
 </head>
@@ -71,7 +73,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn text-secondary shadow-none" data-bs-dismiss="modal">CANCEL</button>
-                                    <button type="button" name="add" class="btn btn-primary">SUBMIT</button>
+                                    <button type="button" name="submit" class="btn btn-primary">SUBMIT</button>
                                 </div>
                             </div>
                         </form>
@@ -84,8 +86,7 @@
     </div>
 
     <?php
-    include("../connection.php");
-    if (isset($_POST["add"])) {
+    if (isset($_POST['submit'])) {
         echo "<script>alert(123)</script>";
         $username = $_SESSION["trader"];
         $sql = "select shop_id from shop s inner join \"USER\" u on u.user_id = s.user_id where u.username = '$username'";
@@ -199,7 +200,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn text-secondary shadow-none" data-bs-dismiss="modal">CANCEL</button>
-                                    <button type="button" class="btn btn-primary">SUBMIT</button>
+                                    <button type="SUBMIT" class="btn btn-primary">SUBMIT</button>
                                 </div>
                             </div>
                         </form>
