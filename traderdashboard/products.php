@@ -8,11 +8,43 @@
 
     <?php
     session_start();
-    include("traderdashboardheader.php");
-
     include("../connection.php");
+    include("traderdashboardheader.php");
+    $traderUser = $_SESSION["traderUser"];
+    $sql = "SELECT t.status FROM \"USER\" u inner join trader t on t.user_id = u.user_id where u.username = '$traderUser' or u.email='$traderUser'";
+    $stid = oci_parse($connection, $sql);
+    oci_execute($stid);
+    $status = null;
+    if ($row = oci_fetch_assoc($stid)) {
+        $status = $row['STATUS'];
+        // echo "<script>alert('" . addslashes($status) . "');</script>";
+    }
+    if ($status != 1) {
+        echo "<script>alert('You have not yet been approved by admin.')</script>";
+        echo "<script>window.location.href = 'dashboard.php';</script>";
+        exit;
+    }
     ?>
-    <?php require('inc/links.php') ?>
+    <?php
+    // require('inc/links.php') 
+    // Fetch categories from the database
+    $categories = [];
+    $sql = "SELECT category_name FROM PRODUCT_CATEGORY"; // Adjust this query according to your table structure
+    $stid = oci_parse($connection, $sql);
+    oci_execute($stid);
+
+    while ($row = oci_fetch_assoc($stid)) {
+        $categories[] = $row['CATEGORY_NAME'];
+    }
+    oci_free_statement($stid);
+    oci_close($connection);
+
+    ?>
+
+
+
+
+
 </head>
 
 <body>
@@ -48,32 +80,56 @@
 
                                         <div class="mb-3">
                                             <label class="form-label">Product Name:</label>
-                                            <input type="text" class="form-control shadown-none" name="pName">
+                                            <input type="text" class="form-control shadown-none" name="pName" required>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Price:</label>
-                                            <input type="text" class="form-control shadown-none" name="pPrice">
+                                            <input type="text" class="form-control shadown-none" name="pPrice" required>
                                         </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Stock Available</label>
+                                            <input type="number" class="form-control shadown-none" name="pStock" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Min Order</label>
+                                            <input type="number" class="form-control shadown-none" name="pMinOrder" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Max order</label>
+                                            <input type="number" class="form-control shadown-none" name="pMaxOrder" required>
+                                        </div>
+
                                         <div class="mb-3">
                                             <label class="form-label">Category:</label>
                                             <select name="pCategory">
                                                 <option>--Select category--</option>
-                                                <option value="Fish Monger">Fish Monger</option>
-                                                <option value="Butchery">Butchery</option>
-                                                <option value="Bakery">Bakery</option>
+                                                <?php foreach ($categories as $category) : ?>
+                                                    <option value="<?php echo htmlspecialchars($category); ?>"><?php echo htmlspecialchars($category); ?></option>
+                                                <?php endforeach; ?>
                                             </select>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Image file:</label>
-                                            <input type="text" class="form-control shadown-none" name="imgName" placeholder="Image Name">
+                                            <input type="text" class="form-control shadown-none" name="imgName" placeholder="Image Name" required>
                                             <input type="file" class="form-control shadown-none" name="pImage">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Description</label>
+                                            <input type="text" class="form-control shadown-none" name="pDescription" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Allergy Information</label>
+                                            <input type="text" class="form-control shadown-none" name="pAllergyInfo" required>
                                         </div>
 
                                     </fieldset>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn text-secondary shadow-none" data-bs-dismiss="modal">CANCEL</button>
-                                    <button type="button" name="submit" class="btn btn-primary">SUBMIT</button>
+                                    <button type="submit" name="add" class="btn btn-primary">SUBMIT</button>
                                 </div>
                             </div>
                         </form>
@@ -86,20 +142,29 @@
     </div>
 
     <?php
-    if (isset($_POST['submit'])) {
-        echo "<script>alert(123)</script>";
-        $username = $_SESSION["trader"];
-        $sql = "select shop_id from shop s inner join \"USER\" u on u.user_id = s.user_id where u.username = '$username'";
+    include("../connection.php");
+    // echo "<script>alert('" . addslashes($traderUser) . "');</script>";
+
+
+    if (isset($_POST["add"])) {
+        $sql = "select shop_id from shop s inner join \"USER\" u on u.user_id = s.user_id where u.username = '$traderUser' or u.email='$traderUser' ";
         $stid = oci_parse($connection, $sql);
         oci_execute($stid);
+        // echo "<script>alert($username)</script>";
         if ($row = oci_fetch_assoc($stid)) {
             $shop_id = $row['SHOP_ID'];
-            echo "<script>alert($shop_id)</script>";
+            // echo "<script>alert('" . addslashes($shop_id) . "');</script>";
         }
         $productName = $_POST['pName'];
-        $productPrice = $_POST['pPrice'];
+        $productPrice = (int)$_POST['pPrice'];
+        $productStock = (int)$_POST['pStock'];
+        $productMinOrder = (int)$_POST['pMinOrder'];
+        $productMaxOrder = (int)$_POST['pMaxOrder'];
         $productCat = $_POST['pCategory'];
+
         $productImgName = $_POST['imgName'];
+        $productDescription = $_POST['pDescription'];
+        $productAllergyInfo = $_POST['pAllergyInfo'];
 
         //capturing the file information
         $imgName = $_FILES["pImage"]["name"];
@@ -107,10 +172,9 @@
         $imgType = $_FILES["pImage"]["type"];
         $tmp = $_FILES["pImage"]["tmp_name"];
 
+        // echo "<script>alert('" . addslashes($productCat) . "');</script>";
 
-
-
-        if (empty($productName) || empty($productPrice) || empty($productCat || empty($productImgName))) {
+        if (empty($productName) || empty($productPrice) || empty($productStock || empty($productMinOrder) || empty($productMaxOrder) || empty($productCat) || empty($productImgName) || empty($productDescription) || empty($productAllergyInfo))) {
             echo "Please fill all the fields.<br>";
         } else if (empty($imgName)) {
             echo "Please upload item image<br>";
@@ -125,7 +189,23 @@
                 echo "<img src=productsImages/$imgName width=200px height=200px>";
             }
         }
+        // echo "<script>alert('" . addslashes($productCat) . "');</script>";
+
+        $sql = "select CATEGORY_ID from PRODUCT_CATEGORY where CATEGORY_NAME = '$productCat'";
+        $stid = oci_parse($connection, $sql);
+        oci_execute($stid);
+        $productCatid = null;
+        if ($row = oci_fetch_assoc($stid)) {
+
+            $productCatid = $row['CATEGORY_ID'];
+        }
+        $sql = "insert into product values(null,'$productName','$imgName','$productDescription','$productPrice','$productStock', '$productMinOrder', '$productMaxOrder', '$productAllergyInfo', '1', '$shop_id', '$productCatid', null)";
+        $stid = oci_parse($connection, $sql);
+        oci_execute($stid);
     }
+
+
+
 
     ?>
 
@@ -200,7 +280,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn text-secondary shadow-none" data-bs-dismiss="modal">CANCEL</button>
-                                    <button type="SUBMIT" class="btn btn-primary">SUBMIT</button>
+                                    <button type="button" class="btn btn-primary">SUBMIT</button>
                                 </div>
                             </div>
                         </form>

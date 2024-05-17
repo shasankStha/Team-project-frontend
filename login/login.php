@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/login.css">
-    <title>Customer Login - CleckShopHub</title>
+    <title>Login - CleckShopHub</title>
 </head>
 
 <body style="display: flex; flex-direction: column;">
@@ -43,8 +43,8 @@
             header("Location: ../index.php");
             exit;
         } elseif ($role == "T") {
-            $_SESSION["trader"] = $username;
-            $_SESSION["loggedinUser"] = TRUE;
+            $_SESSION["traderUser"] = $username;
+            $_SESSION["loggedinTrader"] = TRUE;
             header("Location: ../traderdashboard");
             exit;
         } elseif ($role == "A") {

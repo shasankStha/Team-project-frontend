@@ -202,8 +202,8 @@
                 <input type="text" placeholder="Search...">
                 <button class="search-button"><i class="fa fa-search"></i></button>
             </div>
-            <a href="#login">Login</a>
-            <a href="#register">Register</a>
+            <a href="../login/login.php">Login</a>
+            <a href="../customer/customersignup.php">Register</a>
         </div>
     </nav>
     <div class="sub-navbar">
