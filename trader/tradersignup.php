@@ -4,21 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <title>Trader Signup - CleckShopHub</title>
     <link rel="stylesheet" href="../css/signup.css">
-    <title>Trader Signin - CleckShopHub</title>
-
 </head>
 
 <body>
     <?php
     session_start();
     include("../connection.php");
-    include '../inc/header1.php'; ?>
-    <?php
+    include('../inc/header1.php');
+
     $error_message = '';
     $error_message1 = '';
     $error_message2 = '';
-    $error_message2 = '';
+    $error_message3 = '';
 
     if (isset($_POST['signUp'])) {
         $firstName = $_POST['first_name'];
@@ -30,38 +30,34 @@
         $password = $_POST['password'];
         $confirmPassword = $_POST['confirm_password'];
 
-        // Check if passwords match
         if ($password != $confirmPassword) {
             $error_message = 'Password and Confirm Password do not match !!!.';
         } else if (strlen($confirmPassword) < 8 || strlen($confirmPassword) > 32) {
-            $errormessage = "Password should be 8 to 32 character long.<br>";
+            $error_message = "Password should be 8 to 32 characters long.<br>";
         } else if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/', $_POST['password'])) {
             $error_message = "Password should contain an uppercase,<br>Number<br>and a special character<br>";
         } else {
-            $sql = "select count(*) from \"USER\" where username = '$username'";
+            $sql = "SELECT count(*) FROM \"USER\" WHERE username = '$username'";
             $stid = oci_parse($connection, $sql);
             oci_execute($stid);
-            $count = null;
             if ($row = oci_fetch_assoc($stid)) {
                 $count = $row['COUNT(*)'];
             }
             if ($count != 0) {
-                $error_message1 = 'Username Alredy Exists !!!.';
+                $error_message1 = 'Username Already Exists !!!.';
             } else {
-                $sql = "select count(*) from \"USER\" where email = '$email'";
+                $sql = "SELECT count(*) FROM \"USER\" WHERE email = '$email'";
                 $stid = oci_parse($connection, $sql);
                 oci_execute($stid);
-                $count = null;
                 if ($row = oci_fetch_assoc($stid)) {
                     $count = $row['COUNT(*)'];
                 }
                 if ($count != 0) {
                     $error_message2 = 'Email Already Exists !!!.';
                 } else {
-                    $sql = "select count(*) from \"USER\" where contact_number = '$contact'";
+                    $sql = "SELECT count(*) FROM \"USER\" WHERE contact_number = '$contact'";
                     $stid = oci_parse($connection, $sql);
                     oci_execute($stid);
-                    $count = null;
                     if ($row = oci_fetch_assoc($stid)) {
                         $count = $row['COUNT(*)'];
                     }
@@ -85,65 +81,42 @@
     }
     ?>
 
-
-
-    <div class="container">
+    <div class="container mt-3">
         <div class="form-container">
             <h2>Welcome to CleckShopHub,<br> Sell with Us</h2>
             <p>Want to buy local products? <a href="../customer/customersignup.php">Click here</a></p>
             <br>
-            <form method="post">
-                <div class="inline-fields">
-                    <input type="text" name="first_name" placeholder="First Name" required value=<?php
-                                                                                                    if (isset($_POST['first_name'])) {
-                                                                                                        echo  $_POST['first_name'];
-                                                                                                    }
-                                                                                                    ?>>
-                    <input type="text" name="last_name" placeholder="Last Name" required value=<?php
-                                                                                                if (isset($_POST['last_name'])) {
-                                                                                                    echo  $_POST['last_name'];
-                                                                                                }
-                                                                                                ?>>
+            <form method="post" class="needs-validation" novalidate>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="first_name" placeholder="First Name" required value="<?php echo isset($_POST['first_name']) ? $_POST['first_name'] : ''; ?>" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="last_name" placeholder="Last Name" required value="<?php echo isset($_POST['last_name']) ? $_POST['last_name'] : ''; ?>" required>
+                    </div>
                 </div>
-                <input type="text" name="address" placeholder="Address" required value=<?php
-                                                                                        if (isset($_POST['address'])) {
-                                                                                            echo  $_POST['address'];
-                                                                                        }
-                                                                                        ?>>
-                <input type="text" name="contact_number" placeholder="Contact Number" required value=<?php
-                                                                                                        if (isset($_POST['contact_number'])) {
-                                                                                                            echo  $_POST['contact_number'];
-                                                                                                        }
-                                                                                                        ?>>
-                <div class="error" style="color: red;"><?php if (!empty($error_message3)) echo "<p class='error'>$error_message3</p>"; ?>
-                </div>
-                <input type="email" name="email" placeholder="Email" required value=<?php
-                                                                                    if (isset($_POST['email'])) {
-                                                                                        echo  $_POST['email'];
-                                                                                    }
-                                                                                    ?>>
+                <input type="text" class="form-control mb-3" name="address" placeholder="Address" required value="<?php echo isset($_POST['address']) ? $_POST['address'] : ''; ?>" required>
+                <input type="text" class="form-control mb-3" name="contact_number" placeholder="Contact Number" required value="<?php echo isset($_POST['contact_number']) ? $_POST['contact_number'] : ''; ?>" required>
+                <div class="error" style="color: red;"><?php if (!empty($error_message3)) echo "<p class='error'>$error_message3</p>"; ?></div>
+                <input type="email" class="form-control mb-3" name="email" placeholder="Email" required value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>" required>
                 <div class="error" style="color: red;"><?php if (!empty($error_message2)) echo "<p class='error'>$error_message2</p>"; ?></div>
-                <input type="text" name="username" placeholder="Username" required value=<?php
-                                                                                            if (isset($_POST['username'])) {
-                                                                                                echo  $_POST['username'];
-                                                                                            }
-                                                                                            ?>>
+                <input type="text" class="form-control mb-3" name="username" placeholder="Username" required value="<?php echo isset($_POST['username']) ? $_POST['username'] : ''; ?>" required>
                 <div class="error" style="color: red;"><?php if (!empty($error_message1)) echo "<p class='error'>$error_message1</p>"; ?></div>
-                <input type="password" name="password" placeholder="Password" required>
-                <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                <input type="password" class="form-control mb-3" name="password" placeholder="Password" required>
+                <input type="password" class="form-control mb-3" name="confirm_password" placeholder="Confirm Password" required>
                 <div class="error" style="color: red;"><?php if (!empty($error_message)) echo "<p class='error'>$error_message</p>"; ?></div>
-                <button type="submit" name='signUp'>Next</button>
+                <button type="submit" class="btn btn-primary" name="signUp">Next</button>
                 <br>
-                <div class="center-text">
+                <div class="text-center mt-3">
                     <p>Already have an account? <a href="../login/login.php">Login</a></p>
                 </div>
             </form>
         </div>
-        <div class="image-container">
+        <div class="image-container" style="background: url('../images/fish.jpg') center/cover no-repeat;">
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 
 </html>

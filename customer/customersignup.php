@@ -1,60 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Customer Signup - CleckShopHub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/signup.css">
+    <title>Customer Signup - CleckShopHub</title>
 </head>
 
+
 <?php
+session_start();
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
 
 require 'phpmailer/src/Exception.php';
 require 'phpmailer/src/PHPMailer.php';
 require 'phpmailer/src/SMTP.php';
 ?>
-<style>
-    /* Styles for the popup */
-    .popup {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 9999;
-    }
-
-    .popup-content {
-        background-color: #fff;
-        width: 300px;
-        padding: 20px;
-        border-radius: 5px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-</style>
 
 
 <body>
+
 
     <?php
     include("../connection.php");
     include '../inc/header1.php';
 
+
     $error_message = '';
     $error_message1 = '';
     $error_message2 = '';
     $error_message3 = '';
-    session_start();
+
 
     if (isset($_POST['signUp'])) {
         $firstName = $_POST['first_name'];
@@ -71,12 +53,13 @@ require 'phpmailer/src/SMTP.php';
         $_SESSION['otp'] = $otp;
         $_SESSION['user_data'] = $_POST;
 
+
         if ($password != $confirmPassword) {
             $error_message = 'Password and Confirm Password do not match !!!.';
         } else if (strlen($confirmPassword) < 8 || strlen($confirmPassword) > 32) {
-            $error_message = "Password should be 8 to 32 character long.<br>";
+            $error_message = "Password should be 8 to 32 characters long.<br>";
         } else if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/', $_POST['password'])) {
-            $error_message = "Password should contain an uppercase,<br>Number<br>and a special character<br>";
+            $error_message = "Password should contain an uppercase letter,<br>a number,<br>and a special character<br>";
         } else {
             $sql = "SELECT count(*) FROM \"USER\" WHERE username = '$username'";
             $stid = oci_parse($connection, $sql);
@@ -107,6 +90,7 @@ require 'phpmailer/src/SMTP.php';
                     } else {
                         $mail = new PHPMailer(true);
 
+
                         $mail->isSMTP();
                         $mail->Host = 'smtp.gmail.com';
                         $mail->SMTPAuth = true;
@@ -115,31 +99,24 @@ require 'phpmailer/src/SMTP.php';
                         $mail->SMTPSecure = 'ssl';
                         $mail->Port = 465;
 
+
                         $mail->setFrom('cleckshophub@gmail.com');
-
                         $mail->addAddress($email);
-
                         $mail->isHTML(true);
-
                         $mail->Subject = "OTP verification code.";
-
                         $message = "This is your OTP verification code $otp";
                         $mail->Body = $message;
 
+
                         $mail->send();
 
-                        if ($mail) {
 
-                            // Display the popup
-                            echo "<div id='popup' class='popup'>
-                                    <div class='popup-content'>
-                                        <form method='POST'><p>Please enter the OTP to verify.</p>
-            
-                                            <input type='text' name='otp' placeholder='Enter OTP' required>
-                                            <button type='submit' name='verifyOtp'>Submit</button>
-                                        </form>
-                                    </div>
-                                  </div>";
+                        if ($mail) {
+                            echo "OTP sent to your email. Please enter the OTP to verify.";
+                            echo "<form method='POST'>
+                            <input type='text' name='otp' placeholder='Enter OTP' required>
+                            <button type='submit' name='verifyOtp'>Submit</button>
+                        </form>";
                         } else {
                             $error_message =  "Email cannot be sent";
                         }
@@ -149,10 +126,12 @@ require 'phpmailer/src/SMTP.php';
         }
     }
 
+
     if (isset($_POST['verifyOtp'])) {
         $enteredOtp = $_POST['otp'];
         $otp = $_SESSION['otp'];
         $user_data = $_SESSION['user_data'];
+
 
         if ($enteredOtp == $otp) {
             $username = $user_data['username'];
@@ -165,10 +144,12 @@ require 'phpmailer/src/SMTP.php';
             $dob = date('d/m/Y', strtotime($user_data['date_of_birth']));
             $gender = $user_data['gender'];
 
+
             $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
-                    VALUES (null, '$username', '$password', '$email', '$firstName', '$lastName', '$contact', 'C', SYSDATE, null)";
+                VALUES (null, '$username', '$password', '$email', '$firstName', '$lastName', '$contact', 'C', SYSDATE, null)";
             $stid = oci_parse($connection, $sql);
             oci_execute($stid);
+
 
             $sql = "SELECT user_id FROM \"USER\" WHERE username = '$username'";
             $stid = oci_parse($connection, $sql);
@@ -177,10 +158,15 @@ require 'phpmailer/src/SMTP.php';
                 $user_id = $row['USER_ID'];
             }
 
+
             $sql = "INSERT INTO customer VALUES('$user_id','$address',to_date('$dob','dd/mm/yyyy'),'$gender',null,1)";
             $stid = oci_parse($connection, $sql);
             oci_execute($stid);
             oci_close($connection);
+
+
+            session_destroy();
+
 
             echo "<script>window.location.href = '../login/login.php';</script>";
         } else {
@@ -188,86 +174,58 @@ require 'phpmailer/src/SMTP.php';
         }
     }
     ?>
-    <div class="container">
+
+
+    <div class="container mt-3">
         <div class="form-container">
-            <h2>Welcome to CleckShopHub,<br> Buy with Us</h2>
+            <h2>Welcome to CleckShopHub, Buy with Us</h2>
             <p>Want to become a seller? <a href="../trader/tradersignup.php">Click here</a></p>
-            <form method="post">
-                <div class="inline-fields">
-                    <input type="text" name="first_name" placeholder="First Name" required value=<?php
-                                                                                                    if (isset($_POST['first_name'])) {
-                                                                                                        echo  $_POST['first_name'];
-                                                                                                    }
-                                                                                                    ?>>
-                    <input type="text" name="last_name" placeholder="Last Name" required value=<?php
-                                                                                                if (isset($_POST['last_name'])) {
-                                                                                                    echo  $_POST['last_name'];
-                                                                                                }
-                                                                                                ?>>
+            <form method="post" class="needs-validation" novalidate>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="first_name" placeholder="First Name" required value="<?php echo isset($_POST['first_name']) ? $_POST['first_name'] : ''; ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="last_name" placeholder="Last Name" required value="<?php echo isset($_POST['last_name']) ? $_POST['last_name'] : ''; ?>">
+                    </div>
                 </div>
-                <input type="text" name="address" placeholder="Address" required value=<?php
-                                                                                        if (isset($_POST['address'])) {
-                                                                                            echo  $_POST['address'];
-                                                                                        }
-                                                                                        ?>>
-                <input type="text" name="contact_number" placeholder="Contact Number" required value=<?php
-                                                                                                        if (isset($_POST['contact_number'])) {
-                                                                                                            echo  $_POST['contact_number'];
-                                                                                                        }
-                                                                                                        ?>>
+                <input type="text" class="form-control mb-3" name="address" placeholder="Address" required value="<?php echo isset($_POST['address']) ? $_POST['address'] : ''; ?>">
+                <input type="text" class="form-control mb-3" name="contact_number" placeholder="Contact Number" required value="<?php echo isset($_POST['contact_number']) ? $_POST['contact_number'] : ''; ?>">
                 <div class="error" style="color: red;"><?php if (!empty($error_message3)) echo "<p class='error'>$error_message3</p>"; ?></div>
-                <input type="email" name="email" placeholder="Email" required value=<?php
-                                                                                    if (isset($_POST['email'])) {
-                                                                                        echo  $_POST['email'];
-                                                                                    }
-                                                                                    ?>>
+                <input type="email" class="form-control mb-3" name="email" placeholder="Email" required value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>">
                 <div class="error" style="color: red;"><?php if (!empty($error_message2)) echo "<p class='error'>$error_message2</p>"; ?></div>
-                <input type="text" name="username" placeholder="Username" required value=<?php
-                                                                                            if (isset($_POST['username'])) {
-                                                                                                echo  $_POST['username'];
-                                                                                            }
-                                                                                            ?>>
+                <input type="text" class="form-control mb-3" name="username" placeholder="Username" required value="<?php echo isset($_POST['username']) ? $_POST['username'] : ''; ?>">
                 <div class="error" style="color: red; text-align: left;"><?php if (!empty($error_message1)) echo "<p class='error'>$error_message1</p>"; ?></div>
-                <div class="inline-fields">
-                    <input type="date" name="date_of_birth" placeholder="Date of Birth" required value=<?php
-                                                                                                        if (isset($_POST['date_of_birth'])) {
-                                                                                                            echo  $_POST['date_of_birth'];
-                                                                                                        }
-                                                                                                        ?>>
-                    <select name="gender">
-                        <option value="" disabled selected>Gender</option>
-                        <option value="M" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "M") ? "selected" : "" ?>>Male</option>
-                        <option value="F" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "F") ? "selected" : "" ?>>Female</option>
-                        <option value="O" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "O") ? "selected" : "" ?>>Other</option>
-                    </select>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <input type="date" class="form-control" name="date_of_birth" required value="<?php echo isset($_POST['date_of_birth']) ? $_POST['date_of_birth'] : ''; ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <select name="gender" class="form-select">
+                            <option value="" disabled selected>Gender</option>
+                            <option value="M" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "M") ? "selected" : ""; ?>>Male</option>
+                            <option value="F" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "F") ? "selected" : ""; ?>>Female</option>
+                            <option value="O" <?php echo (isset($_POST['gender']) && $_POST['gender'] == "O") ? "selected" : ""; ?>>Other</option>
+                        </select>
+                    </div>
                 </div>
-                <input type="password" name="password" placeholder="Password" required>
-                <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                <input type="password" class="form-control mb-3" name="password" placeholder="Password" required>
+                <input type="password" class="form-control mb-3" name="confirm_password" placeholder="Confirm Password" required>
                 <div class="error" style="color: red;"><?php if (!empty($error_message)) echo "<p class='error'>$error_message</p>"; ?></div>
-                <label for="terms" class="terms-label">
-                    <input type="checkbox" name="terms" id="terms" required>
-                    I accept the <a href="../terms/terms.php">Terms and Conditions</a>.
-                </label>
-                <button type="submit" name="signUp">SIGN UP</button>
-                <div class="center-text">
-                    <br>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+                    <label class="form-check-label" for="terms">I accept the <a href="../terms/terms.php">Terms and Conditions</a>.</label>
+                </div>
+                <button type="submit" class="btn btn-primary" name="signUp">SIGN UP</button>
+                <div class="text-center mt-3">
                     <p>Already have an account? <a href="../login/login.php">Login</a></p>
                 </div>
             </form>
         </div>
-        <div class="image-container">
-        </div>
+        <div class="image-container" style="background: url('../images/fish.jpg') center/cover no-repeat;"></div>
     </div>
 
 
-    <script>
-        //-----------popup for OTP verification---------------//
-        // JavaScript to display the popup
-        document.addEventListener('DOMContentLoaded', function() {
-            // Show the popup
-            document.getElementById('popup').style.display = 'block';
-        });
-    </script>
 </body>
 
 </html>

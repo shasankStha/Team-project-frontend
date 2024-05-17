@@ -1,37 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/shopdetails.css">
     <title>Shopdetails - CleckShopHub</title>
 
-</head>
-<style>
-    /* Styles for the popup */
-    .popup {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 9999;
-    }
 
-    .popup-content {
-        background-color: #fff;
-        width: 300px;
-        padding: 20px;
-        border-radius: 5px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-</style>
+</head>
 
 
 <body>
@@ -51,16 +29,19 @@
     include('../inc/header1.php');
     ?>
 
+
     <div class="container">
         <div class="form-container">
             <h2>Welcome to CleckShopHub,<br> Enter your shop details</h2>
             <br>
             <form method="post">
 
+
                 <input type="text" name="shop_name" placeholder="Shop Name" required>
                 <input type="text" name="contact_number" placeholder="Contact Number" required>
                 <input type="text" name="location" placeholder="Location" required>
                 <textarea name="description" placeholder="Description" rows="7" required></textarea>
+
 
                 <br>
                 <label for="terms" class="terms-label">
@@ -79,7 +60,9 @@
         </div>
     </div>
 
+
 </body>
+
 
 <?php
 if (!isset($_SESSION['traderSignupData'])) {
@@ -89,7 +72,9 @@ if (!isset($_SESSION['traderSignupData'])) {
     exit();
 }
 
+
 $otp = rand(100000, 999999);
+
 
 if (isset($_POST['signUpBtn'])) {
     $email = $_SESSION['traderSignupData']['email'];
@@ -99,7 +84,9 @@ if (isset($_POST['signUpBtn'])) {
     $description = $_POST['description'];
     $_SESSION['shop_data'] = $_POST;
 
+
     $mail = new PHPMailer(true);
+
 
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';
@@ -109,32 +96,35 @@ if (isset($_POST['signUpBtn'])) {
     $mail->SMTPSecure = 'ssl';
     $mail->Port = 465;
 
+
     $mail->setFrom('cleckshophub@gmail.com');
+
 
     $mail->addAddress($email);
 
+
     $mail->isHTML(true);
 
+
     $mail->Subject = "OTP verification code.";
+
 
     $message = "This is your OTP verification code $otp";
     $mail->Body = $message;
 
+
     if ($mail->send()) {
         $_SESSION['otp'] = $otp;
-        echo "<div id='popup' class='popup'>
-            <div class='popup-content'>
-                <form method='POST'><p>Please enter the OTP to verify.</p>
-
-                    <input type='text' name='otp' placeholder='Enter OTP' required>
-                    <button type='submit' name='verifyOtp'>Submit</button>
-                </form>
-            </div>
-          </div>";
+        echo "OTP sent to your email. Please enter the OTP to verify.";
+        echo "<form method='POST'>
+                <input type='text' name='otp' placeholder='Enter OTP' required>
+                <button type='submit' name='verifyOtp'>Submit</button>
+            </form>";
     } else {
         $error_message = "Email cannot be sent";
     }
 }
+
 
 if (isset($_POST['verifyOtp'])) {
     $enteredOtp = $_POST['otp'];
@@ -155,11 +145,14 @@ if (isset($_POST['verifyOtp'])) {
         $description = $shop_data['description'];
 
 
+
+
         //Insert in User table
         $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
             VALUES (null, '$username', '$confirmpassword', '$email', '$firstname', '$lastname', '$contact', 'T', SYSDATE, null)";
         $stid = oci_parse($connection, $sql);
         oci_execute($stid);
+
 
         //Getting user_id
         $sql = "select user_id from \"USER\" where username = '$username'";
@@ -168,37 +161,34 @@ if (isset($_POST['verifyOtp'])) {
         $user_id = null;
         if ($row = oci_fetch_assoc($stid)) {
             $user_id = $row['USER_ID'];
-            //Adding data in trader table
-            $sql = "INSERT INTO TRADER VALUES ('$user_id', '$address', 0)";
-            $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-
-            //Adding data in shop table
-            $sql = "INSERT INTO SHOP VALUES (null, '$shopname','$description','$location',null,'$contactnumber', '$user_id')";
-            $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-
-            //Destroying the session global variable
-            unset($_SESSION['traderSignupData']);
-            //Closing oracle connection
-            oci_close($connection);
-
-            echo "<script>window.location.href = '../login/login.php';</script>";
         } else {
             echo "User not found";
         }
+
+
+        //Adding data in trader table
+        $sql = "INSERT INTO TRADER VALUES ('$user_id', '$address', 0)";
+        $stid = oci_parse($connection, $sql);
+        oci_execute($stid);
+
+
+        //Adding data in shop table
+        $sql = "INSERT INTO SHOP VALUES (null, '$shopname','$description','$location',null,'$contactnumber', '$user_id')";
+        $stid = oci_parse($connection, $sql);
+        oci_execute($stid);
+
+
+        //Destroying the session global variable
+        unset($_SESSION['traderSignupData']);
+        //Closing oracle connection
+        oci_close($connection);
+
+
+        echo "<script>window.location.href = '../login/login.php';</script>";
     } else {
         echo "OTP did not match.";
     }
 }
 ?>
-<script>
-    //-----------popup for OTP verification---------------//
-    // JavaScript to display the popup
-    document.addEventListener('DOMContentLoaded', function() {
-        // Show the popup
-        document.getElementById('popup').style.display = 'block';
-    });
-</script>
 
 </html>

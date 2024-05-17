@@ -2,28 +2,29 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
+  align-items: flex-start; /* keeps the content at the top of the viewport */
+  min-height: 100vh; /* ensures the body is at least full viewport height */
   background-color: #f4f4f4;
-  padding-top: 15vh;
 }
 
 .container {
   display: flex;
+  flex-wrap: wrap; /* allows the form and image to stack on smaller screens */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   background-color: white;
   max-width: 1000px;
   width: 100%;
-  margin-top: 100px;
+  margin-top: 100px; /* adjusted to start just below the navbar */
   margin-bottom: 20px;
-
   overflow: hidden;
+  position: fixed;
 }
 
 .form-container {
   padding: 20px;
-  width: 50%;
+  flex: 1 1 400px; /* allows for flexibility in layout, with a minimum width */
 }
 
 .form-container h2 {
@@ -68,14 +69,13 @@ input[type="checkbox"] {
   margin-right: 10px;
 }
 
-/* This is to make sure the last element doesn't have a margin-right */
+/* This ensures the last element doesn't have a margin-right */
 .inline-fields > div:last-child,
 .inline-fields > input:last-child,
 .inline-fields > select:last-child {
   margin-right: 0;
 }
 
-/* Centered text */
 .center-text {
   text-align: center;
 }
@@ -94,16 +94,14 @@ button:hover {
 }
 
 .image-container {
-  background: url("../images/fish.jpg") center/cover no-repeat;
-  width: 50%;
+  flex: 1 1 400px; /* similar flexibility to form container */
+  background: url("../Images/fish.jpg") center/cover no-repeat;
 }
 
 .terms-label {
   display: flex;
   align-items: center;
-  /* This will vertically align the checkbox and text */
   margin-bottom: 10px;
-  /* Add some margin if needed */
 }
 
 textarea {
@@ -111,8 +109,13 @@ textarea {
   margin-bottom: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  width: calc(100% - 20px);
-  /* Subtract padding from total width to maintain consistency */
-  resize: vertical;
-  /* Allow vertical resizing only */
+  width: calc(100% - 20px); /* adjust width to account for padding */
+  resize: vertical; /* allow vertical resizing only */
+}
+
+@media (max-width: 768px) {
+  .form-container,
+  .image-container {
+    flex-basis: 100%; /* each takes full width on smaller screens */
+  }
 }
