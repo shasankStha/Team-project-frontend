@@ -50,7 +50,7 @@
         } elseif ($role == "A") {
             $_SESSION["admin"] = $username;
             $_SESSION["loggedinUser"] = TRUE;
-            header("Location: ../dashboardheader.php");
+            header("Location: ../admin");
             exit;
         }
 

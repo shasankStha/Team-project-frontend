@@ -1,3 +1,6 @@
+<?php require('inc/links.php') ?>
+<?php require('../connection.php') ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,56 +8,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Dashboard</title>
-    <?php require ('inc/links.php') ?>
-
 </head>
 
 <body>
-    <?php require ('admindashboardheader.php') ?>
+    <?php require('admindashboardheader.php') ?>
+
     <div class="container-fluid" id="main-content">
         <div class="row">
             <div class="col-lg-10 ms-auto p-4 overflow-hidden">
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h3>DASHBOARD</h3>
-
-                </div>
-
-                <!--general settings-->
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h5>User, Queries, Reviews Analytics</h5>
-                    <!-- <select class="form-select shadow-none bg-light w-auto" onchange="user_analytics(this.value)">
-                        <option value="1">Past 30 Days</option>
-                        <option value="2">Past 90 Days</option>
-                        <option value="3">Past 1 Year</option>
-                        <option value="4">All time</option>
-                    </select> -->
-                </div>
+                <h3>DASHBOARD</h3>
+                <h5>Users, Queries, Reports Analytics</h5>
 
                 <div class="row mb-3">
-                    <div class="col-md-3 mb-4">
-                        <div class="card text-center text-success p-3">
-                            <h6>New Registration</h6>
-                            <h1 class="mt-2 mb-0" id="total_new_reg">0</h1>
-                        </div>
-                    </div>
+                    <!-- Total Users -->
                     <div class="col-md-3 mb-4">
                         <div class="card text-center text-primary p-3">
-                            <h6>Queries</h6>
-                            <h1 class="mt-2 mb-0" id="total_queries">0</h1>
+                            <h6>Total Users</h6>
+                            <?php
+                            $query = "SELECT COUNT(*) AS total_users FROM \"USER\"";
+                            $stmp = oci_parse($connection, $query);
+                            oci_execute($stmp);
+                            $row = oci_fetch_array($stmp, OCI_ASSOC);
+                            ?>
+                            <h1 class="mt-2 mb-0"><?= $row['TOTAL_USERS'] ?></h1>
                         </div>
                     </div>
+                    <!-- Queries -->
                     <div class="col-md-3 mb-4">
                         <div class="card text-center text-primary p-3">
-                            <h6>Reviews</h6>
-                            <h1 class="mt-2 mb-0" id="total_reviews">0</h1>
+                            <h6 style="color: green;">Queries</h6>
+                            <?php
+                            $query = "SELECT COUNT(*) AS total_queries FROM CONTACT_US";
+                            $stmt = oci_parse($connection, $query);
+                            oci_execute($stmt);
+                            $row = oci_fetch_array($stmt, OCI_ASSOC);
+                            ?>
+                            <h1 class="mt-2 mb-0" style="color: green;"><?= $row['TOTAL_QUERIES'] ?></h1>
                         </div>
+                    </div>
+                    <!-- Pending Requests-->
+                    <div class="col-md-3 mb-4">
+                        <div class="card text-center text-primary p-3">
+                            <h6 style="color: red;">Pending traders</h6>
+                            <?php
+                            $query = "SELECT COUNT(*) AS total_queries FROM TRADER WHERE status=0";
+                            $stmt = oci_parse($connection, $query);
+                            oci_execute($stmt);
+                            $row = oci_fetch_array($stmt, OCI_ASSOC);
+                            ?>
+                            <h1 class="mt-2 mb-0" style="color: red;"><?= $row['TOTAL_QUERIES'] ?></h1>
+                        </div>
+                    </div>
+
+                    <!-- Total Traders-->
+                    <div class="col-md-3 mb-4">
+                        <div class="card text-center p-3">
+                            <h6 style="color: purple;">Approved Traders</h6>
+                            <?php
+                            $query = "SELECT COUNT(*) AS total_queries FROM TRADER WHERE status=1";
+                            $stmt = oci_parse($connection, $query);
+                            oci_execute($stmt);
+                            $row = oci_fetch_array($stmt, OCI_ASSOC);
+                            ?>
+                            <h1 class="mt-2 mb-0" style="color: purple;"><?= $row['TOTAL_QUERIES'] ?></h1>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-4">
+                        <div class="card text-center p-3">
+                            <h6 style="color: navy;">Total Customers</h6>
+                            <?php
+                            $query = "SELECT COUNT(*) AS total_queries FROM CUSTOMER";
+                            $stmt = oci_parse($connection, $query);
+                            oci_execute($stmt);
+                            $row = oci_fetch_array($stmt, OCI_ASSOC);
+                            ?>
+                            <h1 class="mt-2 mb-0" style="color: navy;"><?= $row['TOTAL_QUERIES'] ?></h1>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="card" style="width: 28rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"></h5>
+                        <h4 class="card-subtitle mb-2 text-muted">Reports</h4>
+                        <p class="card-text">View Trader Reports</p>
+                        <div class="btn btn-dark">
+                            <a href="http://localhost:8080/apex/f?p=103:LOGIN_DESKTOP" style="text-decoration: none; color: inherit;" target="blank">CLICK HERE</a>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </body>
-
 
 </html>

@@ -37,11 +37,11 @@
                             <a class="nav-link text-white" href="userqueries.php">User Queries</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="reviews.php">Reviews</a>
+                            <a class="nav-link text-white" href="approval.php">Trader Requests</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="settings.php">Settings</a>
-                        </li>
+                       
+                       
+                        
                     </ul>
                 </div>
             </div>

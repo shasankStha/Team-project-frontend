@@ -10,6 +10,39 @@
 
 
 </head>
+<style>
+    /*-----------------for OTP popup----------------*/
+    /* Styles for the popup */
+    .popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+    .popup-content {
+        background-color: #fff;
+        width: 300px;
+        padding: 20px;
+        border-radius: 5px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+<script>
+    //-----------popup for OTP verification---------------//
+    // JavaScript to display the popup
+    document.addEventListener('DOMContentLoaded', function() {
+        // Show the popup
+        document.getElementById('popup').style.display = 'block';
+    });
+</script>
 
 
 <body>
@@ -115,11 +148,18 @@ if (isset($_POST['signUpBtn'])) {
 
     if ($mail->send()) {
         $_SESSION['otp'] = $otp;
-        echo "OTP sent to your email. Please enter the OTP to verify.";
-        echo "<form method='POST'>
-                <input type='text' name='otp' placeholder='Enter OTP' required>
-                <button type='submit' name='verifyOtp'>Submit</button>
-            </form>";
+        echo "<div id='popup' class='popup' style='display: block;'>
+                <div class='popup-content'>
+                    <form method='POST'>
+                        <p>Please enter the OTP to verify.</p>
+                        <input type='text' name='otp' placeholder='Enter OTP' required>
+                        <button type='submit' name='verifyOtp'>Submit</button>
+                    </form>
+                </div>
+              </div>";
+        echo "<script>
+                document.getElementById('popup').style.display = 'block';
+              </script>";
     } else {
         $error_message = "Email cannot be sent";
     }
