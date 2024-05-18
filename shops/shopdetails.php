@@ -71,7 +71,7 @@
 
 
                 <input type="text" name="shop_name" placeholder="Shop Name" required value="<?php echo isset($_POST['shop_name']) ? $_POST['shop_name'] : ''; ?>">
-                <input type="text" name="contact_number" placeholder="Contact Number" required value="<?php echo isset($_POST['contact_number']) ? $_POST['contact_number'] : ''; ?>">
+                <input type="number" name="contact_number" placeholder="Contact Number" required value="<?php echo isset($_POST['contact_number']) ? $_POST['contact_number'] : ''; ?>">
                 <input type="text" name="location" placeholder="Location" required value="<?php echo isset($_POST['location']) ? $_POST['location'] : ''; ?>">
                 <textarea name="description" placeholder="Description" rows="7" required value="<?php echo isset($_POST['description']) ? $_POST['description'] : ''; ?>"></textarea>
 
@@ -116,6 +116,11 @@ if (isset($_POST['signUpBtn'])) {
     $location = $_POST['location'];
     $description = $_POST['description'];
     $_SESSION['shop_data'] = $_POST;
+
+    if(strlen($contactnumber > 10)){
+        echo "<div style='color: red;'>Contact number should have 10 digit number.</div>";
+        exit;
+    }
 
 
     $mail = new PHPMailer(true);

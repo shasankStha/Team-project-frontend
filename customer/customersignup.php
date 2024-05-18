@@ -90,7 +90,11 @@ require 'phpmailer/src/SMTP.php';
 
         if ($password != $confirmPassword) {
             $error_message = 'Password and Confirm Password do not match !!!.';
-        } else if (strlen($confirmPassword) < 8 || strlen($confirmPassword) > 32) {
+        } 
+        else if(strlen($contact) != 10){
+            $error_message = 'Contact number should have 10 digit number.';
+        }
+        else if (strlen($confirmPassword) < 8 || strlen($confirmPassword) > 32) {
             $error_message = "Password should be 8 to 32 characters long.<br>";
         } else if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/', $_POST['password'])) {
             $error_message = "Password should contain an uppercase letter,<br>a number,<br>and a special character<br>";
@@ -241,7 +245,7 @@ require 'phpmailer/src/SMTP.php';
                     </div>
                 </div>
                 <input type="text" class="form-control mb-3" name="address" placeholder="Address" required value="<?php echo isset($_POST['address']) ? $_POST['address'] : ''; ?>">
-                <input type="text" class="form-control mb-3" name="contact_number" placeholder="Contact Number" required value="<?php echo isset($_POST['contact_number']) ? $_POST['contact_number'] : ''; ?>">
+                <input type="number" class="form-control mb-3" name="contact_number" placeholder="Contact Number" required value="<?php echo isset($_POST['contact_number']) ? $_POST['contact_number'] : ''; ?>">
                 <div class="error" style="color: red;"><?php if (!empty($error_message3)) echo "<p class='error'>$error_message3</p>"; ?></div>
                 <input type="email" class="form-control mb-3" name="email" placeholder="Email" required value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>">
                 <div class="error" style="color: red;"><?php if (!empty($error_message2)) echo "<p class='error'>$error_message2</p>"; ?></div>
