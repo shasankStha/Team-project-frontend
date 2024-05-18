@@ -25,7 +25,7 @@
                         <div class="card text-center text-primary p-3">
                             <h6>Total Users</h6>
                             <?php
-                            $query = "SELECT COUNT(*) AS total_users FROM \"USER\"";
+                            $query = "select count(*) as total_users from \"USER\" u left join customer c on c.user_id = u.user_id where u.role = 'T' or (u.role = 'C' and c.status != '0')";
                             $stmp = oci_parse($connection, $query);
                             oci_execute($stmp);
                             $row = oci_fetch_array($stmp, OCI_ASSOC);
@@ -36,7 +36,7 @@
                     <!-- Queries -->
                     <div class="col-md-3 mb-4">
                         <div class="card text-center text-primary p-3">
-                            <h6 style="color: green;">Queries</h6>
+                            <h6 style="color: green;">Messages</h6>
                             <?php
                             $query = "SELECT COUNT(*) AS total_queries FROM CONTACT_US";
                             $stmt = oci_parse($connection, $query);
@@ -79,12 +79,12 @@
                         <div class="card text-center p-3">
                             <h6 style="color: navy;">Total Customers</h6>
                             <?php
-                            $query = "SELECT COUNT(*) AS total_queries FROM CUSTOMER";
+                            $query = "SELECT COUNT(*) AS total_customer FROM CUSTOMER where status = '1'";
                             $stmt = oci_parse($connection, $query);
                             oci_execute($stmt);
                             $row = oci_fetch_array($stmt, OCI_ASSOC);
                             ?>
-                            <h1 class="mt-2 mb-0" style="color: navy;"><?= $row['TOTAL_QUERIES'] ?></h1>
+                            <h1 class="mt-2 mb-0" style="color: navy;"><?= $row['TOTAL_CUSTOMER'] ?></h1>
 
                         </div>
                     </div>

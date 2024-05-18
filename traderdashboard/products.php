@@ -111,7 +111,6 @@
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Image file:</label>
-                                            <input type="text" class="form-control shadown-none" name="imgName" placeholder="Image Name" required>
                                             <input type="file" class="form-control shadown-none" name="pImage">
                                         </div>
 
@@ -161,8 +160,6 @@
         $productMinOrder = (int)$_POST['pMinOrder'];
         $productMaxOrder = (int)$_POST['pMaxOrder'];
         $productCat = $_POST['pCategory'];
-
-        $productImgName = $_POST['imgName'];
         $productDescription = $_POST['pDescription'];
         $productAllergyInfo = $_POST['pAllergyInfo'];
 
@@ -174,19 +171,18 @@
 
         // echo "<script>alert('" . addslashes($productCat) . "');</script>";
 
-        if (empty($productName) || empty($productPrice) || empty($productStock || empty($productMinOrder) || empty($productMaxOrder) || empty($productCat) || empty($productImgName) || empty($productDescription) || empty($productAllergyInfo))) {
+        if (empty($productName) || empty($productPrice) || empty($productStock || empty($productMinOrder) || empty($productMaxOrder) || empty($productCat) || empty($productDescription) || empty($productAllergyInfo))) {
             echo "Please fill all the fields.<br>";
         } else if (empty($imgName)) {
             echo "Please upload item image<br>";
         } else if ($imgType == "pImage/jpeg" || $imgType == "pImage/jpg" || $imgType == "pImage/gif" || $imgType == "pImage/png") {
             echo "Unsupported file format";
-        } else if ($productImgName != $imgName) {
-            echo "The image you selected do not match with the image name you provided.<br>";
         } else {
             $uploadfile = "productsImages/" . $imgName;
             if (move_uploaded_file($tmp, $uploadfile)) {
-                echo "Image Uploaded<br>";
-                echo "<img src=productsImages/$imgName width=200px height=200px>";
+                echo "<script>alert('Product added successfully!!!');</script>";
+                // echo "Image Uploaded<br>";
+                // echo "<img src=productsImages/$imgName width=200px height=200px>";
             }
         }
         // echo "<script>alert('" . addslashes($productCat) . "');</script>";
