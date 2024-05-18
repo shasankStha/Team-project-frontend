@@ -120,49 +120,54 @@ if (isset($_POST['signUpBtn'])) {
 
     $mail = new PHPMailer(true);
 
-
-    $mail->isSMTP();
-    $mail->Host = 'smtp.gmail.com';
-    $mail->SMTPAuth = true;
-    $mail->Username = 'cleckshophub@gmail.com';
-    $mail->Password = 'wxnc kjpg ypto rzyf';
-    $mail->SMTPSecure = 'ssl';
-    $mail->Port = 465;
-
-
-    $mail->setFrom('cleckshophub@gmail.com');
+    try{
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'cleckshophub@gmail.com';
+        $mail->Password = 'wxnc kjpg ypto rzyf';
+        $mail->SMTPSecure = 'ssl';
+        $mail->Port = 465;
 
 
-    $mail->addAddress($email);
+        $mail->setFrom('cleckshophub@gmail.com');
 
 
-    $mail->isHTML(true);
+        $mail->addAddress($email);
 
 
-    $mail->Subject = "OTP verification code.";
+        $mail->isHTML(true);
 
 
-    $message = "This is your OTP verification code $otp";
-    $mail->Body = $message;
+        $mail->Subject = "OTP verification code.";
 
 
-    if ($mail->send()) {
-        $_SESSION['otp'] = $otp;
-        echo "<div id='popup' class='popup' style='display: block;'>
-                <div class='popup-content'>
-                    <form method='POST'>
-                        <p>Please enter the OTP to verify.</p>
-                        <input type='text' name='otp' placeholder='Enter OTP' required>
-                        <button type='submit' name='verifyOtp'>Submit</button>
-                    </form>
-                </div>
-              </div>";
-        echo "<script>
-                document.getElementById('popup').style.display = 'block';
-              </script>";
-    } else {
-        $error_message = "Email cannot be sent";
+        $message = "This is your OTP verification code $otp";
+        $mail->Body = $message;
+
+
+        if ($mail->send()) {
+            $_SESSION['otp'] = $otp;
+            echo "<div id='popup' class='popup' style='display: block;'>
+                    <div class='popup-content'>
+                        <form method='POST'>
+                            <p>Please enter the OTP to verify.</p>
+                            <input type='text' name='otp' placeholder='Enter OTP' required>
+                            <button type='submit' name='verifyOtp'>Submit</button>
+                        </form>
+                    </div>
+                </div>";
+            echo "<script>
+                    document.getElementById('popup').style.display = 'block';
+                </script>";
+        } else {
+            $error_message = "Email cannot be sent";
+        }
     }
+    catch(Exception $e){
+        $error_message = "Mailer Error: " . $mail->ErrorInfo;
+    }
+    
 }
 
 
@@ -185,50 +190,69 @@ if (isset($_POST['verifyOtp'])) {
         $description = $shop_data['description'];
 
 
-
-
-        //Insert in User table
-        $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
+        try{
+            //Insert in User table
+            $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
             VALUES (null, '$username', '$confirmpassword', '$email', '$firstname', '$lastname', '$contact', 'T', SYSDATE, null)";
-        $stid = oci_parse($connection, $sql);
-        oci_execute($stid);
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+            if (!oci_execute($stid)) {
+                $error = oci_error($stid);
+                throw new Exception($error['message']);
+            }
 
 
-        //Getting user_id
-        $sql = "select user_id from \"USER\" where username = '$username'";
-        $stid = oci_parse($connection, $sql);
-        oci_execute($stid);
-        $user_id = null;
-        if ($row = oci_fetch_assoc($stid)) {
-            $user_id = $row['USER_ID'];
-        } else {
-            echo "User not found";
+            //Getting user_id
+            $sql = "select user_id from \"USER\" where username = '$username'";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+            if (!oci_execute($stid)) {
+                $error = oci_error($stid);
+                throw new Exception($error['message']);
+            }
+
+            $user_id = null;
+            if ($row = oci_fetch_assoc($stid)) {
+                $user_id = $row['USER_ID'];
+            } else {
+                throw new Exception("User not found");
+            }
+
+
+            //Adding data in trader table
+            $sql = "INSERT INTO TRADER VALUES ('$user_id', '$address', 0)";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+            if (!oci_execute($stid)) {
+                $error = oci_error($stid);
+                throw new Exception($error['message']);
+            }
+
+            //Adding data in shop table
+            $sql = "INSERT INTO SHOP VALUES (null, '$shopname','$description','$location',null,'$contactnumber', '$user_id')";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+            if (!oci_execute($stid)) {
+                $error = oci_error($stid);
+                throw new Exception($error['message']);
+            }
+
+
+            //Destroying the session global variable
+            unset($_SESSION['traderSignupData']);
+            //Closing oracle connection
+            oci_close($connection);
+
+
+            echo "<script>window.location.href = '../login/login.php';</script>";
+        } 
+        catch(Exception $e){
+            echo "<script>alert('An error occurred: " . $e->getMessage() . "');</script>";
         }
-
-
-        //Adding data in trader table
-        $sql = "INSERT INTO TRADER VALUES ('$user_id', '$address', 0)";
-        $stid = oci_parse($connection, $sql);
-        oci_execute($stid);
-
-
-        //Adding data in shop table
-        $sql = "INSERT INTO SHOP VALUES (null, '$shopname','$description','$location',null,'$contactnumber', '$user_id')";
-        $stid = oci_parse($connection, $sql);
-        oci_execute($stid);
-
-
-        //Destroying the session global variable
-        unset($_SESSION['traderSignupData']);
-        //Closing oracle connection
-        oci_close($connection);
-
-
-        echo "<script>window.location.href = '../login/login.php';</script>";
-    } else {
-        echo "OTP did not match.";
     }
+    else {
+        echo "OTP did not match.";
+    }  
 }
 ?>
-
 </html>

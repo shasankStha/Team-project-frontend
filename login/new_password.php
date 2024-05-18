@@ -166,18 +166,45 @@
       $error_message = "Password should contain an uppercase,<br>Number<br>and a special character<br>";
       echo "<div style='color: red';>$error_message</div>";
     } else {
-      $sql = "select user_id from \"USER\" where email= '$email'";
-      $stid = oci_parse($connection, $sql);
-      oci_execute($stid);
-      $user_id = null;
-      if ($row = oci_fetch_assoc($stid)) {
-        $user_id = $row['USER_ID'];
-      }
-      $sql = "update \"USER\" set password = password_encrypt('$confirmPassword') where user_id = '$user_id'";
-      $stid = oci_parse($connection, $sql);
-      oci_execute($stid);
+      try{
+        $sql = "select user_id from \"USER\" where email= '$email'";
+        $stid = oci_parse($connection, $sql);
+        if (!$stid) {
+          $e = oci_error($connection);
+          throw new Exception("Failed to parse query to fetch user ID: " . $e['message']);
+        }
 
-      echo "<script>window.location.href = '../login/login.php';</script>";
+        oci_execute($stid);
+        if(!oci_execute($stid)){
+          $e = oci_error($stid);
+          throw new Exception("Failed to execute query to fetch user ID: " . $e['message']);
+        }
+
+        $user_id = null;
+        if ($row = oci_fetch_assoc($stid)) {
+          $user_id = $row['USER_ID'];
+        }
+        else{
+          throw new Exception("User not found");
+        }
+
+        $sql = "update \"USER\" set password = password_encrypt('$confirmPassword') where user_id = '$user_id'";
+        $stid = oci_parse($connection, $sql);
+        if (!$stid) {
+          $e = oci_error($connection);
+          throw new Exception("Failed to parse query to update password: " . $e['message']);
+        }
+        oci_execute($stid);
+        if (!oci_execute($stid)) {
+          $e = oci_error($stid);
+          throw new Exception("Failed to execute query to update password: " . $e['message']);
+        }
+
+        echo "<script>window.location.href = '../login/login.php';</script>";
+      }
+      catch(Exception $e){
+        echo "<div style='color: red;'>Error: " . $e->getMessage() . "</div>";
+      }
     }
   }
 

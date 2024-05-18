@@ -21,63 +21,102 @@
     $error_message3 = '';
 
     if (isset($_POST['signUp'])) {
-        $firstName = $_POST['first_name'];
-        $lastName = $_POST['last_name'];
-        $address = $_POST['address'];
-        $contact = $_POST['contact_number'];
-        $email = $_POST['email'];
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-        $confirmPassword = $_POST['confirm_password'];
-
-        if ($password != $confirmPassword) {
-            $error_message = 'Password and Confirm Password do not match !!!.';
-        } else if (strlen($confirmPassword) < 8 || strlen($confirmPassword) > 32) {
-            $error_message = "Password should be 8 to 32 characters long.<br>";
-        } else if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/', $_POST['password'])) {
-            $error_message = "Password should contain an uppercase,<br>Number<br>and a special character<br>";
-        } else {
-            $sql = "SELECT count(*) FROM \"USER\" WHERE username = '$username'";
+        try{
+            $sql = "SELECT count(*) as trader_count FROM \"TRADER\"";
             $stid = oci_parse($connection, $sql);
             oci_execute($stid);
-            if ($row = oci_fetch_assoc($stid)) {
-                $count = $row['COUNT(*)'];
+            if (!oci_execute($stid)) {
+                $error = oci_error($stid);
+                throw new Exception($error['message']);
             }
-            if ($count != 0) {
-                $error_message1 = 'Username Already Exists !!!.';
-            } else {
-                $sql = "SELECT count(*) FROM \"USER\" WHERE email = '$email'";
-                $stid = oci_parse($connection, $sql);
-                oci_execute($stid);
-                if ($row = oci_fetch_assoc($stid)) {
-                    $count = $row['COUNT(*)'];
-                }
-                if ($count != 0) {
-                    $error_message2 = 'Email Already Exists !!!.';
+
+            if ($row = oci_fetch_assoc($stid)) {
+                $traderCount = $row['TRADER_COUNT'];
+            }
+
+            if ($traderCount > 10) {
+                $error_message = 'Number of traders is already 10 and cannot register.';
+                exit;
+            }
+            else{
+                $firstName = $_POST['first_name'];
+                $lastName = $_POST['last_name'];
+                $address = $_POST['address'];
+                $contact = $_POST['contact_number'];
+                $email = $_POST['email'];
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+                $confirmPassword = $_POST['confirm_password'];
+
+                if ($password != $confirmPassword) {
+                    $error_message = 'Password and Confirm Password do not match !!!.';
+                } else if (strlen($confirmPassword) < 8 || strlen($confirmPassword) > 32) {
+                    $error_message = "Password should be 8 to 32 characters long.<br>";
+                } else if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/', $_POST['password'])) {
+                    $error_message = "Password should contain an uppercase,<br>Number<br>and a special character<br>";
                 } else {
-                    $sql = "SELECT count(*) FROM \"USER\" WHERE contact_number = '$contact'";
+                    $sql = "SELECT count(*) FROM \"USER\" WHERE username = '$username'";
                     $stid = oci_parse($connection, $sql);
                     oci_execute($stid);
+                    if (!oci_execute($stid)) {
+                        $error = oci_error($stid);
+                        throw new Exception($error['message']);
+                    }
+
                     if ($row = oci_fetch_assoc($stid)) {
                         $count = $row['COUNT(*)'];
                     }
                     if ($count != 0) {
-                        $error_message3 = 'Contact Number Already Exists !!!.';
+                        $error_message1 = 'Username Already Exists !!!.';
                     } else {
-                        $_SESSION['traderSignupData'] = array(
-                            'firstname' => $firstName,
-                            'lastname' => $lastName,
-                            'address' => $address,
-                            'contact' => $contact,
-                            'email' => $email,
-                            'username' => $username,
-                            'password' => $confirmPassword
-                        );
-                        echo "<script>window.location.href = '../shops/shopdetails.php';</script>";
+                        $sql = "SELECT count(*) FROM \"USER\" WHERE email = '$email'";
+                        $stid = oci_parse($connection, $sql);
+                        oci_execute($stid);
+                        if (!oci_execute($stid)) {
+                            $error = oci_error($stid);
+                            throw new Exception($error['message']);
+                        }
+
+                        if ($row = oci_fetch_assoc($stid)) {
+                            $count = $row['COUNT(*)'];
+                        }
+                        if ($count != 0) {
+                            $error_message2 = 'Email Already Exists !!!.';
+                        } 
+                        else {
+                            $sql = "SELECT count(*) FROM \"USER\" WHERE contact_number = '$contact'";
+                            $stid = oci_parse($connection, $sql);
+                            oci_execute($stid);
+                            if (!oci_execute($stid)) {
+                                $error = oci_error($stid);
+                                throw new Exception($error['message']);
+                            }
+
+                            if ($row = oci_fetch_assoc($stid)) {
+                                $count = $row['COUNT(*)'];
+                            }
+                            if ($count != 0) {
+                                $error_message3 = 'Contact Number Already Exists !!!.';
+                            } else {
+                                $_SESSION['traderSignupData'] = array(
+                                    'firstname' => $firstName,
+                                    'lastname' => $lastName,
+                                    'address' => $address,
+                                    'contact' => $contact,
+                                    'email' => $email,
+                                    'username' => $username,
+                                    'password' => $confirmPassword
+                                );
+                                echo "<script>window.location.href = '../shops/shopdetails.php';</script>";
+                            }
+                        }
                     }
                 }
             }
         }
+        catch(Exception $e){
+            $error_message = "An error occured: ".$e->getMessage();
+        }  
     }
     ?>
 

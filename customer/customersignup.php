@@ -73,14 +73,14 @@ require 'phpmailer/src/SMTP.php';
 
 
     if (isset($_POST['signUp'])) {
-        $firstName = $_POST['first_name'];
-        $lastName = $_POST['last_name'];
-        $address = $_POST['address'];
-        $contact = $_POST['contact_number'];
-        $email = $_POST['email'];
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-        $confirmPassword = $_POST['confirm_password'];
+        $firstName = trim($_POST['first_name']);
+        $lastName = trim($_POST['last_name']);
+        $address = trim($_POST['address']);
+        $contact = trim($_POST['contact_number']);
+        $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+        $username = trim($_POST['username']);
+        $password = trim($_POST['password']);
+        $confirmPassword = trim($_POST['confirm_password']);
         $dob = date('d/m/Y', strtotime($_POST['date_of_birth']));
         $gender = $_POST['gender'];
         $otp = rand(100000, 999999);
@@ -124,7 +124,6 @@ require 'phpmailer/src/SMTP.php';
                     } else {
                         $mail = new PHPMailer(true);
 
-
                         $mail->isSMTP();
                         $mail->Host = 'smtp.gmail.com';
                         $mail->SMTPAuth = true;
@@ -133,7 +132,6 @@ require 'phpmailer/src/SMTP.php';
                         $mail->SMTPSecure = 'ssl';
                         $mail->Port = 465;
 
-
                         $mail->setFrom('cleckshophub@gmail.com');
                         $mail->addAddress($email);
                         $mail->isHTML(true);
@@ -141,9 +139,7 @@ require 'phpmailer/src/SMTP.php';
                         $message = "This is your OTP verification code $otp";
                         $mail->Body = $message;
 
-
                         $mail->send();
-
 
                         if ($mail) {
                             // Display the popup
@@ -166,49 +162,66 @@ require 'phpmailer/src/SMTP.php';
 
 
     if (isset($_POST['verifyOtp'])) {
-        $enteredOtp = $_POST['otp'];
-        $otp = $_SESSION['otp'];
-        $user_data = $_SESSION['user_data'];
-
-
-        if ($enteredOtp == $otp) {
-            $username = $user_data['username'];
-            $password = $user_data['password'];
-            $email = $user_data['email'];
-            $firstName = $user_data['first_name'];
-            $lastName = $user_data['last_name'];
-            $contact = $user_data['contact_number'];
-            $address = $user_data['address'];
-            $dob = date('d/m/Y', strtotime($user_data['date_of_birth']));
-            $gender = $user_data['gender'];
-
-
-            $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
-                VALUES (null, '$username', '$password', '$email', '$firstName', '$lastName', '$contact', 'C', SYSDATE, null)";
-            $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-
-
-            $sql = "SELECT user_id FROM \"USER\" WHERE username = '$username'";
-            $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-            if ($row = oci_fetch_assoc($stid)) {
-                $user_id = $row['USER_ID'];
+        try{
+            $enteredOtp = $_POST['otp'];
+            $otp = $_SESSION['otp'];
+            $user_data = $_SESSION['user_data'];
+    
+    
+            if ($enteredOtp == $otp) {
+                $username = $user_data['username'];
+                $password = $user_data['password'];
+                $email = $user_data['email'];
+                $firstName = $user_data['first_name'];
+                $lastName = $user_data['last_name'];
+                $contact = $user_data['contact_number'];
+                $address = $user_data['address'];
+                $dob = date('d/m/Y', strtotime($user_data['date_of_birth']));
+                $gender = $user_data['gender'];
+    
+    
+                $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
+                    VALUES (null, '$username', '$password', '$email', '$firstName', '$lastName', '$contact', 'C', SYSDATE, null)";
+                $stid = oci_parse($connection, $sql);
+                if(!$stid){
+                    $e = oci_error($connection);
+                    throw new Exception($e['message']);
+                }
+                oci_execute($stid);
+                
+    
+                $sql = "SELECT user_id FROM \"USER\" WHERE username = '$username'";
+                $stid = oci_parse($connection, $sql);
+                if(!$stid){
+                    $e = oci_error($connection);
+                    throw new Exception($e['message']);
+                }
+                oci_execute($stid);
+                
+    
+                if ($row = oci_fetch_assoc($stid)) {
+                    $user_id = $row['USER_ID'];
+                }
+                $sql = "INSERT INTO customer VALUES('$user_id','$address',to_date('$dob','dd/mm/yyyy'),'$gender',null,1)";
+                $stid = oci_parse($connection, $sql);
+                if(!$stid){
+                    $e = oci_error($connection);
+                    throw new Exception($e['message']);
+                }
+                oci_execute($stid);
+                oci_close($connection);
+    
+    
+                session_destroy();
+    
+    
+                echo "<script>window.location.href = '../login/login.php';</script>";
+            } else {
+                echo "OTP did not match.";
             }
-
-
-            $sql = "INSERT INTO customer VALUES('$user_id','$address',to_date('$dob','dd/mm/yyyy'),'$gender',null,1)";
-            $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-            oci_close($connection);
-
-
-            session_destroy();
-
-
-            echo "<script>window.location.href = '../login/login.php';</script>";
-        } else {
-            echo "OTP did not match.";
+        }
+        catch(Exception $e){
+            echo "<div class='error' style='color: red;'>Error: " . $e->getMessage() . "</div>";
         }
     }
     ?>

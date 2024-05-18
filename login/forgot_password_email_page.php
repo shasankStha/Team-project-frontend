@@ -178,62 +178,66 @@ require 'phpmailer/src/SMTP.php';
 ?>
 
 <?php
-
 if (isset($_POST['validateEmail'])) {
     include("../connection.php");
 
     $enteredEmail = $_POST['email'];
     $_SESSION['enteredEmail'] = $enteredEmail;
 
-    $sql = "SELECT count(*) FROM \"USER\" WHERE email = '$enteredEmail'";
-    $stid = oci_parse($connection, $sql);
-    oci_execute($stid);
-
-    if ($row = oci_fetch_assoc($stid)) {
-        $count = $row['COUNT(*)'];
-    }
-
-    if ($count != 0) {
-        $generatedOtp = rand(100000, 999999);
-        $_SESSION['verifyOtp'] = $generatedOtp;
-
-        $mail = new PHPMailer(true);
-
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'cleckshophub@gmail.com';
-        $mail->Password = 'wxnc kjpg ypto rzyf';
-        $mail->SMTPSecure = 'ssl';
-        $mail->Port = 465;
-
-        $mail->setFrom('cleckshophub@gmail.com');
-
-        $mail->addAddress($enteredEmail);
-
-        $mail->isHTML(true);
-
-        $mail->Subject = "OTP verification code.";
-
-        $message = "This is your OTP verification code $generatedOtp";
-        $mail->Body = $message;
-
-        $mail->send();
-
-        if ($mail) {
-            // Display the popup
-            echo "<div id='popup' class='popup'>
-                        <div class='popup-content'>
-                            <form method='POST'><p>Please enter the OTP to verify.</p>
-                                <input type='text' name='otp' placeholder='Enter OTP' required>
-                                <button type='submit' name='verifyOtp'>Submit</button>
-                            </form>
-                        </div>
-                        </div>";
+    try {
+        $sql = "SELECT count(*) FROM \"USER\" WHERE email = '$enteredEmail'";
+        $stid = oci_parse($connection, $sql);
+        if (!oci_execute($stid)) {
+            throw new Exception("Database query failed");
         }
-    } else {
-        $error_message = 'Email Does not Exists !!!.';
-        echo "<div style='color: red';>$error_message</div>";
+
+        if ($row = oci_fetch_assoc($stid)) {
+            $count = $row['COUNT(*)'];
+        }
+
+        if ($count != 0) {
+            $generatedOtp = rand(100000, 999999);
+            $_SESSION['verifyOtp'] = $generatedOtp;
+
+            $mail = new PHPMailer(true);
+
+            try {
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'cleckshophub@gmail.com';
+                $mail->Password = 'wxnc kjpg ypto rzyf';
+                $mail->SMTPSecure = 'ssl';
+                $mail->Port = 465;
+
+                $mail->setFrom('cleckshophub@gmail.com');
+                $mail->addAddress($enteredEmail);
+
+                $mail->isHTML(true);
+                $mail->Subject = "OTP verification code.";
+                $mail->Body = "This is your OTP verification code $generatedOtp";
+
+                $mail->send();
+
+                // Display the popup
+                echo "<div id='popup' class='popup'>
+                          <div class='popup-content'>
+                              <form method='POST'>
+                                  <p>Please enter the OTP to verify.</p>
+                                  <input type='text' name='otp' placeholder='Enter OTP' required>
+                                  <button type='submit' name='verifyOtp'>Submit</button>
+                              </form>
+                          </div>
+                      </div>";
+            } catch (Exception $e) {
+                echo "Mailer Error: " . $mail->ErrorInfo;
+            }
+        } else {
+            $error_message = 'Email Does not Exist !!!.';
+            echo "<div style='color: red;'>$error_message</div>";
+        }
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
     }
 }
 
@@ -245,7 +249,6 @@ if (isset($_POST['verifyOtp'])) {
         echo "<script>window.location.href = 'new_password.php';</script>";
     }
 }
-
 ?>
 
 
