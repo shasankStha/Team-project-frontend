@@ -38,11 +38,24 @@
         }
 
         if ($role == "C") {
-            $_SESSION["user"] = $username;
-            $_SESSION['userID'] = $user_id;
-            $_SESSION["loggedinUser"] = TRUE;
-            header("Location: ../index.php");
-            exit;
+            $sql = "SELECT status FROM customer WHERE user_id = $user_id";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+            $status = null;
+            if ($row = oci_fetch_assoc($stid)) {
+                $status = $row['STATUS'];
+            } else {
+                echo  "<script>alert('Something! went wrong')</script>";
+            }
+            if ($status == '1') {
+                $_SESSION["user"] = $username;
+                $_SESSION['userID'] = $user_id;
+                $_SESSION["loggedinUser"] = TRUE;
+                header("Location: ../index.php");
+                exit;
+            } else {
+                echo  "<script>alert('Your account has been removed!!!')</script>";
+            }
         } elseif ($role == "T") {
             $_SESSION["traderUser"] = $username;
             $_SESSION["loggedinTrader"] = TRUE;

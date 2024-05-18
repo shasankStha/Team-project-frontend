@@ -9,15 +9,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
   $error = false;
 
   // Delete dependent records in the CART table
-  $deleteCartQuery = "DELETE FROM CART WHERE USER_ID = :userId";
-  $deleteCartStmt = oci_parse($connection, $deleteCartQuery);
-  oci_bind_by_name($deleteCartStmt, ":userId", $userId);
-  if (!oci_execute($deleteCartStmt)) {
-    $error = true;
-  }
+  // $deleteCartQuery = "DELETE FROM CART WHERE USER_ID = :userId";
+  // $deleteCartStmt = oci_parse($connection, $deleteCartQuery);
+  // oci_bind_by_name($deleteCartStmt, ":userId", $userId);
+  // if (!oci_execute($deleteCartStmt)) {
+  //   $error = true;
+  // }
 
   // Delete dependent records in the CUSTOMER table
-  $deleteCustomerQuery = "DELETE FROM CUSTOMER WHERE USER_ID = :userId";
+  $deleteCustomerQuery = "update CUSTOMER set status = '0' WHERE USER_ID = :userId";
   $deleteCustomerStmt = oci_parse($connection, $deleteCustomerQuery);
   oci_bind_by_name($deleteCustomerStmt, ":userId", $userId);
   if (!oci_execute($deleteCustomerStmt)) {
@@ -25,18 +25,18 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
   }
 
   // Proceed to delete the user if no errors
-  if (!$error) {
-    $deleteUserQuery = "DELETE FROM \"USER\" WHERE USER_ID = :userId";
-    $deleteUserStmt = oci_parse($connection, $deleteUserQuery);
-    oci_bind_by_name($deleteUserStmt, ":userId", $userId);
+  // if (!$error) {
+  //   $deleteUserQuery = "DELETE FROM \"USER\" WHERE USER_ID = :userId";
+  //   $deleteUserStmt = oci_parse($connection, $deleteUserQuery);
+  //   oci_bind_by_name($deleteUserStmt, ":userId", $userId);
 
-    if (oci_execute($deleteUserStmt)) {
-      oci_execute(oci_parse($connection, 'COMMIT'));
-      $message = "User and all associated records deleted successfully.";
-    } else {
-      $error = true;
-    }
-  }
+  //   if (oci_execute($deleteUserStmt)) {
+  //     oci_execute(oci_parse($connection, 'COMMIT'));
+  //     $message = "User and all associated records deleted successfully.";
+  //   } else {
+  //     $error = true;
+  //   }
+  // }
 
   if ($error) {
     oci_execute(oci_parse($connection, 'ROLLBACK'));
@@ -86,7 +86,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                 </thead>
                 <tbody id="users-data">
                   <?php
-                  $query = "SELECT USER_ID, USERNAME, EMAIL, FIRST_NAME, LAST_NAME, CONTACT_NUMBER, ROLE FROM \"USER\" where role in('T','C') ORDER BY USER_ID";
+                  $query = "SELECT u.USER_ID, u.USERNAME, u.EMAIL, u.FIRST_NAME, u.LAST_NAME, u.CONTACT_NUMBER, u.ROLE 
+                  FROM \"USER\" u
+                  left join customer c on c.user_id = u.user_id
+                  where (u.ROLE = 'T' OR (u.ROLE = 'C' AND c.STATUS = '1'))
+                  ORDER BY USER_ID";
                   $stid = oci_parse($connection, $query);
                   oci_execute($stid);
 
