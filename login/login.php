@@ -14,6 +14,7 @@
     session_start();
     include("../connection.php");
     require('../inc/header1.php');
+    echo "<br><br>";
     $error = ''; // Initialize the error message variable
     if (isset($_POST['btnSignInLogin'])) {
         $username = $_POST['emailLogin'];

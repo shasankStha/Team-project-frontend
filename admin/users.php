@@ -89,7 +89,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                   $query = "SELECT u.USER_ID, u.USERNAME, u.EMAIL, u.FIRST_NAME, u.LAST_NAME, u.CONTACT_NUMBER, u.ROLE 
                   FROM \"USER\" u
                   left join customer c on c.user_id = u.user_id
-                  where (u.ROLE = 'T' OR (u.ROLE = 'C' AND c.STATUS = '1'))
+                  where (u.ROLE = 'C' AND c.STATUS = '1')
                   ORDER BY USER_ID";
                   $stid = oci_parse($connection, $query);
                   oci_execute($stid);
