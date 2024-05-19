@@ -90,7 +90,7 @@
                   <i class=\"fas fa-star\"></i>
                   <i class=\"far fa-star\"></i>
                 </div>
-                <div class=\"product-price\">$price</div>
+                <div class=\"product-price\">£ $price</div>
                 <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
               </div>
             </a>
@@ -152,13 +152,18 @@
 
     function updateFavoriteStatus(productId, isFavorite) {
       fetch("update_favorite_status.php", {
-        method: "POST",
-        body: JSON.stringify({ productId: productId, isFavorite: isFavorite }),
-        headers: { "Content-Type": "application/json" },
-      })
-      .then(response => response.json())
-      .then(data => console.log(data.message))
-      .catch(error => console.error("Error:", error));
+          method: "POST",
+          body: JSON.stringify({
+            productId: productId,
+            isFavorite: isFavorite
+          }),
+          headers: {
+            "Content-Type": "application/json"
+          },
+        })
+        .then(response => response.json())
+        .then(data => console.log(data.message))
+        .catch(error => console.error("Error:", error));
     }
   </script>
 </body>
