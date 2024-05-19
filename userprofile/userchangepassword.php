@@ -23,8 +23,8 @@
         include('../inc/header.php');
     }
 
-    $error_message = ""; 
-    $message = ""; 
+    $error_message = "";
+    $message = "";
 
     if (isset($_POST['submit'])) {
         $user_id = $_SESSION['userID'];
@@ -38,9 +38,8 @@
             $error_message = "Password should be 8 to 32 characters long.";
         } else if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/', $confirmPassword)) {
             $error_message = "Password criteria didn't match.";
-        } 
-        else {
-            try{
+        } else {
+            try {
                 $sql = "SELECT COUNT(*) AS CNT FROM \"USER\" WHERE password = password_encrypt('$oldPassword') AND user_id = '$user_id'";
                 $stid = oci_parse($connection, $sql);
                 oci_execute($stid);
@@ -48,36 +47,31 @@
                 if ($row = oci_fetch_assoc($stid)) {
                     $count = $row['CNT'];
 
-                    
+
                     if ($count == 1) {
-                        try{
+                        try {
                             $sql = "UPDATE \"USER\" SET password = password_encrypt('$confirmPassword') WHERE user_id = '$user_id'";
                             $stid = oci_parse($connection, $sql);
                             $exe = oci_execute($stid);
-    
+
                             if ($exe) {
                                 // echo "<script>alert('Your password has been changed successfully.')</script>";
                                 $message = "Password has been changed successfully.";
-                            } 
-                            else {
+                            } else {
                                 $error_message = "An error occurred while updating the password.";
                             }
-                        }
-                        catch (Exception $e) {
+                        } catch (Exception $e) {
                             $error_message = "An error occurred: " . $e->getMessage();
-                    }    
-                    }
-                    else {
+                        }
+                    } else {
                         $error_message = "Old password didn't match.";
                     }
-                }
-                else {
+                } else {
                     $error_message = "An error occurred while verifying the old password.";
                 }
+            } catch (Exception $e) {
+                $error_message = "An error occured: " . $e->getMessage();
             }
-            catch(Exception $e){
-                $error_message = "An error occured: ".$e->getMessage();
-            }  
         }
     }
     ?>
@@ -90,7 +84,6 @@
             <a href="userfavourites.php">Favourites</a>
             <a href="usermycarts.php">My carts</a>
             <a href="userchangepassword.php">Change Password</a>
-            <a href="../contactus/contactus.php">Contact Us</a>
             <a href="../logout/logout.php">Log out</a>
         </div>
 

@@ -56,23 +56,28 @@
         $username = $_POST['username'] ?? $userDetails['USERNAME'];
         $contactNumber = $_POST['contact_number'] ?? $userDetails['CONTACT_NUMBER'];
 
-        $updateSql = 'UPDATE "USER" SET FIRST_NAME = :firstname, LAST_NAME = :lastname, USERNAME = :username, CONTACT_NUMBER = :contactnumber WHERE USER_ID = :userid';
-        $updateStmt = oci_parse($connection, $updateSql);
-        oci_bind_by_name($updateStmt, ':firstname', $firstName);
-        oci_bind_by_name($updateStmt, ':lastname', $lastName);
-        oci_bind_by_name($updateStmt, ':username', $username);
-        oci_bind_by_name($updateStmt, ':contactnumber', $contactNumber);
-        oci_bind_by_name($updateStmt, ':userid', $userID);
-        if (!oci_execute($updateStmt)) {
-            $e = oci_error($updateStmt);
-            echo "Error executing update: " . $e['message'];
-        } else {
-            // Refresh user details after update
-            $userDetails = getUserDetails($connection, $userID);
-            $changesSaved = true;
+        if (!preg_match('/^\d{10}$/', $contactNumber)) {
+            $contactNumberError = 'Contact number must be exactly 10 digits.';
+        } 
+        else{
+            $updateSql = 'UPDATE "USER" SET FIRST_NAME = :firstname, LAST_NAME = :lastname, USERNAME = :username, CONTACT_NUMBER = :contactnumber WHERE USER_ID = :userid';
+            $updateStmt = oci_parse($connection, $updateSql);
+            oci_bind_by_name($updateStmt, ':firstname', $firstName);
+            oci_bind_by_name($updateStmt, ':lastname', $lastName);
+            oci_bind_by_name($updateStmt, ':username', $username);
+            oci_bind_by_name($updateStmt, ':contactnumber', $contactNumber);
+            oci_bind_by_name($updateStmt, ':userid', $userID);
+            if (!oci_execute($updateStmt)) {
+                $e = oci_error($updateStmt);
+                echo "Error executing update: " . $e['message'];
+            } else {
+                // Refresh user details after update
+                $userDetails = getUserDetails($connection, $userID);
+                $changesSaved = true;
+            }
         }
     }
-
+    
     if ($isLoggedIn) {
         include('../inc/loggedin_header.php');
     } else {
@@ -88,7 +93,6 @@
             <a href="userfavourites.php">Favourites</a>
             <a href="usermycarts.php">My carts</a>
             <a href="userchangepassword.php">Change Password</a>
-            <a href="../contactus/contactus.php">Contact Us</a>
             <a href="../logout/logout.php">Log out</a>
         </div>
 
@@ -116,7 +120,7 @@
                     </div>
                     <div class="form-group">
                         <label for="contact-number">Contact Number</label>
-                        <input type="text" id="contact-number" name="contact_number" class="form-control" value="<?php echo htmlspecialchars($userDetails['CONTACT_NUMBER']); ?>" disabled>
+                        <input type="number" id="contact-number" name="contact_number" class="form-control" value="<?php echo htmlspecialchars($userDetails['CONTACT_NUMBER']); ?>" disabled>
                     </div>
                     <div class="d-flex justify-content-evenly mb-2">
 

@@ -87,10 +87,17 @@ require 'phpmailer/src/SMTP.php';
         $_SESSION['otp'] = $otp;
         $_SESSION['user_data'] = $_POST;
 
+        date_default_timezone_set('Asia/Kathmandu'); 
+        $dobDate = new DateTime($dob);
+        $currentDate = new DateTime();
+        $age = $currentDate->diff($dobDate)->y;
 
         if ($password != $confirmPassword) {
             $error_message = 'Password and Confirm Password do not match !!!.';
         } 
+        else if($age <= 12){
+            $error_message = 'You are not eligible to register.';
+        }
         else if(strlen($contact) != 10){
             $error_message = 'Contact number should have 10 digit number.';
         }

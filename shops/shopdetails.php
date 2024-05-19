@@ -117,7 +117,11 @@ if (isset($_POST['signUpBtn'])) {
     $description = $_POST['description'];
     $_SESSION['shop_data'] = $_POST;
 
+<<<<<<< HEAD
     if(strlen($contactnumber != 10)){
+=======
+    if (strlen($contactnumber != 10)) {
+>>>>>>> ac25aa6ce2f088c17fd3edb7898b7b323a1a4ad5
         echo "<div style='color: red;'>Contact number should have 10 digit number.</div>";
         exit;
     }
@@ -125,7 +129,7 @@ if (isset($_POST['signUpBtn'])) {
 
     $mail = new PHPMailer(true);
 
-    try{
+    try {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
@@ -168,11 +172,9 @@ if (isset($_POST['signUpBtn'])) {
         } else {
             $error_message = "Email cannot be sent";
         }
-    }
-    catch(Exception $e){
+    } catch (Exception $e) {
         $error_message = "Mailer Error: " . $mail->ErrorInfo;
     }
-    
 }
 
 
@@ -195,7 +197,7 @@ if (isset($_POST['verifyOtp'])) {
         $description = $shop_data['description'];
 
 
-        try{
+        try {
             //Insert in User table
             $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
             VALUES (null, '$username', '$confirmpassword', '$email', '$firstname', '$lastname', '$contact', 'T', SYSDATE, null)";
@@ -250,14 +252,13 @@ if (isset($_POST['verifyOtp'])) {
 
 
             echo "<script>window.location.href = '../login/login.php';</script>";
-        } 
-        catch(Exception $e){
+        } catch (Exception $e) {
             echo "<script>alert('An error occurred: " . $e->getMessage() . "');</script>";
         }
-    }
-    else {
+    } else {
         echo "OTP did not match.";
-    }  
+    }
 }
 ?>
+
 </html>
