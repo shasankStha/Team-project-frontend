@@ -1,6 +1,143 @@
 <?php
+session_start();
 require ('../connection.php');
 
+// Ensure that the user is logged in and that userID is set in the session
+if (!isset($_SESSION['traderUser']) || $_SESSION['loggedinTrader'] !== TRUE) {
+    header('Location: ../login/login.php');
+    exit;
+}
+
+$userID = $_SESSION['traderID'];
+function getUserDetails($connection, $userID)
+{
+    $sql = 'SELECT * FROM "USER" WHERE USER_ID = :userid';
+    $stmt = oci_parse($connection, $sql);
+    oci_bind_by_name($stmt, ':userid', $userID);
+    if (!oci_execute($stmt)) {
+        $e = oci_error($stmt);
+        echo "Error executing query: " . $e['message'];
+        return false;
+    }
+    return oci_fetch_assoc($stmt);
+}
+$userDetails = getUserDetails($connection, $userID);
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Extract user input from the form submission
+    $firstName = $_POST['first_name'] ?? '';
+    $lastName = $_POST['last_name'] ?? '';
+    $username = $_POST['username'] ?? '';
+    $contactNumber = $_POST['contact_number'] ?? '';
+
+    // Prepare the update SQL statement
+    $updateSql = 'UPDATE "USER" SET FIRST_NAME = :firstname, LAST_NAME = :lastname, USERNAME = :username, CONTACT_NUMBER = :contactnumber WHERE USER_ID = :userid';
+    $updateStmt = oci_parse($connection, $updateSql);
+
+    // Bind the parameters to the statement
+    oci_bind_by_name($updateStmt, ':firstname', $firstName);
+    oci_bind_by_name($updateStmt, ':lastname', $lastName);
+    oci_bind_by_name($updateStmt, ':username', $username);
+    oci_bind_by_name($updateStmt, ':contactnumber', $contactNumber);
+    oci_bind_by_name($updateStmt, ':userid', $userID);
+
+    // Execute the update statement
+    if (!oci_execute($updateStmt)) {
+        $e = oci_error($updateStmt);
+        echo "Error executing update: " . $e['message'];
+    } else {
+        // Refresh user details after update
+        $userDetails = getUserDetails($connection, $userID);
+        echo "<script>alert('Changes saved successfully!');</script>";
+    }
+}
+
+$shopID = $_SESSION['shopID'];  // Assuming you know the shop ID, or it's stored somewhere like in a session.
+$shopDetailsQuery = 'SELECT SHOP_NAME, SHOP_DESCRIPTION, LOCATION, CONTACT_NUMBER FROM "SHOP" WHERE SHOP_ID = :shopid';
+$shopStmt = oci_parse($connection, $shopDetailsQuery);
+oci_bind_by_name($shopStmt, ':shopid', $shopID);
+oci_execute($shopStmt);
+$shopDetails = oci_fetch_assoc($shopStmt);
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_shop'])) {
+    $shopName = $_POST['shop_name'];
+    $shopDescription = $_POST['shop_description'];
+    $location = $_POST['location'];
+    $contactNumber = $_POST['contact_number'];
+
+    $updateShopSql = 'UPDATE "SHOP" SET SHOP_NAME = :shopname, SHOP_DESCRIPTION = :shopdescription, LOCATION = :location, CONTACT_NUMBER = :contactnumber WHERE SHOP_ID = :shopid';
+    $updateShopStmt = oci_parse($connection, $updateShopSql);
+    oci_bind_by_name($updateShopStmt, ':shopname', $shopName);
+    oci_bind_by_name($updateShopStmt, ':shopdescription', $shopDescription);
+    oci_bind_by_name($updateShopStmt, ':location', $location);
+    oci_bind_by_name($updateShopStmt, ':contactnumber', $contactNumber);
+    oci_bind_by_name($updateShopStmt, ':shopid', $shopID);
+
+    if (oci_execute($updateShopStmt)) {
+        echo "<script>alert('Shop details updated successfully!');</script>";
+        // Re-fetch details to update the display without needing a page refresh
+        oci_execute($shopStmt);
+        $shopDetails = oci_fetch_assoc($shopStmt);
+    } else {
+        $e = oci_error($updateShopStmt);
+        echo "Error updating shop details: " . $e['message'];
+    }
+
+    $error_message = "";
+    $message = "";
+
+    if (isset($_POST['submit'])) {
+        $user_id = $_SESSION['userID'];
+        $oldPassword = $_POST['old_password'];
+        $newPassword = $_POST['new_password'];
+        $confirmPassword = $_POST['confirm_password'];
+
+        if ($newPassword != $confirmPassword) {
+            $error_message = 'Password and Confirm Password do not match.';
+        } else if (strlen($confirmPassword) < 8 || strlen($confirmPassword) > 32) {
+            $error_message = "Password should be 8 to 32 characters long.";
+        } else if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/', $confirmPassword)) {
+            $error_message = "Password criteria didn't match.";
+        } else {
+            try {
+                $sql = "SELECT COUNT(*) AS CNT FROM \"USER\" WHERE password = password_encrypt('$oldPassword') AND user_id = '$user_id'";
+                $stid = oci_parse($connection, $sql);
+                oci_execute($stid);
+
+                if ($row = oci_fetch_assoc($stid)) {
+                    $count = $row['CNT'];
+
+
+                    if ($count == 1) {
+                        try {
+                            $sql = "UPDATE \"USER\" SET password = password_encrypt('$confirmPassword') WHERE user_id = '$user_id'";
+                            $stid = oci_parse($connection, $sql);
+                            $exe = oci_execute($stid);
+
+                            if ($exe) {
+                                // echo "<script>alert('Your password has been changed successfully.')</script>";
+                                $message = "Password has been changed successfully.";
+                            } else {
+                                $error_message = "An error occurred while updating the password.";
+                            }
+                        } catch (Exception $e) {
+                            $error_message = "An error occurred: " . $e->getMessage();
+                        }
+                    } else {
+                        $error_message = "Old password didn't match.";
+                    }
+                } else {
+                    $error_message = "An error occurred while verifying the old password.";
+                }
+            } catch (Exception $e) {
+                $error_message = "An error occured: " . $e->getMessage();
+            }
+        }
+    }
+}
+
+// HTML and form start here
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,221 +159,211 @@ require ('../connection.php');
             <div class="col-lg-10 ms-auto p-4 overflow-hidden">
                 <h3 class="mb-4">SETTINGS</h3>
 
-                <!-- General settings section -->
+                <!-- Profile settings section -->
 
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h5 class="card-title m-0">General Settings</h5>
+                            <h5 class="card-title m-0">Profile Settings</h5>
                             <button type="button" class="btn btn-dark shadow-none btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#general-s">
+                                data-bs-target="#profile-settings">
                                 <i class="bi bi-pencil-square"></i> Edit
                             </button>
                         </div>
-                        <h6 class="card-subtitle mb-1 fw-bold">Shop Title</h6>
-                        <p class="card-text" id="shop_title"></p>
-                        <h6 class="card-subtitle mb-1 fw-bold">Shop Description</h6>
-                        <p class="card-text" id="shop_description"></p>
+                        <h6 class="card-subtitle mb-1 fw-bold">Name</h6>
+                        <p class="card-text" id="shop_title">
+                            <?php echo htmlspecialchars($userDetails['FIRST_NAME']); ?>
+                            <?php echo htmlspecialchars($userDetails['LAST_NAME']); ?>
+                        </p>
+                        <h6 class="card-subtitle mb-1 fw-bold">Username</h6>
+                        <p class="card-text" id="shop_description">
+                            <?php echo htmlspecialchars($userDetails['USERNAME']); ?>
+                        </p>
+                        <h6 class="card-subtitle mb-1 fw-bold">Contact Number</h6>
+                        <p class="card-text" id="shop_description">
+                            <?php echo htmlspecialchars($userDetails['CONTACT_NUMBER']); ?>
+                        </p>
                     </div>
                 </div>
 
-                <!-- General settings modal -->
+                <!-- Profile settings modal -->
 
-                <div class="modal fade" id="general-s" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1"
-                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal fade" id="profile-settings" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="profileSettingsLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <form id="general_s_form">
+                        <form id="profile_settings_form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"
+                            method="post">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">General Settings</h5>
+                                    <h5 class="modal-title">Edit Profile</h5>
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold">Shop Title</label>
-                                        <input type="text" name="shop_title" id="shop_title_inp"
-                                            class="form-control shadow-none" required>
+                                        <label for="first-name" class="form-label fw-bold">First Name</label>
+                                        <input type="text" id="first-name" name="first_name"
+                                            class="form-control shadow-none" required
+                                            value="<?php echo htmlspecialchars($userDetails['FIRST_NAME']); ?>">
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold">Shop Description</label>
-                                        <textarea name="shop_description" id="shop_description_inp"
-                                            class="form-control shadow-none" rows="6" required></textarea>
+                                        <label for="last-name" class="form-label fw-bold">Last Name</label>
+                                        <input type="text" id="last-name" name="last_name"
+                                            class="form-control shadow-none" required
+                                            value="<?php echo htmlspecialchars($userDetails['LAST_NAME']); ?>">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label fw-bold">Username</label>
+                                        <input type="text" id="username" name="username"
+                                            class="form-control shadow-none"
+                                            value="<?php echo htmlspecialchars($userDetails['USERNAME']); ?>">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="contact-number" class="form-label fw-bold">Contact Number</label>
+                                        <input type="text" id="contact-number" name="contact_number"
+                                            class="form-control shadow-none"
+                                            value="<?php echo htmlspecialchars($userDetails['CONTACT_NUMBER']); ?>">
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button"
-                                        onclick="site_title.value = general_data.site_title, site_about.value = general_data.site_about"
-                                        class="btn text-secondary shadow-none" data-bs-dismiss="modal">CANCEL</button>
-                                    <button type="submit" class="btn custom-bg text-white shadow-none">SUBMIT</button>
+                                    <button type="button" class="btn text-secondary shadow-none"
+                                        data-bs-dismiss="modal">CANCEL</button>
+                                    <button type="submit" class="btn btn-dark shadow-none">SUBMIT</button>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
 
-                <!-- Shutdown section -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h5 class="card-title m-0">Shutdown Shop</h5>
-                            <div class="form-check form-switch">
-                                <form>
-                                    <input onchange="upd_shutdown(this.value)" class="form-check-input" type="checkbox"
-                                        id="shutdown-toggle">
-                                </form>
-                            </div>
-                        </div>
-                        <p class="card-text">
-                            No customers will be allowed to shop, when the shutdown mode is turned on.
-                        </p>
-                    </div>
-                </div>
+                <!-- Shop settings modal -->
 
-                <!-- Contact details section -->
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h5 class="card-title m-0">Contacts Settings</h5>
+                            <h5 class="card-title m-0">Shop Settings</h5>
                             <button type="button" class="btn btn-dark shadow-none btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#contacts-s">
+                                data-bs-target="#shop-settings-modal">
                                 <i class="bi bi-pencil-square"></i> Edit
                             </button>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="mb-4">
-                                    <h6 class="card-subtitle mb-1 fw-bold">Address</h6>
-                                    <p class="card-text" id="address"></p>
-                                </div>
-                                <div class="mb-4">
-                                    <h6 class="card-subtitle mb-1 fw-bold">Google Map</h6>
-                                    <p class="card-text" id="gmap"></p>
-                                </div>
-                                <div class="mb-4">
-                                    <h6 class="card-subtitle mb-1 fw-bold">Phone Numbers</h6>
-                                    <p class="card-text mb-1">
-                                        <i class="bi bi-telephone-fill"></i> 9813283818
-                                        <span id="pn1"></span>
-                                    </p>
-                                    <p class="card-text">
-                                        <i class="bi bi-telephone-fill"></i> 01-4293993
-                                        <span id="pn2"></span>
-                                    </p>
-                                </div>
-                                <div class="mb-4">
-                                    <h6 class="card-subtitle mb-1 fw-bold">E-mail</h6>
-                                    <p class="card-text" id="email"></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-4">
-                                    <h6 class="card-subtitle mb-1 fw-bold">Social Links</h6>
-                                    <p class="card-text mb-1">
-                                        <i class="bi bi-facebook me-1"></i>
-                                        <span id="fb"></span>
-                                    </p>
-                                    <p class="card-text mb-1">
-                                        <i class="bi bi-instagram me-1"></i>
-                                        <span id="insta"></span>
-                                    </p>
-                                    <p class="card-text">
-                                        <i class="bi bi-twitter me-1"></i>
-                                        <span id="tw"></span>
-                                    </p>
-                                </div>
-
-                            </div>
-                        </div>
+                        <h6 class="card-subtitle mb-1 fw-bold">Shop Name</h6>
+                        <p class="card-text"><?php echo htmlspecialchars($shopDetails['SHOP_NAME']); ?></p>
+                        <h6 class="card-subtitle mb-1 fw-bold">Description</h6>
+                        <p class="card-text"><?php echo htmlspecialchars($shopDetails['SHOP_DESCRIPTION']); ?></p>
+                        <h6 class="card-subtitle mb-1 fw-bold">Location</h6>
+                        <p class="card-text"><?php echo htmlspecialchars($shopDetails['LOCATION']); ?></p>
+                        <h6 class="card-subtitle mb-1 fw-bold">Contact Number</h6>
+                        <p class="card-text"><?php echo htmlspecialchars($shopDetails['CONTACT_NUMBER']); ?></p>
                     </div>
                 </div>
 
-                <!-- Contacts details modal -->
-
-                <div class="modal fade" id="contacts-s" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1"
-                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <form id="contacts_s_form">
+                <!-- Modal for Editing Shop Details -->
+                <div class="modal fade" id="shop-settings-modal" tabindex="-1" aria-labelledby="shopSettingsModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Contacts Settings</h5>
+                                    <h5 class="modal-title" id="shopSettingsModalLabel">Edit Shop Details</h5>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="container-fluid p-0">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label class="form-label fw-bold">Address</label>
-                                                    <input type="text" name="address" id="address_inp"
-                                                        class="form-control shadow-none" required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label fw-bold">Google Map Link</label>
-                                                    <input type="text" name="gmap" id="gmap_inp"
-                                                        class="form-control shadow-none" required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label fw-bold">Phone Numbers (with country
-                                                        code)</label>
-                                                    <div class="input-group mb-3">
-                                                        <span class="input-group-text"><i
-                                                                class="bi bi-telephone-fill"></i></span>
-                                                        <input type="number" name="pn1" id="pn1_inp"
-                                                            class="form-control shadow-none" required>
-                                                    </div>
-                                                    <div class="input-group mb-3">
-                                                        <span class="input-group-text"><i
-                                                                class="bi bi-telephone-fill"></i></span>
-                                                        <input type="number" name="pn2" id="pn2_inp"
-                                                            class="form-control shadow-none">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label fw-bold">Email</label>
-                                                    <input type="email" name="email" id="email_inp"
-                                                        class="form-control shadow-none" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                < class="mb-3">
-                                                    <label class="form-label fw-bold">Social Links</label>
-                                                    <div class="input-group mb-3">
-                                                        <span class="input-group-text"><i
-                                                                class="bi bi-facebook"></i></span>
-                                                        <input type="text" name="fb" id="fb_inp"
-                                                            class="form-control shadow-none" required>
-                                                    </div>
-                                                    <div class="input-group mb-3">
-                                                        <span class="input-group-text"><i
-                                                                class="bi bi-instagram"></i></span>
-                                                        <input type="text" name="insta" id="insta_inp"
-                                                            class="form-control shadow-none" required>
-                                                    </div>
-                                                    <div class="input-group mb-3">
-                                                        <span class="input-group-text"><i
-                                                                class="bi bi-twitter"></i></span>
-                                                        <input type="text" name="tw" id="tw_inp"
-                                                            class="form-control shadow-none">
-                                                    </div>
-                                            </div>
-                                        </div>
+                                    <div class="mb-3">
+                                        <label for="shop-name" class="form-label">Shop Name</label>
+                                        <input type="text" class="form-control" id="shop-name" name="shop_name" required
+                                            value="<?php echo htmlspecialchars($shopDetails['SHOP_NAME']); ?>">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="shop-description" class="form-label">Description</label>
+                                        <textarea class="form-control" id="shop-description" name="shop_description"
+                                            rows="3"><?php echo htmlspecialchars($shopDetails['SHOP_DESCRIPTION']); ?></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="location" class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="location" name="location"
+                                            value="<?php echo htmlspecialchars($shopDetails['LOCATION']); ?>">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="contact-number" class="form-label">Contact Number</label>
+                                        <input type="text" class="form-control" id="contact-number"
+                                            name="contact_number"
+                                            value="<?php echo htmlspecialchars($shopDetails['CONTACT_NUMBER']); ?>">
                                     </div>
                                 </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn text-secondary"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" name="update_shop" class="btn btn-dark">Update</button>
+                                </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn text-secondary shadow-none"
-                                    data-bs-dismiss="modal">CANCEL</button>
-                                <button type="submit" class="btn custom-bg text-white shadow-none">SUBMIT</button>
-                            </div>
-                        </form> 
+                        </form>
                     </div>
-
                 </div>
+
+                <!-- password settings section -->
+
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h5 class="card-title m-0">Change Password</h5>
+                            <button type="button" class="btn btn-dark shadow-none btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#password-settings">
+                                <i class="bi bi-pencil-square"></i> Change your password
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Password Change Modal -->
+                <div class="modal fade" id="password-settings" data-bs-backdrop="static" data-bs-keyboard="true"
+                    tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form id="password_change_form" action="password_update.php" method="post">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Change Password</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="old-password" class="form-label fw-bold">Old Password</label>
+                                        <input type="password" id="old-password" name="old_password"
+                                            class="form-control shadow-none" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="new-password" class="form-label fw-bold">New Password</label>
+                                        <input type="password" id="new-password" name="new_password"
+                                            class="form-control shadow-none" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="confirm-password" class="form-label fw-bold">Confirm
+                                            Password</label>
+                                        <input type="password" id="confirm-password" name="confirm_password"
+                                            class="form-control shadow-none" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <p class="fw-bold">Password must:</p>
+                                        <ul>
+                                            <li>Contain 8 to 32 characters</li>
+                                            <li>Contain at least one number and special character</li>
+                                            <li>Contain at least one upper and lower case</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn text-secondary shadow-none"
+                                        data-bs-dismiss="modal">CANCEL</button>
+                                    <button type="submit" class="btn btn-dark shadow-none">CHANGE PASSWORD</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+
+
+
             </div>
-
-
-
-
         </div>
-    </div>
 
 
 
