@@ -12,8 +12,8 @@
 <body style="display: flex; flex-direction: column;">
     <?php
     session_start();
-    include("../connection.php");
-    require('../inc/header1.php');
+    include ("../connection.php");
+    require ('../inc/header1.php');
     echo "<br><br>";
     $error = ''; // Initialize the error message variable
     if (isset($_POST['btnSignInLogin'])) {
@@ -46,7 +46,7 @@
             if ($row = oci_fetch_assoc($stid)) {
                 $status = $row['STATUS'];
             } else {
-                echo  "<script>alert('Something! went wrong')</script>";
+                echo "<script>alert('Something! went wrong')</script>";
             }
             if ($status == '1') {
                 $_SESSION["user"] = $username;
@@ -59,14 +59,23 @@
                     header("Location: ../index.php");
                     exit;
                 } else {
-                    echo  "<script>alert('Error! Logging in.')</script>";
+                    echo "<script>alert('Error! Logging in.')</script>";
                 }
             } else {
-                echo  "<script>alert('Your account has been removed!!!')</script>";
+                echo "<script>alert('Your account has been removed!!!')</script>";
             }
         } elseif ($role == "T") {
             $_SESSION["traderUser"] = $username;
             $_SESSION["loggedinTrader"] = TRUE;
+            $_SESSION['traderID'] = $user_id;
+            $sql = "select shop_id from shop where user_id = '$user_id'";
+            $stid = oci_parse($connection, $sql);
+            $exe = oci_execute($stid);
+            $shop_id = null;
+            if ($row = oci_fetch_assoc($stid)) {
+                $shop_id = $row["SHOP_ID"];
+            }
+            $_SESSION['shopID'] = $shop_id;
             $sql = "update \"USER\" set LAST_LOGGEDIN_DATE = sysdate where user_id = '$user_id'";
             $stid = oci_parse($connection, $sql);
             $exe = oci_execute($stid);
@@ -74,7 +83,7 @@
                 header("Location: ../traderdashboard");
                 exit;
             } else {
-                echo  "<script>alert('Error! Logging in.')</script>";
+                echo "<script>alert('Error! Logging in.')</script>";
             }
         } elseif ($role == "A") {
             $_SESSION["admin"] = $username;
@@ -86,7 +95,7 @@
                 header("Location: ../admin");
                 exit;
             } else {
-                echo  "<script>alert('Error! Logging in.')</script>";
+                echo "<script>alert('Error! Logging in.')</script>";
             }
         }
 
@@ -110,7 +119,7 @@
                 <div class="inputBx">
                     <label for="passwordLogin">Password</label>
                     <input type="password" id="passwordLogin" name="passwordLogin" required>
-                    <?php if (!empty($error)) : ?>
+                    <?php if (!empty($error)): ?>
                         <div style="color: red;"><?= $error ?></div>
                     <?php endif; ?>
                 </div>
