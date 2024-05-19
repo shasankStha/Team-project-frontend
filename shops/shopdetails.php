@@ -200,8 +200,8 @@ if (isset($_POST['verifyOtp'])) {
             $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
             VALUES (null, '$username', '$confirmpassword', '$email', '$firstname', '$lastname', '$contact', 'T', SYSDATE, null)";
             $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-            if (!oci_execute($stid)) {
+            $exe = oci_execute($stid);
+            if (!$exe) {
                 $error = oci_error($stid);
                 throw new Exception($error['message']);
             }
@@ -210,8 +210,8 @@ if (isset($_POST['verifyOtp'])) {
             //Getting user_id
             $sql = "select user_id from \"USER\" where username = '$username'";
             $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-            if (!oci_execute($stid)) {
+            $exe = oci_execute($stid);
+            if (!$exe) {
                 $error = oci_error($stid);
                 throw new Exception($error['message']);
             }
@@ -227,8 +227,8 @@ if (isset($_POST['verifyOtp'])) {
             //Adding data in trader table
             $sql = "INSERT INTO TRADER VALUES ('$user_id', '$address', 0)";
             $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-            if (!oci_execute($stid)) {
+            $exe = oci_execute($stid);
+            if (!$exe) {
                 $error = oci_error($stid);
                 throw new Exception($error['message']);
             }
@@ -236,8 +236,8 @@ if (isset($_POST['verifyOtp'])) {
             //Adding data in shop table
             $sql = "INSERT INTO SHOP VALUES (null, '$shopname','$description','$location',null,'$contactnumber', '$user_id')";
             $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-            if (!oci_execute($stid)) {
+            $exe = oci_execute($stid);
+            if (!$exe) {
                 $error = oci_error($stid);
                 throw new Exception($error['message']);
             }
