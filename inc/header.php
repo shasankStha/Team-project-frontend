@@ -190,7 +190,9 @@
 <body>
     <nav class="navbar">
         <div class="logo">
-            <img src="../Images/Logo/just_logo.png" alt="CleckShopHub">
+            <a href="../index.php">
+                <img src="../Images/Logo/just_logo.png" alt="CleckShopHub">
+            </a>
         </div>
         <div class="toggle-button">
             <span class="bar"></span>
@@ -222,7 +224,7 @@
         <a href="../aboutus/aboutus.php">About us</a>
     </div>
     <script>
-        document.querySelector('.toggle-button').addEventListener('click', function() {
+        document.querySelector('.toggle-button').addEventListener('click', function () {
             document.querySelector('.menu').classList.toggle('active');
             document.querySelector('.search-bar').classList.toggle('active');
         });

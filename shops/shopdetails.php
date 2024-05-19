@@ -117,7 +117,7 @@ if (isset($_POST['signUpBtn'])) {
     $description = $_POST['description'];
     $_SESSION['shop_data'] = $_POST;
 
-    if(strlen($contactnumber > 10)){
+    if(strlen($contactnumber != 10)){
         echo "<div style='color: red;'>Contact number should have 10 digit number.</div>";
         exit;
     }

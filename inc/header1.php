@@ -155,7 +155,7 @@
    <!-- Logo -->
    <div class="navbar-container">
    <div class="navbar-brand" id="navbar-brand">
-       <a href="index.php">
+       <a href="../index.php">
            <!-- <img src="../images/logo/white.png" alt="Logo" style="height: 50px;"> -->
            <img  id ="formimage" src="../images/logo/white.png" alt="Logo" style="height: 50px;">
        </a>

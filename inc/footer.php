@@ -1,4 +1,4 @@
-<?php require('links.php'); ?>
+<?php require ('links.php'); ?>
 <!-- footer -->
 
 <br><br><br>
@@ -49,17 +49,23 @@
                 <a href="../aboutus/aboutus.php" class="text-white text-decoration-none mx-2">ABOUT US</a>
 
                 <a href="../contactus/contactus.php" class="text-white text-decoration-none mx-2">CONTACT US</a>
+                <div class="text-center py-4">
 
+                    <a href="../trader/tradersignup.php" class="text-white text-decoration-none mx-2">Become a
+                        Seller</a>
+                    <a href="../customer/customersignup.php" class="text-white text-decoration-none mx-2">Become a
+                        Customer</a>
+                </div>
+
+
+                <div class="text-center py-4">
+
+                    <a href="../terms/terms.php" class="text-white text-decoration-none mx-2">TERMS AND CONDITIONS</a>
+
+                </div>
+                <p class="text-center py-2 m-0" style="color: lightgray;"></p>
 
             </div>
-            <div class="text-center py-4">
-
-                <a href="../terms/terms.php" class="text-white text-decoration-none mx-2">TERMS AND CONDITIONS</a>
-
-            </div>
-            <p class="text-center py-2 m-0" style="color: lightgray;"></p>
-
-
         </div>
     </div>
 </div>

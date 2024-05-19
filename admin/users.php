@@ -54,7 +54,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - Users</title>
+  <title>Admin Panel - Customers</title>
   <?php require('inc/links.php'); ?>
 </head>
 
@@ -65,9 +65,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
   <div class="container-fluid" id="main-content">
     <div class="row">
       <div class="col-lg-10 ms-auto p-4 overflow-hidden">
-        <h3 class="mb-4">USERS</h3>
+        <h3 class="mb-4">CUSTOMERS</h3>
         <?php if (!empty($message))
-          echo "<p>$message</p>"; ?> <!-- Display message -->
+          echo "<p>$message</p>"; ?>
 
         <div class="card border-0 shadow-sm mb-4">
           <div class="card-body">
