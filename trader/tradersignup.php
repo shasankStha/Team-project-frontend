@@ -142,7 +142,7 @@
                 <div class="error" style="color: red;"><?php if (!empty($error_message1)) echo "<p class='error'>$error_message1</p>"; ?></div>
                 <input type="password" class="form-control mb-3" name="password" placeholder="Password" required>
                 <input type="password" class="form-control mb-3" name="confirm_password" placeholder="Confirm Password" required>
-                <div class="error" style="color: red;"><?php if (!empty($error_message)) echo "<p class='error'>$error_message</p>"; ?></div>
+                <div class="error" style="color: red; text-align: left;"><?php if (!empty($error_message)) echo "<p class='error'>$error_message</p>"; ?></div>
                 <button type="submit" class="btn btn-primary" name="signUp">Next</button>
                 <br>
                 <div class="text-center mt-3">

@@ -55,6 +55,7 @@
     require 'phpmailer/src/Exception.php';
     require 'phpmailer/src/PHPMailer.php';
     require 'phpmailer/src/SMTP.php';
+    $error_message = '';
     ?>
 
     <?php
@@ -81,6 +82,7 @@
                     <input type="checkbox" name="terms" id="terms" required>
                     I accept the <a href="../terms/terms.php">Terms and Conditions</a>.
                 </label>
+                <div class="error" style="color: red; text-align: left;"><?php if (!empty($error_message)) echo "<p class='error'>$error_message</p>"; ?></div>
                 <button type="submit" name="signUpBtn">Sign Up</button>
                 <div class="center-text">
                     <br>
@@ -117,8 +119,8 @@ if (isset($_POST['signUpBtn'])) {
     $description = $_POST['description'];
     $_SESSION['shop_data'] = $_POST;
 
-    if (strlen($contactnumber != 10)) {
-        echo "<div style='color: red;'>Contact number should have 10 digit number.</div>";
+    if (strlen($contactnumber) != 10) {
+        $error_message =  "Contact number should have 10 digit number.";
         exit;
     }
 
