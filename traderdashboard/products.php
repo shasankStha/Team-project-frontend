@@ -210,13 +210,7 @@
         $stid = oci_parse($connection, $sql);
         oci_execute($stid);
     }
-
-
-
-
     ?>
-
-
 
     <div class="container-fluid" id="main-content">
         <div class="row">
@@ -225,10 +219,7 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h5 class="card-title m-0">MANAGE PRODUCTS</h5>
-                            <button type="button" class="btn btn-dark shadown-none btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#add-s">
-                                <i class="bi bi-pencil-square"></i> EDIT
-                            </button>
+
                         </div>
                         <div class="table-responsive-lg" style="height: 450px; overflow-y: scroll;">
                             <table class="table table-hover border text-center">
@@ -273,20 +264,23 @@
                         </div>
                     </div>
                 </div>
+                <form method="POST" enctype="multipart/form-data" name="productForm">
 
-
-                <div class="modal fade" id="add-s" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1"
-                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <form method="POST" enctype="multipart/form-data" name="productForm">
+                    <div class="modal fade" id="edit-modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Add Product</h5>
+                                    <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <fieldset>
                                         <legend>Product Details</legend>
-
+                                        <?php
+                                        echo "<script></script>"
+                                        ?>
                                         <div class="mb-3">
                                             <label class="form-label">Product Name:</label>
                                             <input type="text" class="form-control shadown-none" name="pName">
@@ -296,19 +290,50 @@
                                             <input type="text" class="form-control shadown-none" name="pPrice">
                                         </div>
                                         <div class="mb-3">
+                                            <label class="form-label">Stock Available:</label>
+                                            <input type="text" class="form-control shadown-none" name="pPrice">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Min Order</label>
+                                            <input type="number" class="form-control shadown-none" name="pMinOrder"
+                                                required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Max order</label>
+                                            <input type="number" class="form-control shadown-none" name="pMaxOrder"
+                                                required>
+                                        </div>
+
+                                        <div class="mb-3">
                                             <label class="form-label">Category:</label>
                                             <select name="pCategory">
                                                 <option>--Select category--</option>
-                                                <option value="Fish Monger">Fish Monger</option>
-                                                <option value="Butchery">Butchery</option>
-                                                <option value="Bakery">Bakery</option>
+                                                <?php foreach ($categories as $category): ?>
+                                                    <option value="<?php echo htmlspecialchars($category); ?>">
+                                                        <?php echo htmlspecialchars($category); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
                                             </select>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Image file:</label>
-                                            <input type="text" class="form-control shadown-none" name="imgName"
-                                                placeholder="Image Name">
                                             <input type="file" class="form-control shadown-none" name="pImage">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Discount</label>
+                                            <input type="number" class="form-control shadown-none" name="pDiscount"
+                                                required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Description</label>
+                                            <input type="text" class="form-control shadown-none" name="pDescription"
+                                                required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Allergy Information</label>
+                                            <input type="text" class="form-control shadown-none" name="pAllergyInfo"
+                                                required>
                                         </div>
 
                                     </fieldset>
@@ -316,15 +341,15 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn text-secondary shadow-none"
                                         data-bs-dismiss="modal">CANCEL</button>
-                                    <button type="button" class="btn btn-primary">SUBMIT</button>
+                                    <button type="submit" name="updateProduct" class="btn btn-primary">SUBMIT</button>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                </div>
-
+                </form>
             </div>
         </div>
+
+    </div>
+    </div>
 
     </div>
 </body>
