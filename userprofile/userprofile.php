@@ -88,7 +88,6 @@
             <a href="userfavourites.php">Favourites</a>
             <a href="usermycarts.php">My carts</a>
             <a href="userchangepassword.php">Change Password</a>
-            <a href="../contactus/contactus.php">Contact Us</a>
             <a href="../logout/logout.php">Log out</a>
         </div>
 
