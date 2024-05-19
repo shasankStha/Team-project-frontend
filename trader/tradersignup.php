@@ -21,7 +21,7 @@
     $error_message3 = '';
 
     if (isset($_POST['signUp'])) {
-        try{
+        try {
             $sql = "SELECT count(*) as trader_count FROM \"TRADER\"";
             $stid = oci_parse($connection, $sql);
             oci_execute($stid);
@@ -37,8 +37,7 @@
             if ($traderCount > 10) {
                 $error_message = 'Number of traders is already 10 and cannot register.';
                 exit;
-            }
-            else{
+            } else {
                 $firstName = $_POST['first_name'];
                 $lastName = $_POST['last_name'];
                 $address = $_POST['address'];
@@ -50,11 +49,9 @@
 
                 if ($password != $confirmPassword) {
                     $error_message = 'Password and Confirm Password do not match !!!.';
-                } 
-                else if(strlen($contact) > 10){
+                } else if (strlen($contact) != 10) {
                     $error_message = 'Contact number should have 10 digit number.';
-                }
-                else if (strlen($confirmPassword) < 8 || strlen($confirmPassword) > 32) {
+                } else if (strlen($confirmPassword) < 8 || strlen($confirmPassword) > 32) {
                     $error_message = "Password should be 8 to 32 characters long.<br>";
                 } else if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/', $_POST['password'])) {
                     $error_message = "Password should contain an uppercase,<br>Number<br>and a special character<br>";
@@ -86,8 +83,7 @@
                         }
                         if ($count != 0) {
                             $error_message2 = 'Email Already Exists !!!.';
-                        } 
-                        else {
+                        } else {
                             $sql = "SELECT count(*) FROM \"USER\" WHERE contact_number = '$contact'";
                             $stid = oci_parse($connection, $sql);
                             oci_execute($stid);
@@ -117,10 +113,9 @@
                     }
                 }
             }
+        } catch (Exception $e) {
+            $error_message = "An error occured: " . $e->getMessage();
         }
-        catch(Exception $e){
-            $error_message = "An error occured: ".$e->getMessage();
-        }  
     }
     ?>
 
