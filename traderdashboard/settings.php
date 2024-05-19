@@ -2,7 +2,6 @@
 session_start();
 require ('../connection.php');
 
-// Ensure that the user is logged in and that userID is set in the session
 if (!isset($_SESSION['traderUser']) || $_SESSION['loggedinTrader'] !== TRUE) {
     header('Location: ../login/login.php');
     exit;
@@ -25,24 +24,20 @@ $userDetails = getUserDetails($connection, $userID);
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Extract user input from the form submission
-    $firstName = $_POST['first_name'] ?? '';
-    $lastName = $_POST['last_name'] ?? '';
-    $username = $_POST['username'] ?? '';
-    $contactNumber = $_POST['contact_number'] ?? '';
+    $firstName = $_POST['first_name'];
+    $lastName = $_POST['last_name'];
+    $username = $_POST['username'];
+    $contactNumber = $_POST['contact_number'];
 
-    // Prepare the update SQL statement
     $updateSql = 'UPDATE "USER" SET FIRST_NAME = :firstname, LAST_NAME = :lastname, USERNAME = :username, CONTACT_NUMBER = :contactnumber WHERE USER_ID = :userid';
     $updateStmt = oci_parse($connection, $updateSql);
-
-    // Bind the parameters to the statement
     oci_bind_by_name($updateStmt, ':firstname', $firstName);
     oci_bind_by_name($updateStmt, ':lastname', $lastName);
     oci_bind_by_name($updateStmt, ':username', $username);
     oci_bind_by_name($updateStmt, ':contactnumber', $contactNumber);
     oci_bind_by_name($updateStmt, ':userid', $userID);
 
-    // Execute the update statement
+
     if (!oci_execute($updateStmt)) {
         $e = oci_error($updateStmt);
         echo "Error executing update: " . $e['message'];
@@ -53,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-$shopID = $_SESSION['shopID'];  // Assuming you know the shop ID, or it's stored somewhere like in a session.
+$shopID = $_SESSION['shopID']; 
 $shopDetailsQuery = 'SELECT SHOP_NAME, SHOP_DESCRIPTION, LOCATION, CONTACT_NUMBER FROM "SHOP" WHERE SHOP_ID = :shopid';
 $shopStmt = oci_parse($connection, $shopDetailsQuery);
 oci_bind_by_name($shopStmt, ':shopid', $shopID);
@@ -83,59 +78,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_shop'])) {
         $e = oci_error($updateShopStmt);
         echo "Error updating shop details: " . $e['message'];
     }
+}
 
-    $error_message = "";
-    $message = "";
+$error_message = "";
+$message = "";
 
-    if (isset($_POST['submit'])) {
-        $user_id = $_SESSION['userID'];
-        $oldPassword = $_POST['old_password'];
-        $newPassword = $_POST['new_password'];
-        $confirmPassword = $_POST['confirm_password'];
+if (isset($_POST['submit'])) {
+    $user_id = $_SESSION['userID'];
+    $oldPassword = $_POST['old_password'];
+    $newPassword = $_POST['new_password'];
+    $confirmPassword = $_POST['confirm_password'];
 
-        if ($newPassword != $confirmPassword) {
-            $error_message = 'Password and Confirm Password do not match.';
-        } else if (strlen($confirmPassword) < 8 || strlen($confirmPassword) > 32) {
-            $error_message = "Password should be 8 to 32 characters long.";
-        } else if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/', $confirmPassword)) {
-            $error_message = "Password criteria didn't match.";
-        } else {
-            try {
-                $sql = "SELECT COUNT(*) AS CNT FROM \"USER\" WHERE password = password_encrypt('$oldPassword') AND user_id = '$user_id'";
-                $stid = oci_parse($connection, $sql);
-                oci_execute($stid);
+    if ($newPassword != $confirmPassword) {
+        $error_message = 'Password and Confirm Password do not match.';
+    } else if (strlen($confirmPassword) < 8 || strlen($confirmPassword) > 32) {
+        $error_message = "Password should be 8 to 32 characters long.";
+    } else if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/', $confirmPassword)) {
+        $error_message = "Password criteria didn't match.";
+    } else {
+        try {
+            $sql = "SELECT COUNT(*) AS CNT FROM \"USER\" WHERE password = password_encrypt('$oldPassword') AND user_id = '$user_id'";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
 
-                if ($row = oci_fetch_assoc($stid)) {
-                    $count = $row['CNT'];
+            if ($row = oci_fetch_assoc($stid)) {
+                $count = $row['CNT'];
 
 
-                    if ($count == 1) {
-                        try {
-                            $sql = "UPDATE \"USER\" SET password = password_encrypt('$confirmPassword') WHERE user_id = '$user_id'";
-                            $stid = oci_parse($connection, $sql);
-                            $exe = oci_execute($stid);
+                if ($count == 1) {
+                    try {
+                        $sql = "UPDATE \"USER\" SET password = password_encrypt('$confirmPassword') WHERE user_id = '$user_id'";
+                        $stid = oci_parse($connection, $sql);
+                        $exe = oci_execute($stid);
 
-                            if ($exe) {
-                                // echo "<script>alert('Your password has been changed successfully.')</script>";
-                                $message = "Password has been changed successfully.";
-                            } else {
-                                $error_message = "An error occurred while updating the password.";
-                            }
-                        } catch (Exception $e) {
-                            $error_message = "An error occurred: " . $e->getMessage();
+                        if ($exe) {
+                            // echo "<script>alert('Your password has been changed successfully.')</script>";
+                            $message = "Password has been changed successfully.";
+                        } else {
+                            $error_message = "An error occurred while updating the password.";
                         }
-                    } else {
-                        $error_message = "Old password didn't match.";
+                    } catch (Exception $e) {
+                        $error_message = "An error occurred: " . $e->getMessage();
                     }
                 } else {
-                    $error_message = "An error occurred while verifying the old password.";
+                    $error_message = "Old password didn't match.";
                 }
-            } catch (Exception $e) {
-                $error_message = "An error occured: " . $e->getMessage();
+            } else {
+                $error_message = "An error occurred while verifying the old password.";
             }
+        } catch (Exception $e) {
+            $error_message = "An error occured: " . $e->getMessage();
         }
     }
 }
+
 
 // HTML and form start here
 ?>
@@ -317,7 +313,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_shop'])) {
                 <div class="modal fade" id="password-settings" data-bs-backdrop="static" data-bs-keyboard="true"
                     tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <form id="password_change_form" action="password_update.php" method="post">
+                        <form id="password_change_form" method="post">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Change Password</h5>

@@ -8,8 +8,9 @@
 
     <?php
     session_start();
-    include("../connection.php");
-    include("traderdashboardheader.php");
+    include ("../connection.php");
+    include ("traderdashboardheader.php");
+    $shopID = $_SESSION['shopID'];
     $traderUser = $_SESSION["traderUser"];
     $sql = "SELECT t.status FROM \"USER\" u inner join trader t on t.user_id = u.user_id where u.username = '$traderUser' or u.email='$traderUser'";
     $stid = oci_parse($connection, $sql);
@@ -57,7 +58,8 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h5 class="card-title m-0">ADD PRODUCTS</h5>
-                            <button type="button" class="btn btn-dark shadown-none btn-sm" data-bs-toggle="modal" data-bs-target="#add-s">
+                            <button type="button" class="btn btn-dark shadown-none btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#add-s">
                                 <i class="bi bi-plus-square"></i> Add
                             </button>
 
@@ -67,7 +69,8 @@
                 </div>
 
 
-                <div class="modal fade" id="add-s" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal fade" id="add-s" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <form method="POST" enctype="multipart/form-data" name="productForm">
                             <div class="modal-content">
@@ -88,24 +91,29 @@
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Stock Available</label>
-                                            <input type="number" class="form-control shadown-none" name="pStock" required>
+                                            <input type="number" class="form-control shadown-none" name="pStock"
+                                                required>
                                         </div>
 
                                         <div class="mb-3">
                                             <label class="form-label">Min Order</label>
-                                            <input type="number" class="form-control shadown-none" name="pMinOrder" required>
+                                            <input type="number" class="form-control shadown-none" name="pMinOrder"
+                                                required>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Max order</label>
-                                            <input type="number" class="form-control shadown-none" name="pMaxOrder" required>
+                                            <input type="number" class="form-control shadown-none" name="pMaxOrder"
+                                                required>
                                         </div>
 
                                         <div class="mb-3">
                                             <label class="form-label">Category:</label>
                                             <select name="pCategory">
                                                 <option>--Select category--</option>
-                                                <?php foreach ($categories as $category) : ?>
-                                                    <option value="<?php echo htmlspecialchars($category); ?>"><?php echo htmlspecialchars($category); ?></option>
+                                                <?php foreach ($categories as $category): ?>
+                                                    <option value="<?php echo htmlspecialchars($category); ?>">
+                                                        <?php echo htmlspecialchars($category); ?>
+                                                    </option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
@@ -116,18 +124,21 @@
 
                                         <div class="mb-3">
                                             <label class="form-label">Description</label>
-                                            <input type="text" class="form-control shadown-none" name="pDescription" required>
+                                            <input type="text" class="form-control shadown-none" name="pDescription"
+                                                required>
                                         </div>
 
                                         <div class="mb-3">
                                             <label class="form-label">Allergy Information</label>
-                                            <input type="text" class="form-control shadown-none" name="pAllergyInfo" required>
+                                            <input type="text" class="form-control shadown-none" name="pAllergyInfo"
+                                                required>
                                         </div>
 
                                     </fieldset>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn text-secondary shadow-none" data-bs-dismiss="modal">CANCEL</button>
+                                    <button type="button" class="btn text-secondary shadow-none"
+                                        data-bs-dismiss="modal">CANCEL</button>
                                     <button type="submit" name="add" class="btn btn-primary">SUBMIT</button>
                                 </div>
                             </div>
@@ -141,9 +152,9 @@
     </div>
 
     <?php
-    include("../connection.php");
+    include ("../connection.php");
     // echo "<script>alert('" . addslashes($traderUser) . "');</script>";
-
+    
 
     if (isset($_POST["add"])) {
         $sql = "select shop_id from shop s inner join \"USER\" u on u.user_id = s.user_id where u.username = '$traderUser' or u.email='$traderUser' ";
@@ -155,10 +166,10 @@
             // echo "<script>alert('" . addslashes($shop_id) . "');</script>";
         }
         $productName = $_POST['pName'];
-        $productPrice = (int)$_POST['pPrice'];
-        $productStock = (int)$_POST['pStock'];
-        $productMinOrder = (int)$_POST['pMinOrder'];
-        $productMaxOrder = (int)$_POST['pMaxOrder'];
+        $productPrice = (int) $_POST['pPrice'];
+        $productStock = (int) $_POST['pStock'];
+        $productMinOrder = (int) $_POST['pMinOrder'];
+        $productMaxOrder = (int) $_POST['pMaxOrder'];
         $productCat = $_POST['pCategory'];
         $productDescription = $_POST['pDescription'];
         $productAllergyInfo = $_POST['pAllergyInfo'];
@@ -170,7 +181,7 @@
         $tmp = $_FILES["pImage"]["tmp_name"];
 
         // echo "<script>alert('" . addslashes($productCat) . "');</script>";
-
+    
         if (empty($productName) || empty($productPrice) || empty($productStock || empty($productMinOrder) || empty($productMaxOrder) || empty($productCat) || empty($productDescription) || empty($productAllergyInfo))) {
             echo "Please fill all the fields.<br>";
         } else if (empty($imgName)) {
@@ -186,7 +197,7 @@
             }
         }
         // echo "<script>alert('" . addslashes($productCat) . "');</script>";
-
+    
         $sql = "select CATEGORY_ID from PRODUCT_CATEGORY where CATEGORY_NAME = '$productCat'";
         $stid = oci_parse($connection, $sql);
         oci_execute($stid);
@@ -214,7 +225,8 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h5 class="card-title m-0">MANAGE PRODUCTS</h5>
-                            <button type="button" class="btn btn-dark shadown-none btn-sm" data-bs-toggle="modal" data-bs-target="#add-s">
+                            <button type="button" class="btn btn-dark shadown-none btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#add-s">
                                 <i class="bi bi-pencil-square"></i> EDIT
                             </button>
                         </div>
@@ -224,22 +236,47 @@
                                     <tr class="bg-dark text-light">
                                         <th scope="col">S.N</th>
                                         <th scope="col">Name</th>
+                                        <th scope="col">Picture</th>
                                         <th scope="col">Price</th>
                                         <th scope="col">Stock Available</th>
                                         <th scope="col">Min Order</th>
                                         <th scope="col">Max Order</th>
+                                        <th scope="col">DISCOUNT</th>
+                                        <th scope="col">EDIT</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="room-data">
-                                </tbody>
+                                <tbody id="users-data">
+                                    <?php
+                                    $query = "SELECT NAME, IMAGE, PRICE, STOCK_AVAILABLE, MIN_ORDER, MAX_ORDER, DISCOUNT_ID FROM PRODUCT WHERE SHOP_ID = '$shopID' and status = '1'";
+                                    $stid = oci_parse($connection, $query);
+                                    oci_execute($stid);
+
+                                    $sn = 1;  // Serial Number counter
+                                    while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+                                        echo "<tr>\n";
+                                        echo "    <td>" . htmlspecialchars($sn++) . "</td>\n";
+                                        echo "    <td>" . htmlspecialchars($row['NAME']) . "</td>\n";
+                                        echo "    <td><img src='productsImages/" . htmlspecialchars($row['IMAGE']) . "' alt='Product Image' style='width:100px; height:auto;'></td>\n";
+
+                                        echo "    <td>" . htmlspecialchars($row['PRICE']) . "</td>\n";
+                                        echo "    <td>" . htmlspecialchars($row['STOCK_AVAILABLE']) . "</td>\n";
+                                        echo "    <td>" . htmlspecialchars($row['MIN_ORDER']) . "</td>\n";
+                                        echo "    <td>" . htmlspecialchars($row['MAX_ORDER']) . "</td>\n";
+                                        echo "    <td>" . htmlspecialchars($row['DISCOUNT_ID']) . "</td>\n";
+                                        echo "    <td><button type='button' class='btn btn-dark shadow-none btn-sm' data-bs-toggle='modal' data-bs-target='#edit-modal'> <i class='bi bi-pencil-square'></i> EDIT</button></td>\n";
+                                        echo "    <td><a class='btn btn-danger' href='?action=delete&id=" . "' onclick='return confirm(\"Are you sure you want to delete this item?\")'>Delete</a></td>\n";
+                                        echo "</tr>\n";
+                                    }
+                                    ?>
                             </table>
                         </div>
                     </div>
                 </div>
 
 
-                <div class="modal fade" id="add-s" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal fade" id="add-s" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <form method="POST" enctype="multipart/form-data" name="productForm">
                             <div class="modal-content">
@@ -269,14 +306,16 @@
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Image file:</label>
-                                            <input type="text" class="form-control shadown-none" name="imgName" placeholder="Image Name">
+                                            <input type="text" class="form-control shadown-none" name="imgName"
+                                                placeholder="Image Name">
                                             <input type="file" class="form-control shadown-none" name="pImage">
                                         </div>
 
                                     </fieldset>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn text-secondary shadow-none" data-bs-dismiss="modal">CANCEL</button>
+                                    <button type="button" class="btn text-secondary shadow-none"
+                                        data-bs-dismiss="modal">CANCEL</button>
                                     <button type="button" class="btn btn-primary">SUBMIT</button>
                                 </div>
                             </div>
