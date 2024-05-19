@@ -76,7 +76,7 @@
           <div class=\"product-item\">
             <a href=\"../products/productspage.php\" class=\"text-decoration-none text-dark\">
               <div class=\"product-image\">
-                <img src=\"../traderdashboard/productsImages/$image\" alt=\"Product Image\" style=\"width:80px;\" />
+                <img src=\"../traderdashboard/productsImages/$image\" alt=\"Product Image\" style=\"width:110px;\" />
                 <div class=\"favorite-icon\" onclick=\"toggleFavorite(this)\" data-product-id=\"$productId\">
                   <i class=\"far fa-heart\"></i>
                 </div>
