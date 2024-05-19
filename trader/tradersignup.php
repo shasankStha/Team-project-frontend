@@ -34,7 +34,7 @@
                 $traderCount = $row['TRADER_COUNT'];
             }
 
-            if ($traderCount > 10) {
+            if ($traderCount == 10) {
                 $error_message = 'Number of traders is already 10 and cannot register.';
                 exit;
             } else {
