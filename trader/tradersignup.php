@@ -24,17 +24,17 @@
         try {
             $sql = "SELECT count(*) as trader_count FROM \"TRADER\"";
             $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-            if (!oci_execute($stid)) {
+            $exe = oci_execute($stid);
+            if (!$exe) {
                 $error = oci_error($stid);
                 throw new Exception($error['message']);
             }
-
+            $traderCount = null;
             if ($row = oci_fetch_assoc($stid)) {
                 $traderCount = $row['TRADER_COUNT'];
             }
 
-            if ($traderCount > 10) {
+            if ($traderCount == 10) {
                 $error_message = 'Number of traders is already 10 and cannot register.';
                 exit;
             } else {
