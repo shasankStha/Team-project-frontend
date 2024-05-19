@@ -52,21 +52,42 @@
                 $_SESSION["user"] = $username;
                 $_SESSION['userID'] = $user_id;
                 $_SESSION["loggedinUser"] = TRUE;
-                header("Location: ../index.php");
-                exit;
+                $sql = "update \"USER\" set LAST_LOGGEDIN_DATE = sysdate where user_id = '$user_id'";
+                $stid = oci_parse($connection, $sql);
+                $exe = oci_execute($stid);
+                if ($exe) {
+                    header("Location: ../index.php");
+                    exit;
+                } else {
+                    echo  "<script>alert('Error! Logging in.')</script>";
+                }
             } else {
                 echo  "<script>alert('Your account has been removed!!!')</script>";
             }
         } elseif ($role == "T") {
             $_SESSION["traderUser"] = $username;
             $_SESSION["loggedinTrader"] = TRUE;
-            header("Location: ../traderdashboard");
-            exit;
+            $sql = "update \"USER\" set LAST_LOGGEDIN_DATE = sysdate where user_id = '$user_id'";
+            $stid = oci_parse($connection, $sql);
+            $exe = oci_execute($stid);
+            if ($exe) {
+                header("Location: ../traderdashboard");
+                exit;
+            } else {
+                echo  "<script>alert('Error! Logging in.')</script>";
+            }
         } elseif ($role == "A") {
             $_SESSION["admin"] = $username;
             $_SESSION["loggedinUser"] = TRUE;
-            header("Location: ../admin");
-            exit;
+            $sql = "update \"USER\" set LAST_LOGGEDIN_DATE = sysdate where user_id = '$user_id'";
+            $stid = oci_parse($connection, $sql);
+            $exe = oci_execute($stid);
+            if ($exe) {
+                header("Location: ../admin");
+                exit;
+            } else {
+                echo  "<script>alert('Error! Logging in.')</script>";
+            }
         }
 
         oci_close($connection);
