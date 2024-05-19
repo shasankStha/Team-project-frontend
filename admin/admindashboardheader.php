@@ -27,16 +27,16 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" href="dashboard.php">Dashboard</a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="users.php">Users</a>
+                            <a class="nav-link text-white" href="approval.php">Trader Approval</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="users.php">Customers</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="userqueries.php">Contact Us Messages</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="approval.php">Trader Requests</a>
-                        </li>
+                        
 
 
 

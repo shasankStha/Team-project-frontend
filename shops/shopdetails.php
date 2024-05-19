@@ -55,6 +55,7 @@
     require 'phpmailer/src/Exception.php';
     require 'phpmailer/src/PHPMailer.php';
     require 'phpmailer/src/SMTP.php';
+    $error_message = '';
     ?>
 
     <?php
@@ -81,6 +82,7 @@
                     <input type="checkbox" name="terms" id="terms" required>
                     I accept the <a href="../terms/terms.php">Terms and Conditions</a>.
                 </label>
+                <div class="error" style="color: red; text-align: left;"><?php if (!empty($error_message)) echo "<p class='error'>$error_message</p>"; ?></div>
                 <button type="submit" name="signUpBtn">Sign Up</button>
                 <div class="center-text">
                     <br>
@@ -117,8 +119,8 @@ if (isset($_POST['signUpBtn'])) {
     $description = $_POST['description'];
     $_SESSION['shop_data'] = $_POST;
 
-    if (strlen($contactnumber != 10)) {
-        echo "<div style='color: red;'>Contact number should have 10 digit number.</div>";
+    if (strlen($contactnumber) != 10) {
+        $error_message =  "Contact number should have 10 digit number.";
         exit;
     }
 
@@ -198,8 +200,8 @@ if (isset($_POST['verifyOtp'])) {
             $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)
             VALUES (null, '$username', '$confirmpassword', '$email', '$firstname', '$lastname', '$contact', 'T', SYSDATE, null)";
             $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-            if (!oci_execute($stid)) {
+            $exe = oci_execute($stid);
+            if (!$exe) {
                 $error = oci_error($stid);
                 throw new Exception($error['message']);
             }
@@ -208,8 +210,8 @@ if (isset($_POST['verifyOtp'])) {
             //Getting user_id
             $sql = "select user_id from \"USER\" where username = '$username'";
             $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-            if (!oci_execute($stid)) {
+            $exe = oci_execute($stid);
+            if (!$exe) {
                 $error = oci_error($stid);
                 throw new Exception($error['message']);
             }
@@ -225,8 +227,8 @@ if (isset($_POST['verifyOtp'])) {
             //Adding data in trader table
             $sql = "INSERT INTO TRADER VALUES ('$user_id', '$address', 0)";
             $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-            if (!oci_execute($stid)) {
+            $exe = oci_execute($stid);
+            if (!$exe) {
                 $error = oci_error($stid);
                 throw new Exception($error['message']);
             }
@@ -234,8 +236,8 @@ if (isset($_POST['verifyOtp'])) {
             //Adding data in shop table
             $sql = "INSERT INTO SHOP VALUES (null, '$shopname','$description','$location',null,'$contactnumber', '$user_id')";
             $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-            if (!oci_execute($stid)) {
+            $exe = oci_execute($stid);
+            if (!$exe) {
                 $error = oci_error($stid);
                 throw new Exception($error['message']);
             }

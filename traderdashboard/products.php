@@ -222,11 +222,12 @@
                             <table class="table table-hover border text-center">
                                 <thead>
                                     <tr class="bg-dark text-light">
-                                        <th scope="col">#</th>
+                                        <th scope="col">S.N</th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Price</th>
-                                        <th scope="col">Quantity</th>
-                                        <th scope="col">Status</th>
+                                        <th scope="col">Stock Available</th>
+                                        <th scope="col">Min Order</th>
+                                        <th scope="col">Max Order</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
