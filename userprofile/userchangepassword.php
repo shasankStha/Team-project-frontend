@@ -114,7 +114,8 @@
                             <li>Contain at least one upper and lower case</li>
                         </ul>
                     </div>
-                    <div class="success" style="color: white; background-color: green; border-radius: 6;">
+                    <div class="success" style="color: white; background-color: green; border-radius:8px;
+                    width:100%;max-width:400px;text-align:center;">
                         <?php if (!empty($message)) echo "<p class='success'>$message</p>"; ?>
                     </div>
                     <div class="d-flex justify-content-evenly mb-2">
