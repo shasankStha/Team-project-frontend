@@ -15,7 +15,7 @@
   <?php
   include('../connection.php');
   session_start();
-
+  $shop_name = null;
   $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
 
   if ($isLoggedIn) {
@@ -24,8 +24,28 @@
     include('../inc/header.php');
   }
   ?>
+
+  <?php
+  $shopId = $_GET['shop_id'];
+  
+  $sql = "SELECT SHOP_NAME FROM SHOP WHERE SHOP_ID = '$shopId'";
+  $stid = oci_parse($connection, $sql);
+  oci_execute($stid);
+
+  if($row = oci_fetch_assoc($stid)){
+    $shop_name = $row['SHOP_NAME'];
+
+  }
+  ?>
+
+
+
   <div class="shop-name">
-    <h1>Shop Name</h1>
+    <h1>
+      <?php 
+        echo "$shop_name";
+      ?>
+    </h1>
   </div>
   <div class="content-wrapper">
     <div class="shop-main-container">

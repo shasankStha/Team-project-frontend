@@ -188,6 +188,31 @@
 </head>
 
 <body>
+    <?php
+    // connection.php already includes the database connection setup
+    include('../connection.php');
+
+    function getShopNames($connection) {
+        $sql = 'SELECT SHOP_ID, SHOP_NAME FROM SHOP';
+        $stmt = oci_parse($connection, $sql);
+        if (!oci_execute($stmt)) {
+            $e = oci_error($stmt);
+            echo "Error executing query: " . $e['message'];
+            return [];
+        }
+        $shops = [];
+        while ($row = oci_fetch_assoc($stmt)) {
+            $shops[] = $row;  // Store the entire row
+        }
+        return $shops;
+    }
+    ?>
+
+    <?php
+        // Fetch shop names from the database
+        $shops = getShopNames($connection);
+    ?>
+
     <nav class="navbar">
         <div class="logo">
             <img src="../Images/Logo/just_logo.png" alt="CleckShopHub">
@@ -210,13 +235,18 @@
         <a href="../index.php">Home</a>
         <div class="user-icon">
             <a href="#">Shop</a>
-            <div class="dropdown-menu" id="dropdown-menu">
+             <div class="dropdown-menu" id="dropdown-menu">
+                <?php foreach ($shops as $shop): ?>
+                    <a href="../shops/shoppage.php?shop_id=<?php echo urlencode($shop['SHOP_ID']); ?>"><?php echo htmlspecialchars($shop['SHOP_NAME']); ?></a>
+                <?php endforeach; ?>
+            </div> 
+            <!-- <div class="dropdown-menu" id="dropdown-menu">
                 <a href="../shops/shoppage.php">Fishmonger</a>
                 <a href="../shops/shoppage.php">Butcher</a>
                 <a href="../shops/shoppage.php">Greengrocer</a>
                 <a href="../shops/shoppage.php">Bakery</a>
                 <a href="../shops/shoppage.php">Delicatessen</a>
-            </div>
+            </div> -->
         </div>
         <a href="../contactus/contactus.php">Contact us</a>
         <a href="../aboutus/aboutus.php">About us</a>
