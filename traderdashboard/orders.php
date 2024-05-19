@@ -56,7 +56,7 @@
               </table>
             </div>
             <div class="modal fade" id="order-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel">
-              <div class="modal-dialog" style="max-width: 90%; width: 90%;">
+              <div class="modal-dialog" style="max-width: 1200px; width: 100%;">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" id="editModalLabel">Order</h5>

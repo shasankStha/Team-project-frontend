@@ -1,3 +1,5 @@
+<?php require ('inc/links.php') ?>
+<?php require ('../connection.php') ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -43,30 +45,66 @@
 
                 <div class="row mb-3">
                     <div class="col-md-3 mb-4">
-                        <div class="card text-center text-success p-3">
-                            <h6>Total Orders</h6>
-                            <h1 class="mt-2 mb-0" id="">0</h1>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-4">
-                        <div class="card text-center text-success p-3">
-                            <h6>Total Products</h6>
-                            <h1 class="mt-2 mb-0" id="">0</h1>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-4">
-                        <div class="card text-center text-success p-3">
-                            <h6>Pending Orders</h6>
-                            <h1 class="mt-2 mb-0" id="">0</h1>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-4">
                         <div class="card text-center text-primary p-3">
-                            <h6>Reviews</h6>
-                            <h1 class="mt-2 mb-0" id="">0</h1>
+                            <h6 style="color: navy;">Total Orders</h6>
+                            <?php
+                            $query = "SELECT COUNT(*) AS ORDER_ID FROM \"ORDER\"";
+                            $stmp = oci_parse($connection, $query);
+                            oci_execute($stmp);
+                            $row = oci_fetch_array($stmp, OCI_ASSOC);
+                            ?>
+                            <h1 class="mt-2 mb-0" style="color: navy;"><?= $row['ORDER_ID'] ?></h1>
                         </div>
                     </div>
-                   
+                    <div class="col-md-3 mb-4">
+                    <div class="card text-center text-primary p-3">
+                            <h6 style="color: green;">Total Products</h6>
+                            <?php
+                            $query = "SELECT COUNT(*) AS PRODUCT_ID FROM \"PRODUCT\"";
+                            $stmp = oci_parse($connection, $query);
+                            oci_execute($stmp);
+                            $row = oci_fetch_array($stmp, OCI_ASSOC);
+                            ?>
+                            <h1 class="mt-2 mb-0" style="color: green;"><?= $row['PRODUCT_ID'] ?></h1>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                    <div class="card text-center text-primary p-3">
+                            <h6 style="color: red;" >Pending Orders</h6>
+                            <?php
+                            $query = "SELECT COUNT(*) AS ORDER_ID FROM \"ORDER\"";
+                            $stmp = oci_parse($connection, $query);
+                            oci_execute($stmp);
+                            $row = oci_fetch_array($stmp, OCI_ASSOC);
+                            ?>
+                            <h1 class="mt-2 mb-0" style="color: red;"><?= $row['ORDER_ID'] ?></h1>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                    <div class="card text-center text-primary p-3">
+                            <h6>Reviews</h6>
+                            <?php
+                            $query = "SELECT COUNT(*) AS REVIEW_ID FROM \"REVIEW\"";
+                            $stmp = oci_parse($connection, $query);
+                            oci_execute($stmp);
+                            $row = oci_fetch_array($stmp, OCI_ASSOC);
+                            ?>
+                            <h1 class="mt-2 mb-0"><?= $row['REVIEW_ID'] ?></h1>
+                        </div>  
+                    </div>
+
+                </div>
+                <div class="card" style="width: 28rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"></h5>
+                        <h4 class="card-subtitle mb-2 text-muted">Reports</h4>
+                        <p class="card-text">View Trader Reports</p>
+                        <div class="btn btn-dark">
+                            <a href="http://localhost:8080/apex/f?p=103:LOGIN_DESKTOP"
+                                style="text-decoration: none; color: inherit;" target="blank">CLICK HERE</a>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
