@@ -192,7 +192,8 @@
     // connection.php already includes the database connection setup
     include('../connection.php');
 
-    function getShopNames($connection) {
+    function getShopNames($connection)
+    {
         $sql = 'SELECT SHOP_ID, SHOP_NAME FROM SHOP';
         $stmt = oci_parse($connection, $sql);
         if (!oci_execute($stmt)) {
@@ -209,8 +210,8 @@
     ?>
 
     <?php
-        // Fetch shop names from the database
-        $shops = getShopNames($connection);
+    // Fetch shop names from the database
+    $shops = getShopNames($connection);
     ?>
 
     <nav class="navbar">
@@ -237,11 +238,11 @@
         <a href="../index.php">Home</a>
         <div class="user-icon">
             <a href="#">Shop</a>
-             <div class="dropdown-menu" id="dropdown-menu">
-                <?php foreach ($shops as $shop): ?>
+            <div class="dropdown-menu" id="dropdown-menu">
+                <?php foreach ($shops as $shop) : ?>
                     <a href="../shops/shoppage.php?shop_id=<?php echo urlencode($shop['SHOP_ID']); ?>"><?php echo htmlspecialchars($shop['SHOP_NAME']); ?></a>
                 <?php endforeach; ?>
-            </div> 
+            </div>
             <!-- <div class="dropdown-menu" id="dropdown-menu">
                 <a href="../shops/shoppage.php">Fishmonger</a>
                 <a href="../shops/shoppage.php">Butcher</a>
@@ -254,7 +255,7 @@
         <a href="../aboutus/aboutus.php">About us</a>
     </div>
     <script>
-        document.querySelector('.toggle-button').addEventListener('click', function () {
+        document.querySelector('.toggle-button').addEventListener('click', function() {
             document.querySelector('.menu').classList.toggle('active');
             document.querySelector('.search-bar').classList.toggle('active');
         });

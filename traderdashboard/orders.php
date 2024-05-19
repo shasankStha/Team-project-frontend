@@ -6,13 +6,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trader Panel - Order History</title>
-  <?php require ('inc/links.php'); ?>
+  <?php require('inc/links.php'); ?>
 </head>
 
 <body class="bg-light">
 
-  <?php require ('traderdashboardheader.php');
-  require ('../connection.php'); ?>
+  <?php require('traderdashboardheader.php');
+  require('../connection.php'); ?>
 
   <div class="container-fluid" id="main-content">
     <div class="row">
@@ -47,7 +47,8 @@
                     echo "    <td>" . htmlspecialchars($row['ORDER_ID']) . "</td>\n";
                     echo "    <td>" . htmlspecialchars($row['ORDER_DATE']) . "</td>\n";
                     echo "    <td>" . htmlspecialchars($row['TOTAL_PRICE']) . "</td>\n";
-                    echo "    <td><button type='button' class='btn btn-dark shadow-none btn-sm' data-bs-toggle='modal' data-bs-target='#edit-modal'> <i class='bi bi-pencil-square'></i> View order</button></td>\n";
+                    echo "<td><button type='button' class='btn btn-dark shadow-none btn-sm' onclick='saveOrderId(this)' data-bs-toggle='modal' data-bs-target='#order-modal'> <i class='bi bi-pencil-square'></i> View order</button></td>\n";
+
                     echo "</tr>\n";
                   }
                   ?>
@@ -55,12 +56,14 @@
               </table>
             </div>
 
+
           </div>
         </div>
 
       </div>
     </div>
   </div>
+
 
 
 

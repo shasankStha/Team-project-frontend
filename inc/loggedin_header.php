@@ -193,171 +193,6 @@
       border-radius: 30px;
     }
 
-    /* Styles for the overlay */
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(135, 134, 134, 0.5);
-      z-index: 9999;
-    }
-
-    /* Styles for the review box */
-    .review-box {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      border-radius: 10px;
-      padding: 20px;
-      width: 30%;
-      max-height: 80%;
-      overflow-y: auto;
-      text-align: left;
-    }
-
-    .clear_cart {
-      font-size: 15px;
-      color: #e44c4c;
-      cursor: pointer;
-      border: 1px solid #686666;
-      padding: 5px;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      border-radius: 5px;
-      position: absolute;
-      left: 20em;
-      margin-right: 30px;
-      right: 15px;
-    }
-
-    .clear_cart h4 {
-      text-align: right;
-    }
-
-    .counter {
-      font-weight: bold;
-      margin-top: 5px;
-      width: 15%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid #d9d9d9;
-      border-radius: 5px;
-      background-color: #d9d9d9;
-      margin-left: 95px;
-      margin-bottom: 30px;
-    }
-
-    .btn1 {
-      width: 30px;
-      height: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #202020;
-      cursor: pointer;
-    }
-
-    .gg-trash {
-      color: #e44c4c;
-      cursor: pointer;
-      text-align: right;
-      margin-right: 5px;
-      margin-left: 20em;
-      margin-bottom: 60px;
-      margin-top: -3em;
-    }
-
-    .title {
-      color: #202020;
-      text-align: center;
-      padding-bottom: 10px;
-      font-size: 20px;
-      margin-right: 7em;
-      margin-top: 25px;
-    }
-
-    .prices {
-      text-align: right;
-      font-weight: bold;
-      margin-right: 25px;
-      font-size: 18px;
-    }
-
-    .image_box {
-      width: 20%;
-      text-align: left;
-      height: 20%;
-      margin-top: 20px;
-    }
-
-    .image_box img {
-      max-width: 100%;
-    }
-
-    .about {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 10px;
-    }
-
-    .box {
-      margin-top: 50px;
-      border: 1px solid black;
-      border-radius: 5px;
-      width: 100%;
-      height: 9em;
-    }
-
-    .checkout {
-      float: right;
-      margin-right: 5%;
-      width: 35%;
-    }
-
-    .total {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .Subtotal {
-      font-weight: 600;
-    }
-
-    .total-amount {
-      float: right;
-    }
-
-    .button {
-      margin-top: 8px;
-      width: 100%;
-      height: 30px;
-      border: none;
-      background: linear-gradient(to bottom right, #5ed5b9, #01f9ec);
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      margin-right: 5em;
-    }
-
-    .close-button {
-      color: red;
-      cursor: pointer;
-      font-size: 30px;
-    }
-
-    .exit {
-      text-align: right;
-    }
-
     /* Dropdown menu for notifications */
     .notifications-dropdown {
       display: none;
@@ -397,6 +232,198 @@
       margin-top: 2em;
       margin-right: 10em;
       margin-top: 2.2em;
+    }
+
+    .cart-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 400px;
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 1001;
+      display: none;
+    }
+
+    .cart-popup h2 {
+      margin: 0;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-popup h2 .close-btn {
+      cursor: pointer;
+      font-size: 20px;
+      color: black;
+    }
+
+    .clear-cart-btn {
+      background: #FF3B30;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      font-size: 14px;
+      margin-left: 250px;
+      margin-top: 12px;
+    }
+
+    .clear-cart-btn:hover {
+      background: #CC2B24;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 0;
+      padding: 10px;
+      background: #f7f7f7;
+      border-radius: 8px;
+    }
+
+    .cart-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .cart-item .product-details {
+      flex: 1;
+      margin: 0 10px;
+      text-align: center;
+    }
+
+    .cart-item .quantity-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 5px;
+    }
+
+    .cart-item .quantity-controls button {
+      background: black;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 0 5px;
+      transition: background 0.3s;
+    }
+
+    .cart-item .quantity-controls button:hover {
+      background: grey;
+    }
+
+    .cart-popup .subtotal {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 10px;
+      border-top: 1px solid #ddd;
+      margin-top: 20px;
+    }
+
+    .cart-popup .checkout {
+      background: black;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+
+    .cart-popup .checkout:hover {
+      background: grey;
+    }
+
+    .background-blur {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .cart-popup {
+        width: 95%;
+      }
+    }
+
+    .fa-trash {
+      /* Change the color to red */
+      margin-top: 90px;
+      /* Adjust the position to your preference */
+      cursor: pointer;
+      /* Add a pointer cursor */
+      transition: color 0.3s;
+      /* Add a transition for hover effect */
+    }
+
+    .fa-trash:hover {
+      color: darkred;
+      /* Change color on hover */
+    }
+
+    .price-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .price-wrapper span {
+      color: #000;
+      /* Default color for the price */
+      font-size: 16px;
+      /* Adjust as needed */
+      margin-right: 10px;
+      /* Adjust spacing */
+    }
+
+    .price-wrapper .fa-trash {
+      color: black;
+      /* Change the color to red */
+      margin-left: 10px;
+      /* Adjust the position to your preference */
+      cursor: pointer;
+      /* Add a pointer cursor */
+      transition: color 0.3s;
+      /* Add a transition for hover effect */
+    }
+
+    .price-wrapper .fa-trash:hover {
+      color: darkred;
+      /* Change color on hover */
+    }
+
+    .product-details span {
+      color: #000;
+      /* Default color for the product name */
+      font-size: 16px;
+      /* Adjust as needed */
+      margin-bottom: 80px;
+      /* Add margin for spacing if needed */
+      display: block;
+      /* Ensure it takes its own line if necessary */
+      font-weight: 900;
     }
   </style>
 </head>
@@ -458,65 +485,6 @@
     </div>
   </nav>
 
-  <!-- Overlay for Cart Popup -->
-  <div class="overlay" onclick="closeCartPopup()">
-    <div class="review-box" onclick="stopPropagation(event)">
-      <div class="exit">
-        <span class="close-button" onclick="closeCartPopup()">&times;</span>
-      </div>
-      <div class="cart_summary">
-        <h1>Your Cart</h1>
-        <h4 class="clear_cart">Clear cart</h4>
-      </div>
-      <div class="box">
-        <div class="about">
-          <div class="image_box">
-            <img src="apple_juice.jpg">
-          </div>
-          <div>
-            <b>
-              <div class="title">Product Name</div>
-            </b>
-            <div class="prices">$3.99</div>
-          </div>
-        </div>
-        <div class="counter">
-          <div class="btn1" onclick="updateCount(this, -1)">-</div>
-          <div class="count">1</div>
-          <div class="btn1" onclick="updateCount(this, 1)">+</div>
-        </div>
-        <i class="gg-trash" onclick="removeItem(event)"></i>
-      </div>
-      <div class="box">
-        <div class="about">
-          <div class="image_box">
-            <img src="apple_juice.jpg">
-          </div>
-          <div>
-            <b>
-              <div class="title">Product Name</div>
-            </b>
-            <div class="prices">$2.99</div>
-          </div>
-        </div>
-        <div class="counter">
-          <div class="btn1" onclick="updateCount(this, -1)">-</div>
-          <div class="count">2</div>
-          <div class="btn1" onclick="updateCount(this, 1)">+</div>
-        </div>
-        <i class="gg-trash" onclick="removeItem(event)"></i>
-      </div>
-      <hr>
-      <div class="checkout">
-        <div class="total">
-          <div class="Subtotal">Sub-Total:</div>
-          <div class="total-amount">$0.00</div>
-        </div>
-        <a href="order_confirmation.php"><button class="button">Checkout</button></a>
-      </div>
-    </div>
-  </div>
-
   <div class="sub-navbar">
     <a href="../index.php">Home</a>
     <div class="user-icon">
@@ -531,156 +499,110 @@
     <a href="../aboutus/aboutus.php">About us</a>
   </div>
 
+  <div class="background-blur" id="backgroundBlur"></div>
+
+  <div class="cart-popup" id="cartPopup">
+    <h2>
+      Your Cart
+      <span class="close-btn" onclick="toggleCartPopup()">×</span>
+    </h2>
+    <button class="clear-cart-btn" onclick="clearCart()">Clear Cart</button>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-item">
+        <div class="quantity-wrapper">
+          <img src="https://via.placeholder.com/50" alt="Product">
+          <div class="quantity-controls">
+            <button onclick="decreaseQuantity(this)">-</button>
+            <span>1</span>
+            <button onclick="increaseQuantity(this)">+</button>
+          </div>
+        </div>
+        <div class="product-details">
+          <span>Product Name</span>
+        </div>
+        <div class="price-wrapper">
+          <span>$3.99</span>
+          <i class="fas fa-trash" onclick="removeItem(this)"></i>
+        </div>
+      </div>
+      <div class="cart-item">
+        <div class="quantity-wrapper">
+          <img src="https://via.placeholder.com/50" alt="Product">
+          <div class="quantity-controls">
+            <button onclick="decreaseQuantity(this)">-</button>
+            <span>2</span>
+            <button onclick="increaseQuantity(this)">+</button>
+          </div>
+        </div>
+        <div class="product-details">
+          <span>Product Name</span>
+        </div>
+        <div class="price-wrapper">
+          <span>$2.99</span>
+          <i class="fas fa-trash" onclick="removeItem(this)"></i>
+        </div>
+      </div>
+    </div>
+    <div class="subtotal">
+      <span>Sub-Total:</span>
+      <span id="subtotal">$9.97</span>
+    </div>
+    <button class="checkout">Checkout</button>
+  </div>
+
   <script>
-    // Function to toggle the popup
-    function toggleCartPopup(event) {
-      var overlay = document.querySelector('.overlay');
-      overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
-      event.stopPropagation(); // Prevent click event from propagating to overlay
+    function toggleCartPopup() {
+      const cartPopup = document.getElementById('cartPopup');
+      const backgroundBlur = document.getElementById('backgroundBlur');
+      cartPopup.style.display = cartPopup.style.display === 'none' ? 'block' : 'none';
+      backgroundBlur.style.display = backgroundBlur.style.display === 'none' ? 'block' : 'none';
     }
 
-    // Function to close the popup
-    function closeCartPopup() {
-      var overlay = document.querySelector('.overlay');
-      overlay.style.display = 'none';
+    function increaseQuantity(button) {
+      const quantityElement = button.previousElementSibling;
+      let quantity = parseInt(quantityElement.textContent, 10);
+      quantity++;
+      quantityElement.textContent = quantity;
+      updateSubtotal();
     }
 
-    // Function to stop event propagation
-    function stopPropagation(event) {
-      event.stopPropagation();
-    }
-
-    // Function to update the count
-    function updateCount(button, increment) {
-      const counter = button.closest('.counter');
-      const countElement = counter.querySelector('.count');
-      let currentCount = parseInt(countElement.textContent);
-
-      // Update the count based on the increment value (+1 for increase, -1 for decrease)
-      currentCount += increment;
-
-      // Ensure the count does not go below zero (optional, depending on your use case)
-      if (currentCount < 1) {
-        const userConfirmed = confirm("Are you sure you want to delete this item from your cart?");
-        // If the user confirms the deletion, proceed with removing the item
-        if (userConfirmed) {
-          const itemBox = button.closest('.box');
-          if (itemBox) {
-            itemBox.remove();
-          }
-        }
-      } else {
-        // Update the count element with the new count
-        countElement.textContent = currentCount;
+    function decreaseQuantity(button) {
+      const quantityElement = button.nextElementSibling;
+      let quantity = parseInt(quantityElement.textContent, 10);
+      if (quantity > 1) {
+        quantity--;
+        quantityElement.textContent = quantity;
+        updateSubtotal();
       }
-
-      // Recalculate the total amount
-      calculateTotal();
     }
 
-    // Function to remove an item from the cart
-    function removeItem(event) {
-      // Prevent the event from propagating further (if necessary)
-      event.stopPropagation();
-
-      // Show a confirmation dialog to the user
-      const userConfirmed = confirm("Are you sure you want to delete this item from your cart?");
-
-      // If the user confirms the deletion, proceed with removing the item
-      if (userConfirmed) {
-        const trashIcon = event.target;
-        const itemBox = trashIcon.closest('.box');
-        if (itemBox) {
-          itemBox.remove();
-        }
-      }
-
-      // Recalculate the total amount
-      calculateTotal();
-    }
-
-    // Function to clear the cart
     function clearCart() {
-      // Select all 'box' elements (representing each cart item)
-      const cartItems = document.querySelectorAll('.box');
-
-      // Show a confirmation dialog to the user if the cart is not empty
-      if (cartItems.length > 0) {
-        const userConfirmed = confirm("Are you sure you want to clear all items from your cart?");
-        // If the user confirms, proceed with removing all items
-        if (!userConfirmed) {
-          return; // Exit the function if the user cancels
-        }
-      }
-
-      // Iterate over each cart item and remove it from the DOM
-      cartItems.forEach(item => {
-        item.remove();
-      });
-
-      // If there are no items left in the cart, show a message
-      const cartIsEmpty = document.querySelectorAll('.box').length === 0;
-      if (cartIsEmpty) {
-        alert("Your cart is empty.");
-      }
-
-      // Recalculate the total amount
-      calculateTotal();
+      const cartItems = document.getElementById('cartItems');
+      cartItems.innerHTML = '';
+      updateSubtotal();
     }
 
-    // Function to calculate the total amount
-    function calculateTotal() {
+    function updateSubtotal() {
+      const cartItems = document.querySelectorAll('.cart-item');
       let subtotal = 0;
-
-      // Get all cart items
-      const cartItems = document.querySelectorAll('.box');
-      const subtotalElement = document.querySelector('.total-amount');
-
       cartItems.forEach(item => {
-        const countElement = item.querySelector('.count');
-        const priceElement = item.querySelector('.prices');
-
-        const count = parseInt(countElement.textContent);
-        const priceText = priceElement.textContent.trim();
-        const price = parseFloat(priceText.replace('$', ''));
-
-        subtotal += count * price;
+        const price = parseFloat(item.querySelector('.price-wrapper span').textContent.replace('$', ''));
+        const quantity = parseInt(item.querySelector('.quantity-controls span').textContent, 10);
+        subtotal += price * quantity;
       });
-
-      // Update the subtotal element with the calculated total
-      subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
     }
 
-    // Attach event listeners to all counter elements
-    const counters = document.querySelectorAll('.counter');
-    counters.forEach(counter => {
-      const decreaseButton = counter.querySelector('.btn1:nth-child(1)');
-      const increaseButton = counter.querySelector('.btn1:nth-child(3)');
-
-      // Attach event listeners to the decrease and increase buttons
-      decreaseButton.addEventListener('click', function() {
-        updateCount(this, -1);
-      });
-
-      increaseButton.addEventListener('click', function() {
-        updateCount(this, 1);
-      });
-    });
-
-    // Attach event listeners to all trash bin icons
-    const trashIcons = document.querySelectorAll('.gg-trash');
-    trashIcons.forEach(trashIcon => {
-      trashIcon.addEventListener('click', removeItem);
-    });
-
-    // Attach an event listener to the "Clear cart" element
-    const clearCartElement = document.querySelector('.clear_cart');
-    if (clearCartElement) {
-      clearCartElement.addEventListener('click', clearCart);
+    function removeItem(trashIcon) {
+      const cartItem = trashIcon.closest('.cart-item');
+      cartItem.remove();
+      updateSubtotal();
     }
 
-    // Initialize total amount on page load
-    calculateTotal();
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('cartPopup').style.display = 'none';
+      document.getElementById('backgroundBlur').style.display = 'none';
+    });
 
     // Function to toggle the menu for the hamburger button
     document.querySelector('.toggle-button').addEventListener('click', function() {
