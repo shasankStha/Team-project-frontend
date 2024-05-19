@@ -11,8 +11,8 @@
 
 <body>
   <?php
-  include('../connection.php');
   session_start();
+  include('../connection.php');
   $shopId = $_GET['shop_id'];
 
   // Fetch shop information in a single query
@@ -68,13 +68,15 @@
         oci_execute($stid);
 
         while ($row = oci_fetch_assoc($stid)) {
+          $productId = $row['PRODUCT_ID'];
           $productId = htmlspecialchars($row['PRODUCT_ID']);
           $name = htmlspecialchars($row['NAME']);
           $price = htmlspecialchars($row['PRICE']);
           $image = htmlspecialchars($row['IMAGE']);
+
           echo "
           <div class=\"product-item\">
-            <a href=\"../products/productspage.php\" class=\"text-decoration-none text-dark\">
+          <a href='../products/productspage.php?product_id=$productId' class='text-decoration-none text-dark'>
               <div class=\"product-image\">
                 <img src=\"../traderdashboard/productsImages/$image\" alt=\"Product Image\" style=\"width:110px;\" />
                 <div class=\"favorite-icon\" onclick=\"toggleFavorite(this)\" data-product-id=\"$productId\">

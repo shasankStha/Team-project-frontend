@@ -138,15 +138,20 @@ html {
     flex-direction: column;
 }
 
-.add-to-cart,
-.buy-now {
+.add-to-cart {
     padding: 12.5px 25px;
     margin-bottom: 12.5px;
     font-size: 20px;
     border: 1.25px solid #ddd;
-    background-color: #fff;
+    background-color: #000000;
     cursor: pointer;
+    color: white;
 }
+
+.add-to-cart:hover {
+    background-color: rgb(88, 121, 40);
+}
+
 
 .buy-now {
     background-color: #000;

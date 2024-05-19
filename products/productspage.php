@@ -12,8 +12,8 @@
 
 <body>
     <?php
-    include ('../connection.php');
     session_start();
+    include ('../connection.php');
 
     $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
 
@@ -22,23 +22,52 @@
     } else {
         include ('../inc/header.php');
     }
+
+    $productId = null;
+    $productName = null;
+    $productImag = null;
+    $productDescription = null;
+    $productPrice = null;
+    $StockAvailable = null;
+    $minOrder = null;
+    $allergyInfo = null;
     ?>
+
+    <?php
+        $productId = $_GET['product_id'];
+        $sql = "SELECT * FROM PRODUCT WHERE PRODUCT_ID = '$productId'";
+        $stid = oci_parse($connection, $sql);
+        oci_execute($stid);
+
+        while ($row = oci_fetch_assoc($stid)) {
+          $productId = $row['PRODUCT_ID'];
+          $productName = $row['NAME'];
+          $productImage = $row['IMAGE'];
+          $productDescription = $row['DESCRIPTION'];
+          $productPrice = $row['PRICE'];
+          $StockAvailable = $row['STOCK_AVAILABLE'];
+          $minOrder = $row['MIN_ORDER'];
+          $maxOrder = $row['MAX_ORDER'];
+          $allergyInfo = $row['ALLERGY_INFORMATION'];
+        }
+    
+    ?>
+
     <div class="main-container">
         <div class="container">
             <div class="left-section">
-                <img src="../images/fish.jpg" alt="Fish Image">
+                <?php echo "<img src=\"../traderdashboard/productsImages/$productImage\" alt=\"Product Image\"/>"?>
             </div>
             <div class="right-section">
                 <div class="product-details">
-                    <h1 class="product-name">Aquatic Wonder</h1>
+                    <h1 class="product-name"><?php echo "$productName";?></h1>
                     <div class="product-meta-info">
-                        <p class="product-desc">Discover the beauty of the aquatic life with this vibrant and
-                            mesmerizing goldfish.</p>
-                        <p class="product-price">Price: $29.99</p>
-                        <p class="product-stock">Stock Available: 15</p>
-                        <p class="product-min">Minimum Order: 1</p>
-                        <p class="product-max">Maximum Order: 5</p>
-                        <p class="product-allergy">Allergy Information: Hypoallergenic</p>
+                        <p class="product-desc"><?php echo "$productDescription";?></p>
+                        <p class="product-price">Price: £<?php echo "$productPrice";?></p>
+                        <p class="product-stock">Stock Available: <?php echo "$StockAvailable";?></p>
+                        <p class="product-min">Min-Order: <?php echo "$minOrder";?></p>
+                        <p class="product-max">Max-Order: <?php echo "$maxOrder";?></p>
+                        <p class="product-allergy">Allergy Information: <?php echo "$allergyInfo";?></p>
                     </div>
                     <div class="quantity-and-favorite">
                         <div class="quantity-selector">
@@ -55,7 +84,6 @@
                     </div>
                     <div class="actions">
                         <button class="add-to-cart">Add to Cart</button>
-                        <button class="buy-now">Buy Now</button>
                     </div>
                 </div>
             </div>
