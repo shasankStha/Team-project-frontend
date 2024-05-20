@@ -1,3 +1,14 @@
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
+    $_SESSION['search'] = $_POST['search'];
+    header("Location: ../products/products.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -203,7 +214,7 @@
         }
         $shops = [];
         while ($row = oci_fetch_assoc($stmt)) {
-            $shops[] = $row;  // Store the entire row
+            $shops[] = $row;
         }
         return $shops;
     }
@@ -227,9 +238,16 @@
         </div>
         <div class="menu">
             <div class="search-bar">
-                <input type="text" placeholder="Search...">
-                <button class="search-button"><i class="fa fa-search"></i></button>
+                <form action="" method="post">
+                    <input type="text" name="search" placeholder="Search..." onkeypress="if(event.key === 'Enter') { this.form.submit(); }">
+                    <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
+                </form>
             </div>
+            <?php
+            if (isset($_SESSION['search'])) {
+                $search = $_SESSION['search'];
+            }
+            ?>
             <a href="../login/login.php">Login</a>
             <a href="../customer/customersignup.php">Register</a>
         </div>

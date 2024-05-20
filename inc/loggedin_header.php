@@ -3,11 +3,10 @@ if (session_status() == PHP_SESSION_NONE) {
   session_start();
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $search = htmlspecialchars($_POST['search']);
-    $_SESSION['search'] = $search;
-    header("Location: ../products/products.php");
-    exit();
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
+  $_SESSION['search'] = $_POST['search'];
+  header("Location: ../products/products.php");
+  exit();
 }
 ?>
 <!DOCTYPE html>
@@ -442,9 +441,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
   <?php
-
-  // connection.php already includes the database connection setup
-  include ('../connection.php');
+  include('../connection.php');
 
   function getShopNames($connection)
   {
@@ -457,7 +454,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $shops = [];
     while ($row = oci_fetch_assoc($stmt)) {
-      $shops[] = $row;  // Store the entire row
+      $shops[] = $row;
     }
     return $shops;
   }
@@ -478,17 +475,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="menu">
       <div class="search-bar">
         <form action="" method="post">
-          <input type="text" name="search" placeholder="Search..."
-            onkeypress="if(event.key === 'Enter') { this.form.submit(); }">
+          <input type="text" name="search" placeholder="Search..." onkeypress="if(event.key === 'Enter') { this.form.submit(); }">
           <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
         </form>
       </div>
       <?php
-      // if (isset($_SESSION['search'])) {
-      //   $search = $_SESSION['search'];
-      //   // Unset the session variable if you do not want it to persist
-      //   // unset($_SESSION['search']);
-      // }
+      if (isset($_SESSION['search'])) {
+        $search = $_SESSION['search'];
+      }
       ?>
       <div class="notification-icon">
         <a href="#"><i class="fas fa-bell"></i><span class="label noti">Notifications</span></a>
@@ -504,8 +498,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <a href="../logout/logout.php">Logout</a>
         </div>
       </div>
-      <a href="#" class="icon cart-icon" onclick="toggleCartPopup(event)"><i class="fas fa-shopping-cart"></i><span
-          class="label">Cart</span></a>
+      <a href="#" class="icon cart-icon" onclick="toggleCartPopup(event)"><i class="fas fa-shopping-cart"></i><span class="label">Cart</span></a>
     </div>
   </nav>
 
@@ -514,9 +507,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="user-icon">
       <a href="#">Shop</a>
       <div class="dropdown-menu" id="dropdown-menu">
-        <?php foreach ($shops as $shop): ?>
-          <a
-            href="../shops/shoppage.php?shop_id=<?php echo urlencode($shop['SHOP_ID']); ?>"><?php echo htmlspecialchars($shop['SHOP_NAME']); ?></a>
+        <?php foreach ($shops as $shop) : ?>
+          <a href="../shops/shoppage.php?shop_id=<?php echo urlencode($shop['SHOP_ID']); ?>"><?php echo htmlspecialchars($shop['SHOP_NAME']); ?></a>
         <?php endforeach; ?>
       </div>
     </div>
@@ -630,7 +622,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     });
 
     // Function to toggle the menu for the hamburger button
-    document.querySelector('.toggle-button').addEventListener('click', function () {
+    document.querySelector('.toggle-button').addEventListener('click', function() {
       document.querySelector('.menu').classList.toggle('active');
     });
   </script>

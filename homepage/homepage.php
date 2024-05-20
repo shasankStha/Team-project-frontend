@@ -65,18 +65,7 @@
             <div class="swiper card-swiper-container">
                 <div class="swiper-wrapper">
                     <?php
-                    // Fetch products for the shop
-                    $sql = "SELECT 
-                    p.product_id,
-                    p.name,
-                    p.price,
-                    p.image,
-                    p.shop_id
-                FROM 
-                    product p
-                ORDER BY 
-                DBMS_RANDOM.VALUE";
-
+                    $sql = "select * from (select p.product_id,p.name,p.price,p.image,p.shop_id FROM product p ORDER BY DBMS_RANDOM.VALUE) where ROWNUM <= 8 ";
                     $stid = oci_parse($connection, $sql);
                     oci_execute($stid);
 
@@ -85,33 +74,33 @@
                         $name = htmlspecialchars($row['NAME']);
                         $price = htmlspecialchars($row['PRICE']);
                         $image = htmlspecialchars($row['IMAGE']);
-                        $shopId = htmlspecialchars($row['SHOP_ID']); // Assuming shop_id is part of the product table
+                        $shopId = htmlspecialchars($row['SHOP_ID']);
 
                         echo "
-        <div class='swiper-slide'>
-            <div class='card border-0 shadow product-item'>
-                <a href='../products/productspage.php?product_id=$productId&shop_id=$shopId' class='text-decoration-none text-dark'>
-                    <div class='product-image'>
-                        <img src='../traderdashboard/productsImages/$image' alt='Product Image' style='width:110px;' />
-                        <div class='favorite-icon' onclick='toggleFavorite(this)' data-product-id='$productId'>
-                            <i class='far fa-heart'></i>
-                        </div>
-                    </div>
-                    <div class='product-info'>
-                        <h3 class='product-name'>$name</h3>
-                        <div class='product-rating'>
-                            <i class='fas fa-star'></i>
-                            <i class='fas fa-star'></i>
-                            <i class='fas fa-star'></i>
-                            <i class='fas fa-star'></i>
-                            <i class='far fa-star'></i>
-                        </div>
-                        <div class='product-price'>£ $price</div>
-                    </div>
-                </a>
-                <button class='btn btn-success btn-add-to-cart'>Add to Cart</button>
-            </div>
-        </div>";
+                            <div class='swiper-slide'>
+                                <div class='card border-0 shadow product-item'>
+                                    <a href='../products/productspage.php?product_id=$productId&shop_id=$shopId' class='text-decoration-none text-dark'>
+                                    <div class='product-image'>
+                                        <img src='../traderdashboard/productsImages/$image' alt='Product Image' style='width:110px;' />
+                                        <div class='favorite-icon' onclick='toggleFavorite(this)' data-product-id='$productId'>
+                                            <i class='far fa-heart'></i>
+                                        </div>
+                                    </div>
+                                    <div class='product-info'>
+                                        <h3 class='product-name'>$name</h3>
+                                            <div class='product-rating'>
+                                                <i class='fas fa-star'></i>
+                                                <i class='fas fa-star'></i>
+                                                <i class='fas fa-star'></i>
+                                                <i class='fas fa-star'></i>
+                                                <i class='far fa-star'></i>
+                                            </div>
+                                            <div class='product-price'>£ $price</div>
+                                    </div>
+                                    </a>
+                                    <button class='btn btn-success btn-add-to-cart'>Add to Cart</button>
+                                </div>
+                            </div>";
                     }
                     ?>
                     <div class="swiper-pagination"></div>

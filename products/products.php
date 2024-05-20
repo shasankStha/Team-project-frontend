@@ -6,9 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Results - CleckShopHub</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/products.css">
 
@@ -16,16 +14,15 @@
 
 <body class="overflow-x-hidden">
     <?php
-    include ('../connection.php');
+    include('../connection.php');
     session_start();
     $search = $_SESSION['search'];
-    echo "<script>alert('$search')</script>";
     $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
 
     if ($isLoggedIn) {
-        include ('../inc/loggedin_header.php');
+        include('../inc/loggedin_header.php');
     } else {
-        include ('../inc/header.php');
+        include('../inc/header.php');
     }
     ?>
 
@@ -103,7 +100,50 @@
                 <h2 class="text-xl font-bold my-4">All Products</h2>
             </div>
             <div class=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
-                <div>
+
+                <?php
+                $sql = "select p.product_id, p.name, p.price, p.image, p.shop_id 
+                from product p
+                inner join product_category c on p.category_id = c.category_id
+                inner join shop s on p.shop_id = s.shop_id
+                where (p.name like '%' || 'mea' || '%' or c.category_name like '%' || 'mea' || '%' or s.shop_name like '%' || 'mea' || '%')
+                order by p.product_id";
+                $stid = oci_parse($connection, $sql);
+                oci_execute($stid);
+                while ($row = oci_fetch_assoc($stid)) {
+                    $productId = htmlspecialchars($row['PRODUCT_ID']);
+                    $name = htmlspecialchars($row['NAME']);
+                    $price = htmlspecialchars($row['PRICE']);
+                    $image = htmlspecialchars($row['IMAGE']);
+                    $shopId = htmlspecialchars($row['SHOP_ID']);
+
+                    echo "<div>
+                    <div class=\"card border-0 shadow product-item\">
+                        <a href=\"../products/productspage.php?product_id=$productId&shop_id=$shopId\" class=\"text-decoration-none text-dark\">
+
+                            <div class=\"product-image\">
+                                <img src=\"../traderdashboard/productsImages/$image\" class=\"card-img-top\" alt=\"Product Image\">
+                            </div>
+                            <div class=\"product-info\">
+                                <h3 class=\"product-name\">$name</h3>
+                                <div class=\"product-rating\">
+                                    <i class=\"fas fa-star\"></i>
+                                    <i class=\"fas fa-star\"></i>
+                                    <i class=\"fas fa-star\"></i>
+                                    <i class=\"fas fa-star\"></i>
+                                    <i class=\"far fa-star\"></i>
+                                </div>
+                                <div class=\"product-price\">£ $price</div>
+
+                            </div>
+                        </a>
+                        <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
+                    </div>
+
+                </div>";
+                }
+                ?>
+                <!-- <div>
                     <div class="card border-0 shadow product-item">
                         <a href="../products/productspage.php" class="text-decoration-none text-dark">
 
@@ -274,16 +314,14 @@
                         </div>
                     </a>
                     <button class="btn btn-success btn-add-to-cart">Add to Cart</button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
 
 
-    <?php require ('../inc/footer.php'); ?>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+    <?php require('../inc/footer.php'); ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
     <script src="../js/carousel.js"></script>
 </body>
