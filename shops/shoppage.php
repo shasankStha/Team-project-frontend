@@ -45,10 +45,9 @@
   <div class="content-wrapper">
     <div class="shop-main-container">
       <div class="shop-image">
-        <img src="images/<?php echo htmlspecialchars($picture); ?>"  />
-
-
+      <?php echo "<img src=../shop_image/$image alt=\"Product Image\"/>" ?>
       </div>
+
       <div class="description-container">
         <div class="description-heading">Description</div>
         <div class="description-text">
