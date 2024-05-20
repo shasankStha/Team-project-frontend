@@ -34,13 +34,13 @@
     <div class="row">
         <div class="col-lg-12 text-center py-4">
             <h5>Follow us</h5>
-            <a href="" class="d-inline-block text-decoration-none mb-2 rounded" style="color: white; font-size: 24px">
+            <a href="https://twitter.com" class="d-inline-block text-decoration-none mb-2 rounded" style="color: white; font-size: 24px">
                 <i class="bi bi-twitter p-1"></i>
             </a>
-            <a href="" class="d-inline-block text-decoration-none mb-2 rounded" style="color: white; font-size: 24px">
+            <a href="https://facebook.com" class="d-inline-block text-decoration-none mb-2 rounded" style="color: white; font-size: 24px">
                 <i class="bi bi-facebook p-1"></i>
             </a>
-            <a href="" class="d-inline-block text-decoration-none mb-2 rounded" style="color: white; font-size: 24px">
+            <a href="https://instagram.com" class="d-inline-block text-decoration-none mb-2 rounded" style="color: white; font-size: 24px">
                 <i class="bi bi-instagram p-1"></i>
             </a>
             <br>

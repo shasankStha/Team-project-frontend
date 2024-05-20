@@ -48,8 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-$shopID = $_SESSION['shopID']; 
-$shopDetailsQuery = 'SELECT SHOP_NAME, SHOP_DESCRIPTION, LOCATION, CONTACT_NUMBER FROM "SHOP" WHERE SHOP_ID = :shopid';
+$shopID = $_SESSION['shopID'];
+$shopDetailsQuery = 'SELECT SHOP_NAME, SHOP_DESCRIPTION, PICTURE, LOCATION, CONTACT_NUMBER FROM "SHOP" WHERE SHOP_ID = :shopid';
 $shopStmt = oci_parse($connection, $shopDetailsQuery);
 oci_bind_by_name($shopStmt, ':shopid', $shopID);
 oci_execute($shopStmt);
@@ -60,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_shop'])) {
     $shopDescription = $_POST['shop_description'];
     $location = $_POST['location'];
     $contactNumber = $_POST['contact_number'];
+    $image = $POST['PICTURE'];
 
     $updateShopSql = 'UPDATE "SHOP" SET SHOP_NAME = :shopname, SHOP_DESCRIPTION = :shopdescription, LOCATION = :location, CONTACT_NUMBER = :contactnumber WHERE SHOP_ID = :shopid';
     $updateShopStmt = oci_parse($connection, $updateShopSql);
@@ -68,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_shop'])) {
     oci_bind_by_name($updateShopStmt, ':location', $location);
     oci_bind_by_name($updateShopStmt, ':contactnumber', $contactNumber);
     oci_bind_by_name($updateShopStmt, ':shopid', $shopID);
+    
 
     if (oci_execute($updateShopStmt)) {
         echo "<script>alert('Shop details updated successfully!');</script>";
@@ -283,6 +285,12 @@ if (isset($_POST['submit'])) {
                                             name="contact_number"
                                             value="<?php echo htmlspecialchars($shopDetails['CONTACT_NUMBER']); ?>">
                                     </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Image file:</label>
+                                        <input type="file" class="form-control shadown-none" name="picture"
+                                            value="<?php echo htmlspecialchars($shopDetails['CONTACT_NUMBER']); ?>">
+                                    </div>
+
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn text-secondary"

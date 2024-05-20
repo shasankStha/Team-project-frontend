@@ -87,11 +87,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" href="orders.php">Orders</a>
                         </li>
-
-
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="reviews.php">Reviews</a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="settings.php">Settings</a>
                         </li>

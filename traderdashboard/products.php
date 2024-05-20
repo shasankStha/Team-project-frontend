@@ -54,6 +54,11 @@
     <div class="container-fluid" id="main-content">
         <div class="row">
             <div class="col-lg-10 ms-auto p-4 overflow-hidden">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h3>Products</h3>
+
+                </div>
+
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
@@ -235,6 +240,7 @@
                                         <th scope="col">DISCOUNT</th>
                                         <th scope="col">EDIT</th>
                                         <th scope="col">Action</th>
+                                        <th scope="col">Reviews</th>
                                     </tr>
                                 </thead>
                                 <tbody id="users-data">
@@ -257,6 +263,7 @@
                                         echo "    <td>" . htmlspecialchars($row['DISCOUNT_ID']) . "</td>\n";
                                         echo "    <td><button type='button' class='btn btn-dark shadow-none btn-sm' data-bs-toggle='modal' data-bs-target='#edit-modal'> <i class='bi bi-pencil-square'></i> EDIT</button></td>\n";
                                         echo "    <td><a class='btn btn-danger' href='?action=delete&id=" . "' onclick='return confirm(\"Are you sure you want to delete this item?\")'>Delete</a></td>\n";
+                                        echo "    <td><button type='button' class='btn btn-dark shadow-none btn-sm' data-bs-toggle='modal' data-bs-target='#review-modal'> <i class='bi bi-pencil-square'></i> View Reviews</button></td>\n";
                                         echo "</tr>\n";
                                     }
                                     ?>
@@ -348,6 +355,24 @@
                     </div>
 
                 </form>
+
+                <div class="modal fade" id="review-modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel">Reviews</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn text-secondary shadow-none"
+                                    data-bs-dismiss="modal">CANCEL</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

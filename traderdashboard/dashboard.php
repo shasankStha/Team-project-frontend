@@ -34,13 +34,7 @@
 
                 <!--general settings-->
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h5>Orders, Reviews Analytics</h5>
-                    <!-- <select class="form-select shadow-none bg-light w-auto" onchange="user_analytics(this.value)">
-                        <option value="1">Past 30 Days</option>
-                        <option value="2">Past 90 Days</option>
-                        <option value="3">Past 1 Year</option>
-                        <option value="4">All time</option>
-                    </select> -->
+                    <h5>Orders, Products and Reviews Analytics</h5>
                 </div>
 
                 <div class="row mb-3">

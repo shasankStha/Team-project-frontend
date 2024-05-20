@@ -21,7 +21,7 @@
 
         <div class="card border-0 shadow-sm mb-4">
           <div class="card-body">
-            <div class="table-responsive">
+            <div class="table-responsive" style="height: 450px; overflow-y: scroll;">
               <table class="table table-hover border text-center" style="min-width: 1300px;">
                 <thead>
                   <tr class="bg-dark text-light">
@@ -63,8 +63,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <div class="table-responsive">
-                      <table class="table table-hover border text-center" style="min-width: 1500px;">
+                    <div class="table-responsive" style="height: 100px; overflow-y: scroll; width: 100%;  ">
+                      <table class="table table-hover border text-center" style="min-width: 1500px;  width: 100%;">
                         <thead>
                           <tr class="bg-dark text-light">
                             <th scope="col">S.N</th>

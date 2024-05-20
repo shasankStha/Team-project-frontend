@@ -61,13 +61,13 @@
 
                     <h5 class="mt-4">Follow us</h5>
                     <!-- Social Media Links -->
-                    <a href="your-twitter-link" class="d-inline-block text-dark fs-5 me-2">
+                    <a href="https://twitter.com" class="d-inline-block text-dark fs-5 me-2">
                         <i class="bi bi-twitter me-1"></i>
                     </a>
-                    <a href="your-facebook-link" class="d-inline-block text-dark fs-5 me-2">
+                    <a href="https://facebook.com" class="d-inline-block text-dark fs-5 me-2">
                         <i class="bi bi-facebook me-1"></i>
                     </a>
-                    <a href="your-instagram-link" class="d-inline-block text-dark fs-5">
+                    <a href="https://instagram.com" class="d-inline-block text-dark fs-5">
                         <i class="bi bi-instagram me-1"></i>
                     </a>
                 </div>
