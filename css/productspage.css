@@ -1,58 +1,58 @@
 body,
 html {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
 }
 
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 25px;
-    max-width: 1500px;
-    margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 25px;
+  max-width: 1500px;
+  margin: auto;
 }
 
 .left-section {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 25px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 25px;
 }
 
 .left-section img {
-    width: 100%;
-    object-fit: cover;
-    max-height: 500px;
-    margin-top: 12%;
+  width: 100%;
+  object-fit: cover;
+  max-height: 500px;
+  margin-top: 12%;
 }
 
 .right-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 0 25px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 25px;
 }
 
 .product-details {
-    padding: 25px;
+  padding: 25px;
 }
 
 .product-meta-info {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 25px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 25px;
 }
 
 .product-name {
-    font-size: 30px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .product-desc,
@@ -61,682 +61,664 @@ html {
 .product-min,
 .product-max,
 .product-allergy {
-    font-size: 16px;
-    margin-bottom: 6.25px;
+  font-size: 16px;
+  margin-bottom: 6.25px;
 }
 
 .quantity-and-favorite {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 35px;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 35px;
+  width: 100%;
 }
 
 .quantity-selector {
-    display: flex;
-    flex-grow: 1;
-    order: 1;
-    flex-direction: column;
-
+  display: flex;
+  flex-grow: 1;
+  order: 1;
+  flex-direction: column;
 }
 
 .quantity-label {
-    margin-bottom: 5px;
-    margin-left: 24px;
+  margin-bottom: 5px;
+  margin-left: 24px;
 }
 
 .quantity-controls {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .quantity-control {
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    cursor: pointer;
-    padding: 5px 8px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  padding: 5px 8px;
 }
 
 .minus,
 .plus {
-    border-radius: 4px;
+  border-radius: 4px;
 }
 
 .quantity-value {
-    width: 50px;
-    height: 25px;
-    text-align: center;
-    border: 1px solid #ddd;
-    border-radius: 10%;
+  width: 50px;
+  height: 25px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 10%;
 }
 
 .favorite-icon-container {
-    margin-left: auto;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-grow: 0;
-    order: 2;
+  margin-left: auto;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 0;
+  order: 2;
 }
 
 .favorite-icon {
-    color: #ccc;
-    font-size: 24px;
-    cursor: pointer;
+  color: #ccc;
+  font-size: 24px;
+  cursor: pointer;
 }
 
 .favorite-icon.favorited {
-    color: red;
-    /* Or any color you prefer for the favorited state */
+  color: red;
+  /* Or any color you prefer for the favorited state */
 }
 
 .actions {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .add-to-cart {
-    padding: 12.5px 25px;
-    margin-bottom: 12.5px;
-    font-size: 20px;
-    border: 1.25px solid #ddd;
-    background-color: #000000;
-    cursor: pointer;
-    color: white;
+  padding: 12.5px 25px;
+  margin-bottom: 12.5px;
+  font-size: 20px;
+  border: 1.25px solid #ddd;
+  background-color: #000000;
+  cursor: pointer;
+  color: white;
 }
 
 .add-to-cart:hover {
-    background-color: rgb(88, 121, 40);
+  background-color: rgb(88, 121, 40);
 }
 
-
 .buy-now {
-    background-color: #000;
-    color: #fff;
-    border: none;
+  background-color: #000;
+  color: #fff;
+  border: none;
 }
 
 .reviews-section {
-    display: flex;
-    flex-wrap: wrap;
-    /* Allow the reviews to wrap to the next line */
-    justify-content: space-between;
-    /* Space out the reviews */
-    gap: 20px;
-    /* Add some space between the reviews vertically and horizontally */
-    margin: 20px auto;
-    /* Additional space at the top if needed */
-    padding: 15px;
-    /* Padding inside the reviews container */
-    width: 80%;
-    /* Full width of the container */
-    align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  /* Allow the reviews to wrap to the next line */
+  justify-content: space-between;
+  /* Space out the reviews */
+  gap: 20px;
+  /* Add some space between the reviews vertically and horizontally */
+  margin: 20px auto;
+  /* Additional space at the top if needed */
+  padding: 15px;
+  /* Padding inside the reviews container */
+  width: 80%;
+  /* Full width of the container */
+  align-items: center;
 }
 
 .reviews-section h2 {
-    text-align: center;
-    /* This centers the text within the heading */
-    width: 100%;
-    /* This ensures the heading takes the full width */
-    margin-bottom: 20px;
-    /* This adds space below the heading */
-    font-size: 40px;
+  text-align: center;
+  /* This centers the text within the heading */
+  width: 100%;
+  /* This ensures the heading takes the full width */
+  margin-bottom: 20px;
+  /* This adds space below the heading */
+  font-size: 40px;
 }
 
 .review {
-    flex-basis: calc(25% - 20px);
-    /* Calculate width for 4 reviews with 20px gap */
-    max-width: calc(25% - 20px);
-    /* Apply maximum width */
-    box-sizing: border-box;
-    /* Include padding and border in the width */
-    margin-bottom: 20px;
-    /* Space below each review box */
-    border: 1px solid #000000;
-    /* Add a border around each review box */
-    padding: 20px;
-    /* Padding inside each review box */
-    border-radius: 25px;
-    /* Rounded corners for review boxes */
+  flex-basis: calc(25% - 20px);
+  /* Calculate width for 4 reviews with 20px gap */
+  max-width: calc(25% - 20px);
+  /* Apply maximum width */
+  box-sizing: border-box;
+  /* Include padding and border in the width */
+  margin-bottom: 20px;
+  /* Space below each review box */
+  border: 1px solid #000000;
+  /* Add a border around each review box */
+  padding: 20px;
+  /* Padding inside each review box */
+  border-radius: 25px;
+  /* Rounded corners for review boxes */
 }
 
 .username-and-stars {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .username {
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    /* Adds space between the user icon and the username */
-    margin-bottom: 5px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  /* Adds space between the user icon and the username */
+  margin-bottom: 5px;
 }
 
 .review-stars {
-    display: flex;
-    justify-content: flex-start;
-    gap: 3px;
-    /* Space between stars */
+  display: flex;
+  justify-content: flex-start;
+  gap: 3px;
+  /* Space between stars */
 }
 
 .date {
-    margin-left: auto;
-    /* Pushes the date to the right */
-    padding-top: 8px;
-    /* Space above the date */
+  margin-left: auto;
+  /* Pushes the date to the right */
+  padding-top: 8px;
+  /* Space above the date */
 }
 
-
 .review-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.9rem;
-    margin-bottom: 8px;
-
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
 }
 
 .review-header .username {
-    font-weight: bold;
-    display: flex;
-    align-items: center;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
 .review-header .username i {
-    margin-right: 5px;
-    color: #333;
-    /* Add some space between icon and text */
+  margin-right: 5px;
+  color: #333;
+  /* Add some space between icon and text */
 }
 
 .review-header .date {
-    color: #666;
+  color: #666;
 }
 
 .review-body p {
-    color: #333;
+  color: #333;
 }
 
 .more-reviews-link {
+  padding: 10px 20px;
+  /* Add padding for a bigger click area */
+  text-decoration: underline;
+  color: #000;
+  /* Set the color for the link */
+  font-weight: bold;
+  /* Make the link text bold */
+  align-self: flex-end;
+  /* Align the link to the right */
 
-    padding: 10px 20px;
-    /* Add padding for a bigger click area */
-    text-decoration: underline;
-    color: #000;
-    /* Set the color for the link */
-    font-weight: bold;
-    /* Make the link text bold */
-    align-self: flex-end;
-    /* Align the link to the right */
-
-    border-radius: 5px;
-    /* Rounded corners for aesthetics */
-    margin-left: auto;
-    font-size: 24px;
+  border-radius: 5px;
+  /* Rounded corners for aesthetics */
+  margin-left: auto;
+  font-size: 24px;
 }
 
 .fa-star {
-    color: #ffd700;
-    /* This is a gold-like yellow color */
+  color: #ffd700;
+  /* This is a gold-like yellow color */
 }
 
 .product-rating .fas,
 .product-rating .far {
-    color: #ffd700;
-    /* This will make all stars yellow */
+  color: #ffd700;
+  /* This will make all stars yellow */
 }
 
 .product-rating .far {
-    color: #e4e4e4;
-    /* Optional: If you want empty stars to be a lighter color, like gray */
+  color: #e4e4e4;
+  /* Optional: If you want empty stars to be a lighter color, like gray */
 }
 
 .similar-products-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    /* This will handle the spacing between items */
-    padding: 20px;
-    gap: 10px;
-    /* Adjust gap to your preference */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  /* This will handle the spacing between items */
+  padding: 20px;
+  gap: 10px;
+  /* Adjust gap to your preference */
 }
 
 .similar-products-section h2 {
-    text-align: center;
-    font-size: 40px;
-    margin-bottom: 20px;
-    /* Add space below the heading */
+  text-align: center;
+  font-size: 40px;
+  margin-bottom: 20px;
+  /* Add space below the heading */
 }
 
 .similar-product-item {
-    background-color: #FFFFFF;
-    width: calc(25% - 20px);
-    /* Adjusted for 4 items per row */
-    margin-bottom: 10px;
-    /* Space between rows */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #ffffff;
+  width: calc(25% - 20px);
+  /* Adjusted for 4 items per row */
+  margin-bottom: 10px;
+  /* Space between rows */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .similar-product-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .similar-product-image img {
-    width: 100%;
-    height: auto;
-    border-bottom: 1px solid #ddd;
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid #ddd;
+  margin-left: 110px;
 }
 
 .similar-product-info {
-    padding: 10px;
-    text-align: center;
+  padding: 10px;
+  text-align: center;
 }
 
 .similar-product-name {
-    font-size: 1.2em;
-    margin: 10px 0;
+  font-size: 1.2em;
+  margin: 10px 0;
 }
 
 .similar-product-price {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: black;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: black;
 }
 
 .product-rating {
-    color: #ffd700;
-    margin: 10px 0;
+  color: #ffd700;
+  margin: 10px 0;
 }
 
 .product-rating .fas,
 .product-rating .far {
-    color: inherit;
+  color: inherit;
 }
 
 .product-rating .far {
-    color: #e4e4e4;
+  color: #e4e4e4;
 }
 
 .btn-primary {
-    background-color: #007bff;
-    /* Primary blue color */
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 10px 2px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+  background-color: #007bff;
+  /* Primary blue color */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
-    /* Darker shade for hover effect */
-    color: white;
+  background-color: #0056b3;
+  /* Darker shade for hover effect */
+  color: white;
 }
 
 .button-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-    /* Adjust the margin as needed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  /* Adjust the margin as needed */
 }
 
 @media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-        align-items: center;
-    }
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
 
-    .reviews-section {
-        width: 90%;
-        /* Subtract any desired padding */
-        padding: auto;
-        /* Adjust padding to match the subtraction above */
-    }
+  .reviews-section {
+    width: 90%;
+    /* Subtract any desired padding */
+    padding: auto;
+    /* Adjust padding to match the subtraction above */
+  }
 
-    .review {
-        flex: 0 0 100%;
-        max-width: 100%;
-        /* Increase padding for better readability */
-        padding: 15px;
-        /* Adjust padding as needed */
-        margin-bottom: 20px;
-        /* Give some space between reviews */
-    }
+  .review {
+    flex: 0 0 100%;
+    max-width: 100%;
+    /* Increase padding for better readability */
+    padding: 15px;
+    /* Adjust padding as needed */
+    margin-bottom: 20px;
+    /* Give some space between reviews */
+  }
 
-    .review-body p {
-        font-size: 14px;
-        /* Adjust font size as needed */
-    }
+  .review-body p {
+    font-size: 14px;
+    /* Adjust font size as needed */
+  }
 
-    .more-reviews-link {
-        align-self: center;
-        /* Center the link on smaller screens */
-        font-size: 30px;
-        margin-right: 50px;
-    }
+  .more-reviews-link {
+    align-self: center;
+    /* Center the link on smaller screens */
+    font-size: 30px;
+    margin-right: 50px;
+  }
 
-    .review-header {
-        flex-direction: column;
-        /* Stack username and date on top of each other */
-        align-items: flex-start;
-        /* Align items to the start */
-    }
+  .review-header {
+    flex-direction: column;
+    /* Stack username and date on top of each other */
+    align-items: flex-start;
+    /* Align items to the start */
+  }
 
-    .date {
-        align-self: flex-end;
-        /* Align the date to the end of the container */
-        padding-top: 0;
-        /* Remove additional top padding if necessary */
-        order: -1;
-        /* Place the date above the username and stars */
-        margin-right: auto;
-    }
+  .date {
+    align-self: flex-end;
+    /* Align the date to the end of the container */
+    padding-top: 0;
+    /* Remove additional top padding if necessary */
+    order: -1;
+    /* Place the date above the username and stars */
+    margin-right: auto;
+  }
 
-    .username-and-stars {
-        align-items: center;
-        /* Center-align the username and stars */
-    }
+  .username-and-stars {
+    align-items: center;
+    /* Center-align the username and stars */
+  }
 
-    .username {
-        justify-content: center;
-        /* Center-align the username inside its container */
-    }
+  .username {
+    justify-content: center;
+    /* Center-align the username inside its container */
+  }
 
-    .review-stars {
-        justify-content: center;
-        /* Center-align the stars */
-    }
+  .review-stars {
+    justify-content: center;
+    /* Center-align the stars */
+  }
 
-    /* Ensure that the .review items stack on top of each other */
-    .review {
-        width: 100%;
-    }
+  /* Ensure that the .review items stack on top of each other */
+  .review {
+    width: 100%;
+  }
 
+  .review-header .username {
+    /* Add responsiveness to username to ensure it doesn't overflow */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 8px;
+  }
 
+  .left-section img {
+    max-width: 100%;
+    height: auto;
+    max-height: 300px;
+  }
 
-    .review-header .username {
-        /* Add responsiveness to username to ensure it doesn't overflow */
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-right: 8px;
-    }
+  .product-name {
+    font-size: 24px;
+  }
 
-    .left-section img {
-        max-width: 100%;
-        height: auto;
-        max-height: 300px;
-    }
+  .quantity-and-favorite {
+    justify-content: flex-start;
+  }
 
-    .product-name {
-        font-size: 24px;
-    }
+  .quantity-selector .favorite-icon-container {
+    width: 100%;
+    /* Full width for the quantity selector and heart icon container */
+    order: unset;
+    /* Removes any specific order */
+  }
 
-    .quantity-and-favorite {
-        justify-content: flex-start;
-    }
+  .favorite-icon-container {
+    margin-left: 0;
+    /* Resets any margin pushing the icon to the right */
+    justify-content: flex-end;
+    /* Aligns the heart icon to the right */
+    padding: 10px 0;
+  }
 
-    .quantity-selector .favorite-icon-container {
-        width: 100%;
-        /* Full width for the quantity selector and heart icon container */
-        order: unset;
-        /* Removes any specific order */
-    }
+  .favorite-icon {
+    font-size: 20px;
+  }
 
-    .favorite-icon-container {
-        margin-left: 0;
-        /* Resets any margin pushing the icon to the right */
-        justify-content: flex-end;
-        /* Aligns the heart icon to the right */
-        padding: 10px 0;
+  .actions {
+    width: 100%;
+  }
 
-    }
+  .add-to-cart,
+  .buy-now {
+    width: 100%;
+    padding: 10px;
+  }
 
-    .favorite-icon {
-        font-size: 20px;
-    }
+  .reviews-section {
+    margin-top: 10px;
+  }
 
-    .actions {
-        width: 100%;
-    }
+  .review {
+    padding: 10px;
+  }
 
-    .add-to-cart,
-    .buy-now {
-        width: 100%;
-        padding: 10px;
-    }
+  .product-item {
+    width: calc(50% - 40px);
+    /* 2 items per row */
+  }
 
-    .reviews-section {
-        margin-top: 10px;
-    }
-
-    .review {
-        padding: 10px;
-    }
-
-    .product-item {
-        width: calc(50% - 40px);
-        /* 2 items per row */
-    }
-
-    .similar-product-item {
-        width: calc(100% - 20px);
-        /* 1 item per row */
-        margin: 10px auto;
-        /* Center align the single column */
-    }
-
+  .similar-product-item {
+    width: calc(100% - 20px);
+    /* 1 item per row */
+    margin: 10px auto;
+    /* Center align the single column */
+  }
 }
 
 @media (max-width: 576px) {
+  .product-details,
+  .product-meta-info,
+  .quantity-selector,
+  .actions {
+    padding: 15px;
+  }
 
-    .product-details,
-    .product-meta-info,
-    .quantity-selector,
-    .actions {
-        padding: 15px;
-    }
+  .reviews-section,
+  .review {
+    padding: 10px;
+  }
 
-    .reviews-section,
-    .review {
-        padding: 10px;
-    }
+  .quantity-label {
+    margin-left: 0;
+    /* Reset left margin */
+  }
 
-    .quantity-label {
-        margin-left: 0;
-        /* Reset left margin */
-    }
+  .review-header .username,
+  .review-header .date {
+    /* Further font size adjustments for very small screens may be needed */
+    font-size: 13px;
+  }
 
-    .review-header .username,
-    .review-header .date {
-        /* Further font size adjustments for very small screens may be needed */
-        font-size: 13px;
-    }
+  .favorite-icon-container {
+    padding: 0px;
+  }
 
-    .favorite-icon-container {
-        padding: 0px;
+  .favorite-icon {
+    font-size: 30px;
+  }
 
-    }
-
-    .favorite-icon {
-        font-size: 30px;
-
-    }
-
-    .product-item {
-        width: calc(50% - 20px);
-        /* Adjust the width for two items per row on mobile devices */
-    }
+  .product-item {
+    width: calc(50% - 20px);
+    /* Adjust the width for two items per row on mobile devices */
+  }
 }
 
 @media (max-width: 1024px) {
+  /* For smaller desktops and tablets, we'll go for two reviews per row */
+  .review {
+    flex: 0 0 calc(50% - 20px);
+    /* 2 reviews per row */
+    max-width: calc(50% - 20px);
+  }
 
-    /* For smaller desktops and tablets, we'll go for two reviews per row */
-    .review {
-        flex: 0 0 calc(50% - 20px);
-        /* 2 reviews per row */
-        max-width: calc(50% - 20px);
-    }
-
-    .product-item {
-        width: calc(50% - 20px);
-        /* 3 items per row */
-    }
+  .product-item {
+    width: calc(50% - 20px);
+    /* 3 items per row */
+  }
 }
-
 
 @media (max-width: 1200px) {
-    .review {
-        flex-basis: calc(50% - 20px);
-        /* Adjust to have 2 reviews per line */
-        max-width: calc(50% - 20px);
-    }
+  .review {
+    flex-basis: calc(50% - 20px);
+    /* Adjust to have 2 reviews per line */
+    max-width: calc(50% - 20px);
+  }
 
-    .similar-product-item {
-        width: calc(33.333% - 20px);
-        /* 3 items per row */
-    }
+  .similar-product-item {
+    width: calc(33.333% - 20px);
+    /* 3 items per row */
+  }
 }
 
 @media (max-width: 480px) {
-    .product-item {
-        width: 100%;
-        /* 1 item per row */
-    }
+  .product-item {
+    width: 100%;
+    /* 1 item per row */
+  }
 }
 
 @media (max-width: 480px) {
-
-    .product-item img {
-        width: 100%;
-        /* Image should fill the entire width of the product item */
-        height: auto;
-        /* Maintain the aspect ratio */
-
-    }
+  .product-item img {
+    width: 100%;
+    /* Image should fill the entire width of the product item */
+    height: auto;
+    /* Maintain the aspect ratio */
+  }
 }
 
 @media (max-width: 992px) {
-    .similar-product-item {
-        width: calc(50% - 20px);
-        /* 2 items per row */
-    }
+  .similar-product-item {
+    width: calc(50% - 20px);
+    /* 2 items per row */
+  }
 }
-
 
 /*-----------------------for more review-----------------------*/
 /* Styles for the overlay */
 .overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5) !important;
-    z-index: 9999;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  z-index: 9999;
+}
+.popup-button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* Styles for the review box */
+.review-popup-box {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 20px;
+  width: 60%;
+  max-height: 80%;
+  overflow-y: auto;
+  text-align: left;
+}
+.more-review-title {
+  text-align: center;
+}
 
-  }
-  .popup-button {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  /* Styles for the review box */
-  .review-popup-box {
-    display: none;
-    position: fixed;    
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    border: 1px solid black;
-    border-radius: 10px;
-    padding: 20px;
-    width: 60%;
-    max-height: 80%;
-    overflow-y: auto; 
-    text-align: left; 
-    
-  }
-  .more-review-title{
-    text-align: center;
-  }
+/* Styles for the profile picture */
+.profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
 
-  /* Styles for the profile picture */
-  .profile-pic {
-    width: 50px; 
-    height: 50px; 
-    border-radius: 50%;
-    margin-right: 20px; 
-  }
+/* Styles for the username */
+.username-container {
+  display: flex; /* Use flexbox layout */
+  align-items: center; /* Vertically center content */
+}
 
-  /* Styles for the username */
-  .username-container {
-    display: flex; /* Use flexbox layout */
-    align-items: center; /* Vertically center content */
-  }
+.username {
+  margin: 0;
+}
 
-  .username {
-    margin: 0;
-  }
+.dates {
+  text-align: right;
+}
 
-  .dates {
-    text-align: right;
-  }
+.review-border {
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 10px;
+}
 
-  .review-border {
-    border: 1px solid black;
-    padding: 10px;
-    border-radius: 10px;
-  }
+/* Styles for the review input */
+.review-input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
 
-  /* Styles for the review input */
-  .review-input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box; 
-  }
-  
-  .submit-button {
-    display: block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align:right;
-  }
-  .close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    color: red;
-    font-size:30px;
-  }
+.submit-button {
+  display: block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: right;
+}
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: red;
+  font-size: 30px;
+}

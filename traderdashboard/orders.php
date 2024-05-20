@@ -36,18 +36,20 @@
                   <?php
                   $query = "SELECT ORDER_ID, ORDER_DATE, TOTAL_PRICE FROM \"ORDER\"";
                   $stid = oci_parse($connection, $query);
-                  oci_execute($stid);
-
-                  $sn = 1;  // Serial Number counter
-                  while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
-                    echo "<tr>\n";
-                    echo "    <td>" . htmlspecialchars($sn++) . "</td>\n";
-                    echo "    <td>" . htmlspecialchars($row['ORDER_ID']) . "</td>\n";
-                    echo "    <td>" . htmlspecialchars($row['ORDER_DATE']) . "</td>\n";
-                    echo "    <td>" . htmlspecialchars($row['TOTAL_PRICE']) . "</td>\n";
-                    echo "<td><button type='button' class='btn btn-dark shadow-none btn-sm' onclick='saveOrderId(this)' data-bs-toggle='modal' data-bs-target='#order-modal'> <i class='bi bi-pencil-square'></i> View order</button></td>\n";
-
-                    echo "</tr>\n";
+                  if (!oci_execute($stid)) {
+                    $err = oci_error($stid);
+                    echo "<tr><td colspan='5'>Error: " . htmlspecialchars($err['message']) . "</td></tr>";
+                  } else {
+                    $sn = 1;  // Serial Number counter
+                    while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+                      echo "<tr>\n";
+                      echo "    <td>" . htmlspecialchars($sn++) . "</td>\n";
+                      echo "    <td>" . htmlspecialchars($row['ORDER_ID']) . "</td>\n";
+                      echo "    <td>" . htmlspecialchars($row['ORDER_DATE']) . "</td>\n";
+                      echo "    <td>" . htmlspecialchars($row['TOTAL_PRICE']) . "</td>\n";
+                      echo "    <td><button type='button' class='btn btn-dark shadow-none btn-sm' data-bs-toggle='modal' data-bs-target='#order-modal' data-order-id='" . htmlspecialchars($row['ORDER_ID']) . "'> <i class='bi bi-pencil-square'></i> View order</button></td>\n";
+                      echo "</tr>\n";
+                    }
                   }
                   ?>
                 </tbody>
@@ -82,7 +84,6 @@
                 </div>
               </div>
             </div>
-
 
           </div>
         </div>
@@ -122,7 +123,6 @@
         });
     }
   </script>
-
 
 </body>
 

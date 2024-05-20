@@ -248,8 +248,8 @@
                 echo "
               
                 <div class=\"similar-product-item\">
+                <a href=\"?product_id=$productId&shop_id=$shop_id\" class=\"text-decoration-none text-dark\">
                     <div class=\"similar-product-image\">
-                        <a href=\"?product_id=$productId&shop_id=$shop_id\" class=\"text-decoration-none text-dark\">
                         <img src=\"../traderdashboard/productsImages/$pImage\" alt=\"Product Image\" style=\"width:110px;\" />
                     </div>
                     <div class=\"similar-product-info\">

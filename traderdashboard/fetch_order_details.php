@@ -17,7 +17,7 @@ if (isset($_GET['order_id'])) {
             INNER JOIN order_item oi ON oi.product_id = p.product_id
             INNER JOIN \"ORDER\" o ON o.order_id = oi.order_id
             WHERE o.order_id = :order_id";
-  
+
   $stid = oci_parse($connection, $query);
   oci_bind_by_name($stid, ':order_id', $order_id);
   oci_execute($stid);
@@ -29,4 +29,3 @@ if (isset($_GET['order_id'])) {
 
   echo json_encode($result);
 }
-?>
