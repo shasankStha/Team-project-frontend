@@ -121,18 +121,10 @@
                 <div class="swiper-wrapper">
                     <?php
                     // Fetch products for the shop
-                    $sql = "SELECT p.Product_id,
-                    p.Name ,
-                    p.Price,
-                    p.Image,
-                    p.Shop_id,
-                    SUM(oi.Quantity) AS Total_Sold
-             FROM ORDER_ITEM oi
-             JOIN PRODUCT p ON oi.Product_id = p.Product_id
-             GROUP BY p.Product_id, p.Name, p.Price, p.Image, p.Shop_id
-             ORDER BY SUM(oi.Quantity) DESC";
-
-
+                    $sql = "select * from (select p.product_id,p.name,p.price,p.image,p.shop_id,sum(oi.quantity) from order_item oi 
+                    inner join product p on oi.product_id = p.product_id
+                    group by p.product_id, p.name, p.price, p.image, p.shop_id
+                    order by sum(oi.quantity) desc) where ROWNUM <=8";
                     $stid = oci_parse($connection, $sql);
                     oci_execute($stid);
 
