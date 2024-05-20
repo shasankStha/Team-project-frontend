@@ -335,7 +335,7 @@ if (isset($_POST['submit'])) {
                         echo "<script>alert('Password and Confirm Password do not match.')</script>";
                     } else if (strlen($confirmPassword) <= 8 || strlen($confirmPassword) >= 32) {
                         echo "<script>alert('Password should be 8 to 32 characters long.')</script>";
-                    } else if (!preg_match("/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/", $confirmPassword)) {
+                    } else if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/', $newPassword)) {
                         echo "<script>alert('Password criteria didn't match.')</script>";
                     } else {
                         try {
