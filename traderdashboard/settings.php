@@ -1,6 +1,6 @@
 <?php
 session_start();
-require ('../connection.php');
+require('../connection.php');
 
 if (!isset($_SESSION['traderUser']) || $_SESSION['loggedinTrader'] !== TRUE) {
     header('Location: ../login/login.php');
@@ -172,12 +172,12 @@ if (isset($_POST['submit'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trader Panel - Settings</title>
-    <?php require ('inc/links.php'); ?>
+    <?php require('inc/links.php'); ?>
 </head>
 
 <body class="bg-light">
 
-    <?php require ('traderdashboardheader.php'); ?>
+    <?php require('traderdashboardheader.php'); ?>
 
     <div class="container-fluid" id="main-content">
         <div class="row">
@@ -190,8 +190,7 @@ if (isset($_POST['submit'])) {
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h5 class="card-title m-0">Profile Settings</h5>
-                            <button type="button" class="btn btn-dark shadow-none btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#profile-settings">
+                            <button type="button" class="btn btn-dark shadow-none btn-sm" data-bs-toggle="modal" data-bs-target="#profile-settings">
                                 <i class="bi bi-pencil-square"></i> Edit
                             </button>
                         </div>
@@ -213,11 +212,9 @@ if (isset($_POST['submit'])) {
 
                 <!-- Profile settings modal -->
 
-                <div class="modal fade" id="profile-settings" data-bs-backdrop="static" data-bs-keyboard="false"
-                    tabindex="-1" aria-labelledby="profileSettingsLabel" aria-hidden="true">
+                <div class="modal fade" id="profile-settings" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="profileSettingsLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <form id="profile_settings_form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"
-                            method="post">
+                        <form id="profile_settings_form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Edit Profile</h5>
@@ -225,36 +222,26 @@ if (isset($_POST['submit'])) {
                                 <div class="modal-body">
                                     <div class="mb-3">
                                         <label for="first-name" class="form-label fw-bold">First Name</label>
-                                        <input type="text" id="first-name" name="first_name"
-                                            class="form-control shadow-none" required
-                                            value="<?php echo htmlspecialchars($userDetails['FIRST_NAME']); ?>">
+                                        <input type="text" id="first-name" name="first_name" class="form-control shadow-none" required value="<?php echo htmlspecialchars($userDetails['FIRST_NAME']); ?>">
                                     </div>
                                     <div class="mb-3">
                                         <label for="last-name" class="form-label fw-bold">Last Name</label>
-                                        <input type="text" id="last-name" name="last_name"
-                                            class="form-control shadow-none" required
-                                            value="<?php echo htmlspecialchars($userDetails['LAST_NAME']); ?>">
+                                        <input type="text" id="last-name" name="last_name" class="form-control shadow-none" required value="<?php echo htmlspecialchars($userDetails['LAST_NAME']); ?>">
                                     </div>
                                     <div class="mb-3">
                                         <label for="username" class="form-label fw-bold">Username</label>
-                                        <input type="text" id="username" name="username"
-                                            class="form-control shadow-none"
-                                            value="<?php echo htmlspecialchars($userDetails['USERNAME']); ?>">
+                                        <input type="text" id="username" name="username" class="form-control shadow-none" value="<?php echo htmlspecialchars($userDetails['USERNAME']); ?>">
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="contact-number" class="form-label fw-bold">Contact Number</label>
-                                        <input type="number" id="contact-number" name="contact_number"
-                                            class="form-control shadow-none"
-                                            value="<?php echo htmlspecialchars($userDetails['CONTACT_NUMBER']); ?>">
+                                        <input type="number" id="contact-number" name="contact_number" class="form-control shadow-none" value="<?php echo htmlspecialchars($userDetails['CONTACT_NUMBER']); ?>">
                                     </div>
 
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn text-secondary shadow-none"
-                                        data-bs-dismiss="modal">CANCEL</button>
-                                    <button type="submit" name="update_profile"
-                                        class="btn btn-dark shadow-none">SUBMIT</button>
+                                    <button type="button" class="btn text-secondary shadow-none" data-bs-dismiss="modal">CANCEL</button>
+                                    <button type="submit" name="update_profile" class="btn btn-dark shadow-none">SUBMIT</button>
                                 </div>
                             </div>
                         </form>
@@ -267,8 +254,7 @@ if (isset($_POST['submit'])) {
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h5 class="card-title m-0">Shop Settings</h5>
-                            <button type="button" class="btn btn-dark shadow-none btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#shop-settings-modal">
+                            <button type="button" class="btn btn-dark shadow-none btn-sm" data-bs-toggle="modal" data-bs-target="#shop-settings-modal">
                                 <i class="bi bi-pencil-square"></i> Edit
                             </button>
                         </div>
@@ -284,11 +270,9 @@ if (isset($_POST['submit'])) {
                 </div>
 
                 <!-- Modal for Editing Shop Details -->
-                <div class="modal fade" id="shop-settings-modal" tabindex="-1" aria-labelledby="shopSettingsModalLabel"
-                    aria-hidden="true">
+                <div class="modal fade" id="shop-settings-modal" tabindex="-1" aria-labelledby="shopSettingsModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"
-                            enctype="multipart/form-data">
+                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="shopSettingsModalLabel">Edit Shop Details</h5>
@@ -296,24 +280,19 @@ if (isset($_POST['submit'])) {
                                 <div class="modal-body">
                                     <div class="mb-3">
                                         <label for="shop-name" class="form-label">Shop Name</label>
-                                        <input type="text" class="form-control" id="shop-name" name="shop_name" required
-                                            value="<?php echo htmlspecialchars($shopDetails['SHOP_NAME']); ?>">
+                                        <input type="text" class="form-control" id="shop-name" name="shop_name" required value="<?php echo htmlspecialchars($shopDetails['SHOP_NAME']); ?>">
                                     </div>
                                     <div class="mb-3">
                                         <label for="shop-description" class="form-label">Description</label>
-                                        <textarea class="form-control" id="shop-description" name="shop_description"
-                                            rows="3"><?php echo htmlspecialchars($shopDetails['SHOP_DESCRIPTION']); ?></textarea>
+                                        <textarea class="form-control" id="shop-description" name="shop_description" rows="3"><?php echo htmlspecialchars($shopDetails['SHOP_DESCRIPTION']); ?></textarea>
                                     </div>
                                     <div class="mb-3">
                                         <label for="location" class="form-label">Location</label>
-                                        <input type="text" class="form-control" id="location" name="location"
-                                            value="<?php echo htmlspecialchars($shopDetails['LOCATION']); ?>">
+                                        <input type="text" class="form-control" id="location" name="location" value="<?php echo htmlspecialchars($shopDetails['LOCATION']); ?>">
                                     </div>
                                     <div class="mb-3">
                                         <label for="contact-number" class="form-label">Contact Number</label>
-                                        <input type="text" class="form-control" id="contact-number"
-                                            name="contact_number"
-                                            value="<?php echo htmlspecialchars($shopDetails['CONTACT_NUMBER']); ?>">
+                                        <input type="text" class="form-control" id="contact-number" name="contact_number" value="<?php echo htmlspecialchars($shopDetails['CONTACT_NUMBER']); ?>">
                                     </div>
                                     <div class="mb-3">
                                         <label for="shop-image" class="form-label">Shop Image</label>
@@ -322,8 +301,7 @@ if (isset($_POST['submit'])) {
 
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn text-secondary"
-                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn text-secondary" data-bs-dismiss="modal">Cancel</button>
                                     <button type="submit" name="update_shop" class="btn btn-dark">Update</button>
                                 </div>
                             </div>
@@ -337,8 +315,7 @@ if (isset($_POST['submit'])) {
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h5 class="card-title m-0">Change Password</h5>
-                            <button type="button" class="btn btn-dark shadow-none btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#password-settings">
+                            <button type="button" class="btn btn-dark shadow-none btn-sm" data-bs-toggle="modal" data-bs-target="#password-settings">
                                 <i class="bi bi-pencil-square"></i> Change your password
                             </button>
                         </div>
@@ -347,8 +324,58 @@ if (isset($_POST['submit'])) {
                 </div>
 
                 <!-- Password Change Modal -->
-                <div class="modal fade" id="password-settings" data-bs-backdrop="static" data-bs-keyboard="true"
-                    tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+                <?php
+
+                if (isset($_POST['changePasswordSubmit'])) {
+                    $oldPassword = $_POST['old_password'];
+                    $newPassword = $_POST['new_password'];
+                    $confirmPassword = $_POST['confirm_password'];
+
+                    if ($newPassword != $confirmPassword) {
+                        echo "<script>alert('Password and Confirm Password do not match.')</script>";
+                    } else if (strlen($confirmPassword) <= 8 || strlen($confirmPassword) >= 32) {
+                        echo "<script>alert('Password should be 8 to 32 characters long.')</script>";
+                    } else if (!preg_match("/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/", $confirmPassword)) {
+                        echo "<script>alert('Password criteria didn't match.')</script>";
+                    } else {
+                        try {
+                            $sql = "SELECT COUNT(*) AS CNT FROM \"USER\" WHERE password = password_encrypt('$oldPassword') AND user_id = '$userID'";
+                            $stid = oci_parse($connection, $sql);
+                            oci_execute($stid);
+
+                            if ($row = oci_fetch_assoc($stid)) {
+                                $count = $row['CNT'];
+
+
+                                if ($count == 1) {
+                                    try {
+                                        $sql = "UPDATE \"USER\" SET password = password_encrypt('$confirmPassword') WHERE user_id = '$userID'";
+                                        $stid = oci_parse($connection, $sql);
+                                        $exe = oci_execute($stid);
+
+                                        if ($exe) {
+                                            echo "<script>alert('Password has been changed successfully.')</script>";
+                                        } else {
+                                            echo "<script>alert('An error occurred while updating the password')</script>";
+                                        }
+                                    } catch (Exception $e) {
+                                        echo "<script>alert(An error occurred)</script>";
+                                    }
+                                } else {
+                                    echo "<script>alert('Old password didn't match.')</script>";
+                                }
+                            } else {
+                                echo "<script>alert('An error occurred while verifying the old password')</script>";
+                            }
+                        } catch (Exception $e) {
+                            echo "<script>alert(An error occurred)</script>";
+                        }
+                    }
+                }
+                ?>
+
+
+                <div class="modal fade" id="password-settings" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <form id="password_change_form" method="post">
                             <div class="modal-content">
@@ -358,19 +385,19 @@ if (isset($_POST['submit'])) {
                                 <div class="modal-body">
                                     <div class="mb-3">
                                         <label for="old-password" class="form-label fw-bold">Old Password</label>
-                                        <input type="password" id="old-password" name="old_password"
-                                            class="form-control shadow-none" required>
+                                        <input type="password" id="old-password" name="old_password" class="form-control shadow-none" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="new-password" class="form-label fw-bold">New Password</label>
-                                        <input type="password" id="new-password" name="new_password"
-                                            class="form-control shadow-none" required>
+                                        <input type="password" id="new-password" name="new_password" class="form-control shadow-none" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="confirm-password" class="form-label fw-bold">Confirm
                                             Password</label>
-                                        <input type="password" id="confirm-password" name="confirm_password"
-                                            class="form-control shadow-none" required>
+                                        <input type="password" id="confirm-password" name="confirm_password" class="form-control shadow-none" required>
+                                    </div>
+                                    <div class="error" style="color: red;">
+
                                     </div>
                                     <div class="mb-3">
                                         <p class="fw-bold">Password must:</p>
@@ -380,11 +407,13 @@ if (isset($_POST['submit'])) {
                                             <li>Contain at least one upper and lower case</li>
                                         </ul>
                                     </div>
+                                    <div class="success" style="color: white; background-color: green; border-radius:8px;
+                    width:100%;max-width:400px;text-align:center;">
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn text-secondary shadow-none"
-                                        data-bs-dismiss="modal">CANCEL</button>
-                                    <button type="submit" class="btn btn-dark shadow-none">CHANGE PASSWORD</button>
+                                    <button type="button" class="btn text-secondary shadow-none" data-bs-dismiss="modal">CANCEL</button>
+                                    <button type="submit" class="btn btn-dark shadow-none" name="changePasswordSubmit">CHANGE PASSWORD</button>
                                 </div>
                             </div>
                         </form>
@@ -397,9 +426,6 @@ if (isset($_POST['submit'])) {
 
             </div>
         </div>
-
-
-
 
 </body>
 
