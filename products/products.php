@@ -18,7 +18,8 @@
     <?php
     include ('../connection.php');
     session_start();
-
+    $search = $_SESSION['search'];
+    echo "<script>alert('$search')</script>";
     $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
 
     if ($isLoggedIn) {
