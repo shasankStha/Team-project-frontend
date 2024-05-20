@@ -16,7 +16,7 @@
     <?php
     include('../connection.php');
     session_start();
-    $search = $_SESSION['search'];
+    $search = $_SESSION['search'] || $_GET['search'];
     $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
 
     if ($isLoggedIn) {
@@ -35,13 +35,17 @@
                     <div class="mt-3">
                         <h1>Categories</h1>
                         <div class="mt-3">
+                            <?php
+                            $sql = "select * from (select * from product_category ORDER BY DBMS_RANDOM.VALUE) where ROWNUM <=8";
+                            $stid = oci_parse($connection, $sql);
+                            oci_execute($stid);
+                            while ($row = oci_fetch_assoc($stid)) {
+                                $category_id = htmlspecialchars($row['CATEGORY_ID']);
+                                $name = htmlspecialchars($row['CATEGORY_NAME']);
+                                echo "<p class=\"text-gray-500 mt-2\"><a href=\"../products/products.php?search=", urlencode($name), "\" class=\"no-underline text-white\">$name</a></p>";
+                            }
 
-                            <p class="text-gray-500 mt-2"><a href="" class="no-underline text-white">FishMongers</a></p>
-                            <p class="text-gray-500 mt-2"><a href="" class="no-underline text-white">Butcher</a></p>
-                            <p class="text-gray-500 mt-2"><a href="" class="no-underline text-white">Greengrocer</a></p>
-                            <p class="text-gray-500"> <a href="" class="no-underline text-white">Bakery</a> </p>
-                            <p class="text-gray-500 mt-2"><a href="" class="no-underline text-white">Delicatessen</a>
-                            </p>
+                            ?>
                         </div>
                     </div>
                     <br>
