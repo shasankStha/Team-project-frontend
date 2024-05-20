@@ -331,26 +331,31 @@ if (isset($_POST['submit'])) {
                     $newPassword = $_POST['new_password'];
                     $confirmPassword = $_POST['confirm_password'];
 
-                    if ($newPassword != $confirmPassword) {
+                    if ($newPassword !== $confirmPassword) {
                         echo "<script>alert('Password and Confirm Password do not match.')</script>";
-                    } else if (strlen($confirmPassword) <= 8 || strlen($confirmPassword) >= 32) {
+                    } else if (strlen($confirmPassword) < 8 || strlen($confirmPassword) > 32) {
                         echo "<script>alert('Password should be 8 to 32 characters long.')</script>";
                     } else if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/', $newPassword)) {
-                        echo "<script>alert('Password criteria didn't match.')</script>";
+                        echo "<script>alert('Password criteria didn\'t match.')</script>";
                     } else {
                         try {
-                            $sql = "SELECT COUNT(*) AS CNT FROM \"USER\" WHERE password = password_encrypt('$oldPassword') AND user_id = '$userID'";
+                            // Prepare the SQL statement with parameterized query
+                            $sql = "SELECT COUNT(*) AS CNT FROM \"USER\" WHERE password = password_encrypt(:oldPassword) AND user_id = :userID";
                             $stid = oci_parse($connection, $sql);
+                            oci_bind_by_name($stid, ':oldPassword', $oldPassword);
+                            oci_bind_by_name($stid, ':userID', $userID);
                             oci_execute($stid);
 
                             if ($row = oci_fetch_assoc($stid)) {
                                 $count = $row['CNT'];
 
-
                                 if ($count == 1) {
                                     try {
-                                        $sql = "UPDATE \"USER\" SET password = password_encrypt('$confirmPassword') WHERE user_id = '$userID'";
+                                        // Prepare the update statement
+                                        $sql = "UPDATE \"USER\" SET password = password_encrypt(:newPassword) WHERE user_id = :userID";
                                         $stid = oci_parse($connection, $sql);
+                                        oci_bind_by_name($stid, ':newPassword', $confirmPassword);
+                                        oci_bind_by_name($stid, ':userID', $userID);
                                         $exe = oci_execute($stid);
 
                                         if ($exe) {
@@ -359,19 +364,20 @@ if (isset($_POST['submit'])) {
                                             echo "<script>alert('An error occurred while updating the password')</script>";
                                         }
                                     } catch (Exception $e) {
-                                        echo "<script>alert(An error occurred)</script>";
+                                        echo "<script>alert('An error occurred')</script>";
                                     }
                                 } else {
-                                    echo "<script>alert('Old password didn't match.')</script>";
+                                    echo "<script>alert('Old password didn\'t match.')</script>";
                                 }
                             } else {
                                 echo "<script>alert('An error occurred while verifying the old password')</script>";
                             }
                         } catch (Exception $e) {
-                            echo "<script>alert(An error occurred)</script>";
+                            echo "<script>alert('An error occurred')</script>";
                         }
                     }
                 }
+
                 ?>
 
 
