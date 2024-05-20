@@ -35,18 +35,23 @@
         <div class="swiper swiper-container ">
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
-                    <img src="../images/img_slider.jpg">
+                    <img src="../images/img1.jpeg">
                 </div>
                 <div class="swiper-slide">
-                    <img src="../images/img_slider3.jpg" />
+                    <img src="../images/img2.jpeg">
                 </div>
                 <div class="swiper-slide">
-                    <img src="../images/img_slider2.jpg" />
+                    <img src="../images/img4.jpeg">
                 </div>
                 <div class="swiper-slide">
-                    <img src="../images/img_slider3.jpg" />
+                    <img src="../images/img6.jpeg">
                 </div>
-
+                <div class="swiper-slide">
+                    <img src="../images/img3.jpeg">
+                </div>
+                <div class="swiper-slide">
+                    <img src="../images/img5.jpeg">
+                </div>
             </div>
             <div class="swiper-pagination"></div>
 
