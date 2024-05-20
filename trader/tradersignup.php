@@ -28,6 +28,7 @@
             if (!$exe) {
                 $error = oci_error($stid);
                 throw new Exception($error['message']);
+                exit;
             }
             $traderCount = null;
             if ($row = oci_fetch_assoc($stid)) {
@@ -35,7 +36,8 @@
             }
 
             if ($traderCount == 10) {
-                $error_message = 'Number of traders is already 10 and cannot register.';
+                echo "<script>alert('Number of traders is already 10 and cannot register.')</script>";
+                echo "<script>window.location.href = '../trader/tradersignup.php';</script>";
                 exit;
             } else {
                 $firstName = $_POST['first_name'];
