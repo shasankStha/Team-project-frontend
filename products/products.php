@@ -106,12 +106,19 @@
             <div class=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
 
                 <?php
-                $sql = "select p.product_id, p.name, p.price, p.image, p.shop_id 
-                from product p
+                $sql = "select p.product_id,p.name,p.price,p.image,p.shop_id,
+                case 
+                    when p.name like '%' || '$search' || '%' then 3
+                    when c.category_name like '%' || '$search' || '%' then 2
+                    when s.shop_name like '%' || '$search' || '%' then 1
+                    else 0
+                end as relevance_score
+                from 
+                product p
                 inner join product_category c on p.category_id = c.category_id
                 inner join shop s on p.shop_id = s.shop_id
-                where (p.name like '%' || 'mea' || '%' or c.category_name like '%' || 'mea' || '%' or s.shop_name like '%' || 'mea' || '%')
-                order by p.product_id";
+                where (p.name like '%' || '$search' || '%' or c.category_name like '%' || '$search' || '%' or s.shop_name like '%' || '$search' || '%')
+                order by relevance_score desc, p.product_id";
                 $stid = oci_parse($connection, $sql);
                 oci_execute($stid);
                 while ($row = oci_fetch_assoc($stid)) {
