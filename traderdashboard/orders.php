@@ -21,8 +21,6 @@
 
         <div class="card border-0 shadow-sm mb-4">
           <div class="card-body">
-
-
             <div class="table-responsive">
               <table class="table table-hover border text-center" style="min-width: 1300px;">
                 <thead>
@@ -55,6 +53,35 @@
                 </tbody>
               </table>
             </div>
+            <div class="modal fade" id="order-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel">
+              <div class="modal-dialog" style="max-width: 1200px; width: 100%;">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Order</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover border text-center" style="min-width: 1500px;">
+                        <thead>
+                          <tr class="bg-dark text-light">
+                            <th scope="col">S.N</th>
+                            <th scope="col">Product Name</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Price per Unit</th>
+                            <th scope="col">Discount</th>
+                            <th scope="col">Total Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody id="order-details">
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
 
           </div>
@@ -64,7 +91,37 @@
     </div>
   </div>
 
+  <script>
+    document.querySelectorAll('[data-bs-toggle="modal"]').forEach(button => {
+      button.addEventListener('click', function() {
+        const orderId = this.getAttribute('data-order-id');
+        fetchOrderDetails(orderId);
+      });
+    });
 
+    function fetchOrderDetails(orderId) {
+      fetch(`fetch_order_details.php?order_id=${orderId}`)
+        .then(response => response.json())
+        .then(data => {
+          const orderDetailsContainer = document.getElementById('order-details');
+          orderDetailsContainer.innerHTML = '';
+          let sn = 1;
+          data.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${sn++}</td>
+              
+              <td>${row.PRODUCT_NAME}</td>
+              <td>${row.QUANTITY}</td>
+              <td>${row.PRICE_PER_UNIT}</td>
+              <td>${row.DISCOUNT}</td>
+              <td>${row.TOTAL_AMOUNT}</td>
+            `;
+            orderDetailsContainer.appendChild(tr);
+          });
+        });
+    }
+  </script>
 
 
 </body>

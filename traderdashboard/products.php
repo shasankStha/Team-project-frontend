@@ -280,7 +280,7 @@
                                         <legend>Product Details</legend>
                                         <?php
                                         echo "<script></script>"
-                                        ?>
+                                            ?>
                                         <div class="mb-3">
                                             <label class="form-label">Product Name:</label>
                                             <input type="text" class="form-control shadown-none" name="pName">
@@ -344,6 +344,9 @@
                                     <button type="submit" name="updateProduct" class="btn btn-primary">SUBMIT</button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
                 </form>
             </div>
         </div>
