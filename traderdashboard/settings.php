@@ -23,7 +23,7 @@ function getUserDetails($connection, $userID)
 $userDetails = getUserDetails($connection, $userID);
 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
     $firstName = $_POST['first_name'];
     $lastName = $_POST['last_name'];
     $username = $_POST['username'];
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 $shopID = $_SESSION['shopID'];
-$shopDetailsQuery = 'SELECT SHOP_NAME, SHOP_DESCRIPTION, PICTURE, LOCATION, CONTACT_NUMBER FROM "SHOP" WHERE SHOP_ID = :shopid';
+$shopDetailsQuery = 'SELECT SHOP_NAME, SHOP_DESCRIPTION, LOCATION, CONTACT_NUMBER, PICTURE FROM "SHOP" WHERE SHOP_ID = :shopid';
 $shopStmt = oci_parse($connection, $shopDetailsQuery);
 oci_bind_by_name($shopStmt, ':shopid', $shopID);
 oci_execute($shopStmt);
@@ -60,17 +60,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_shop'])) {
     $shopDescription = $_POST['shop_description'];
     $location = $_POST['location'];
     $contactNumber = $_POST['contact_number'];
-    $image = $POST['PICTURE'];
+    $shopID = $_SESSION['shopID'];
+    $image = $shopDetails['PICTURE'];
 
-    $updateShopSql = 'UPDATE "SHOP" SET SHOP_NAME = :shopname, SHOP_DESCRIPTION = :shopdescription, LOCATION = :location, CONTACT_NUMBER = :contactnumber WHERE SHOP_ID = :shopid';
+    // Handle image upload
+    if (isset($_FILES['shop_image']) && $_FILES['shop_image']['error'] == 0) {
+        $allowed = ['jpg', 'jpeg', 'png', 'gif'];  // Allowed file types
+        $filename = $_FILES['shop_image']['name'];
+        $filetype = pathinfo($filename, PATHINFO_EXTENSION);
+
+        if (in_array(strtolower($filetype), $allowed)) {
+            $newFilename = uniqid('IMG-', true) . '.' . $filetype;
+            $uploadDir = '../shop_image/';
+            $destination = $uploadDir . $newFilename;
+
+            if (move_uploaded_file($_FILES['shop_image']['tmp_name'], $destination)) {
+                $image = $newFilename;
+            } else {
+                echo "<script>alert('Error uploading file.');</script>";
+                $image = null;
+            }
+        } else {
+            echo "<script>alert('Invalid file type.');</script>";
+            $image = null;
+        }
+    } else {
+        // If no new image is uploaded, use the existing one
+        $image = $shopDetails['PICTURE'];
+    }
+
+    // Update shop details including the new image if available
+    $updateShopSql = 'UPDATE "SHOP" SET SHOP_NAME = :shopname, SHOP_DESCRIPTION = :shopdescription, LOCATION = :location, CONTACT_NUMBER = :contactnumber, PICTURE = :picture WHERE SHOP_ID = :shopid';
     $updateShopStmt = oci_parse($connection, $updateShopSql);
     oci_bind_by_name($updateShopStmt, ':shopname', $shopName);
     oci_bind_by_name($updateShopStmt, ':shopdescription', $shopDescription);
     oci_bind_by_name($updateShopStmt, ':location', $location);
     oci_bind_by_name($updateShopStmt, ':contactnumber', $contactNumber);
+    oci_bind_by_name($updateShopStmt, ':picture', $image);
     oci_bind_by_name($updateShopStmt, ':shopid', $shopID);
-    
-
     if (oci_execute($updateShopStmt)) {
         echo "<script>alert('Shop details updated successfully!');</script>";
         // Re-fetch details to update the display without needing a page refresh
@@ -221,11 +248,13 @@ if (isset($_POST['submit'])) {
                                             class="form-control shadow-none"
                                             value="<?php echo htmlspecialchars($userDetails['CONTACT_NUMBER']); ?>">
                                     </div>
+
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn text-secondary shadow-none"
                                         data-bs-dismiss="modal">CANCEL</button>
-                                    <button type="submit" class="btn btn-dark shadow-none">SUBMIT</button>
+                                    <button type="submit" name="update_profile"
+                                        class="btn btn-dark shadow-none">SUBMIT</button>
                                 </div>
                             </div>
                         </form>
@@ -258,7 +287,8 @@ if (isset($_POST['submit'])) {
                 <div class="modal fade" id="shop-settings-modal" tabindex="-1" aria-labelledby="shopSettingsModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog">
-                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"
+                            enctype="multipart/form-data">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="shopSettingsModalLabel">Edit Shop Details</h5>
@@ -286,9 +316,8 @@ if (isset($_POST['submit'])) {
                                             value="<?php echo htmlspecialchars($shopDetails['CONTACT_NUMBER']); ?>">
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">Image file:</label>
-                                        <input type="file" class="form-control shadown-none" name="picture"
-                                            value="<?php echo htmlspecialchars($shopDetails['CONTACT_NUMBER']); ?>">
+                                        <label for="shop-image" class="form-label">Shop Image</label>
+                                        <input type="file" class="form-control" id="shop-image" name="shop_image">
                                     </div>
 
                                 </div>
