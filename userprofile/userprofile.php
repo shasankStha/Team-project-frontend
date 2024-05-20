@@ -24,6 +24,7 @@
 
     // Fetch the user ID from the session
     $userID = $_SESSION['userID'];
+    $error_message1 = $error_message2 = null;
 
     function getUserDetails($connection, $userID)
     {
@@ -60,24 +61,56 @@
             $contactNumberError = 'Contact number must be exactly 10 digits.';
         } 
         else{
-            $updateSql = 'UPDATE "USER" SET FIRST_NAME = :firstname, LAST_NAME = :lastname, USERNAME = :username, CONTACT_NUMBER = :contactnumber WHERE USER_ID = :userid';
-            $updateStmt = oci_parse($connection, $updateSql);
-            oci_bind_by_name($updateStmt, ':firstname', $firstName);
-            oci_bind_by_name($updateStmt, ':lastname', $lastName);
-            oci_bind_by_name($updateStmt, ':username', $username);
-            oci_bind_by_name($updateStmt, ':contactnumber', $contactNumber);
-            oci_bind_by_name($updateStmt, ':userid', $userID);
-            if (!oci_execute($updateStmt)) {
-                $e = oci_error($updateStmt);
-                echo "Error executing update: " . $e['message'];
-            } else {
-                // Refresh user details after update
-                $userDetails = getUserDetails($connection, $userID);
-                $changesSaved = true;
+            $sql = "SELECT count(*) FROM \"USER\" WHERE username = '$username'";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+            if (!oci_execute($stid)) {
+                $error = oci_error($stid);
+                throw new Exception($error['message']);
             }
+
+            if ($row = oci_fetch_assoc($stid)) {
+                $count = $row['COUNT(*)'];
+            }
+            if ($count != 0) {
+                $error_message1 = 'Username Already Exists !!!.';
+            }  
+            else {
+                $sql = "SELECT count(*) FROM \"USER\" WHERE contact_number = '$contactNumber'";
+                $stid = oci_parse($connection, $sql);
+                oci_execute($stid);
+                if (!oci_execute($stid)) {
+                    $error = oci_error($stid);
+                    throw new Exception($error['message']);
+                }
+
+                if ($row = oci_fetch_assoc($stid)) {
+                    $count = $row['COUNT(*)'];
+                }
+                if ($count != 0) {
+                    $error_message2 = 'Contact Number Already Exists !!!.';
+                }
+                else{
+                    $updateSql = 'UPDATE "USER" SET FIRST_NAME = :firstname, LAST_NAME = :lastname, USERNAME = :username, CONTACT_NUMBER = :contactnumber WHERE USER_ID = :userid';
+                    $updateStmt = oci_parse($connection, $updateSql);
+                    oci_bind_by_name($updateStmt, ':firstname', $firstName);
+                    oci_bind_by_name($updateStmt, ':lastname', $lastName);
+                    oci_bind_by_name($updateStmt, ':username', $username);
+                    oci_bind_by_name($updateStmt, ':contactnumber', $contactNumber);
+                    oci_bind_by_name($updateStmt, ':userid', $userID);
+                    if (!oci_execute($updateStmt)) {
+                        $e = oci_error($updateStmt);
+                        echo "Error executing update: " . $e['message'];
+                    } else {
+                        // Refresh user details after update
+                        $userDetails = getUserDetails($connection, $userID);
+                        $changesSaved = true;
+                    }
+                } 
+            }   
         }
     }
-    
+
     if ($isLoggedIn) {
         include('../inc/loggedin_header.php');
     } else {
@@ -118,10 +151,12 @@
                         <label for="username">Username</label>
                         <input type="text" id="username" name="username" class="form-control" value="<?php echo htmlspecialchars($userDetails['USERNAME']); ?>" disabled>
                     </div>
+                    <div class="error" style="color: red;"><?php if (!empty($error_message2)) echo "<p class='error'>$error_message2</p>"; ?></div>
                     <div class="form-group">
                         <label for="contact-number">Contact Number</label>
                         <input type="number" id="contact-number" name="contact_number" class="form-control" value="<?php echo htmlspecialchars($userDetails['CONTACT_NUMBER']); ?>" disabled>
                     </div>
+                    <div class="error" style="color: red;"><?php if (!empty($error_message2)) echo "<p class='error'>$error_message2</p>"; ?></div>
                     <div class="d-flex justify-content-evenly mb-2">
 
                         <input type="submit" value="Save Changes" class="btn btn-primary" disabled>

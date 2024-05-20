@@ -224,8 +224,48 @@
     </div>
     <div class="similar-products-section">
         <h2>Similar Products</h2>
-        <div class="similar-products-container">
-            <!-- Product Item -->
+
+
+         <?php
+        $shop_id = $_GET['shop_id'];
+        // Fetch products for the shop
+        $sql = "SELECT * FROM PRODUCT WHERE SHOP_ID = '$shop_id' and product_id != '$productId'";
+        $stid = oci_parse($connection, $sql);
+        oci_execute($stid);
+
+        while ($row = oci_fetch_assoc($stid)) {
+            $productId = $row['PRODUCT_ID'];
+            $pName = $row['NAME'];
+            $pPrice = $row['PRICE'];
+            $pImage = $row['IMAGE'];
+        
+            echo "
+            <div class=\"similar-products-container\">  
+                <div class=\"similar-product-item\">
+                    <div class=\"similar-product-image\">
+                        <a href=\"?product_id=$productId&shop_id=$shop_id\" class=\"text-decoration-none text-dark\">
+                        <img src=\"../traderdashboard/productsImages/$pImage\" alt=\"Product Image\" style=\"width:110px;\" />
+                    </div>
+                    <div class=\"similar-product-info\">
+                        <h3 class=\"similar-product-name\">$pName</h3>
+                        <i class=\"fas fa-star\"></i>
+                        <i class=\"fas fa-star\"></i>
+                        <i class=\"fas fa-star\"></i>
+                        <i class=\"fas fa-star\"></i>
+                        <i class=\"far fa-star\"></i>
+                        <p class=\"similar-product-price\">£$pPrice</p>
+                        </a>
+                        <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
+                    </div>
+
+                </div>
+            </div>
+            ";
+        }
+        ?> 
+
+
+        <!-- <div class="similar-products-container">
             <div class="similar-product-item">
 
                 <div class="similar-product-image">
@@ -302,7 +342,7 @@
                 </div>
 
             </div>
-        </div>
+        </div> -->
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('heart').addEventListener('click', function () {

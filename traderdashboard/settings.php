@@ -215,7 +215,7 @@ if (isset($_POST['submit'])) {
 
                                     <div class="mb-3">
                                         <label for="contact-number" class="form-label fw-bold">Contact Number</label>
-                                        <input type="text" id="contact-number" name="contact_number"
+                                        <input type="number" id="contact-number" name="contact_number"
                                             class="form-control shadow-none"
                                             value="<?php echo htmlspecialchars($userDetails['CONTACT_NUMBER']); ?>">
                                     </div>

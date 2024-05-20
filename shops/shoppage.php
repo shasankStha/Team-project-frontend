@@ -76,7 +76,7 @@
 
           echo "
           <div class=\"product-item\">
-          <a href='../products/productspage.php?product_id=$productId' class='text-decoration-none text-dark'>
+          <a href='../products/productspage.php?product_id=$productId&shop_id=$shopId' class='text-decoration-none text-dark'>
               <div class=\"product-image\">
                 <img src=\"../traderdashboard/productsImages/$image\" alt=\"Product Image\" style=\"width:110px;\" />
                 <div class=\"favorite-icon\" onclick=\"toggleFavorite(this)\" data-product-id=\"$productId\">
