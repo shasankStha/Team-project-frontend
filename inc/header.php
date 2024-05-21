@@ -5,7 +5,14 @@ if (session_status() == PHP_SESSION_NONE) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
     $_SESSION['search'] = $_POST['search'];
-    header("Location: ../products/products.php");
+    if (!empty($_SESSION['search'])) {
+        header("Location: ../products/products.php");
+    } else {
+        echo "<script>
+        alert('Search bar is empty!!!');
+        window.location.href = window.location.href;
+        </script>";
+    }
     exit();
 }
 ?>
