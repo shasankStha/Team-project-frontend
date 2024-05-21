@@ -15,7 +15,9 @@
     <?php
     include('../connection.php');
     session_start();
-    $search = $_SESSION['search'] || $_GET['search'];
+    $search = $_SESSION['search'] ?? $_GET['search'];
+    $categoryFilter = $_GET['category'] ?? null;
+    $priceFilter = $_GET['price'] ?? null;
     $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
 
     if ($isLoggedIn) {
@@ -25,22 +27,22 @@
     }
     ?>
 
-    <div class="flex flex-col md:flex-row">
+    <div class="flex">
         <!-- Sidebar -->
-        <div class="sidebar-box w-full md:w-1/4 px-0">
+        <div class="sidebar-box w-1/4 px-0">
             <div class="px-4 mt-2 flex gap-6">
-                <div class="w-full px-0">
+                <div class="w-3/4 px-0">
                     <div class="mt-3">
                         <h1>Categories</h1>
                         <div class="mt-3">
                             <?php
-                            $sql = "select * from (select * from product_category ORDER BY DBMS_RANDOM.VALUE) where ROWNUM <=8";
+                            $sql = "select * from (select * from product_category ORDER BY DBMS_RANDOM.VALUE) where ROWNUM <= 8";
                             $stid = oci_parse($connection, $sql);
                             oci_execute($stid);
                             while ($row = oci_fetch_assoc($stid)) {
                                 $category_id = htmlspecialchars($row['CATEGORY_ID']);
                                 $name = htmlspecialchars($row['CATEGORY_NAME']);
-                                echo "<p class=\"text-gray-500 mt-2\"><a href=\"../products/products.php?search=", urlencode($name), "\" class=\"no-underline text-white\">$name</a></p>";
+                                echo "<p class=\"text-gray-500 mt-2\"><a href=\"products.php?category=", urlencode($name), "\" class=\"no-underline text-white\">$name</a></p>";
                             }
                             ?>
                         </div>
@@ -49,53 +51,32 @@
                     <div class="mt-3">
                         <h1>Price Range</h1>
                         <div class="mt-3">
-                            <div class="flex justify-between mt-1">
-                                <div>
-                                    <p class="text-gray-500">£0.00 - £50</p>
-                                </div>
-                                <div class="w-[50px] h-[18px]">
-                                    <input type="checkbox" class="w-full h-full text-xs" />
-                                </div>
-                            </div>
-                            <div class="flex justify-between mt-1">
-                                <div>
-                                    <p class="text-gray-500">£50 - £100</p>
-                                </div>
-                                <div class="w-[50px] h-[18px]">
-                                    <input type="checkbox" class="w-full h-full text-xs" />
-                                </div>
-                            </div>
-                            <div class="flex justify-between mt-1">
-                                <div>
-                                    <p class="text-gray-500">£100 - £150</p>
-                                </div>
-                                <div class="w-[50px] h-[18px]">
-                                    <input type="checkbox" class="w-full h-full text-xs" />
-                                </div>
-                            </div>
-                            <div class="flex justify-between mt-1">
-                                <div>
-                                    <p class="text-gray-500">£150 - £200</p>
-                                </div>
-                                <div class="w-[50px] h-[18px]">
-                                    <input type="checkbox" class="w-full h-full text-xs" />
-                                </div>
-                            </div>
-                            <div class="flex justify-between mt-1">
-                                <div>
-                                    <p class="text-gray-500">£200+</p>
-                                </div>
-                                <div class="w-[50px] h-[18px]">
-                                    <input type="checkbox" class="w-full h-full text-xs" />
-                                </div>
-                            </div>
+                            <?php
+                            $priceRanges = [
+                                '0-50' => '£0.00 - £50',
+                                '50-100' => '£50 - £100',
+                                '100-150' => '£100 - £150',
+                                '150-200' => '£150 - £200',
+                                '200-above' => '£200+'
+                            ];
+                            foreach ($priceRanges as $range => $label) {
+                                echo "<div class=\"flex justify-between mt-1\">
+                                    <div>
+                                        <p class=\"text-gray-500\">$label</p>
+                                    </div>
+                                    <div class=\"w-[50px] h-[18px]\">
+                                        <input type=\"checkbox\" class=\"w-full h-full text-xs\" onchange=\"window.location.href='products.php?price=$range'\" " . ($priceFilter == $range ? 'checked' : '') . " />
+                                    </div>
+                                </div>";
+                            }
+                            ?>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="w-full md:w-3/4">
+        <div class="w-3/4">
             <div class="flex justify-between">
                 <h2 class="text-xl font-bold my-4">All Products</h2>
             </div>
@@ -103,50 +84,88 @@
                 <?php
                 $sql = "select p.product_id,p.name,p.price,p.image,p.shop_id,
                 case 
-                    when p.name like '%' || '$search' || '%' then 3
-                    when c.category_name like '%' || '$search' || '%' then 2
-                    when s.shop_name like '%' || '$search' || '%' then 1
+                    when p.name like '%' || :search || '%' then 3
+                    when c.category_name like '%' || :search || '%' then 2
+                    when s.shop_name like '%' || :search || '%' then 1
                     else 0
                 end as relevance_score
                 from 
                 product p
                 inner join product_category c on p.category_id = c.category_id
                 inner join shop s on p.shop_id = s.shop_id
-                where (p.name like '%' || '$search' || '%' or c.category_name like '%' || '$search' || '%' or s.shop_name like '%' || '$search' || '%') and p.status = '1'
-                order by relevance_score desc, p.product_id";
+                where (p.name like '%' || :search || '%' or c.category_name like '%' || :search || '%' or s.shop_name like '%' || :search || '%') and p.status = '1'";
+
+                if ($categoryFilter) {
+                    $sql .= " and c.category_name = :categoryFilter";
+                }
+
+                if ($priceFilter) {
+                    switch ($priceFilter) {
+                        case '0-50':
+                            $sql .= " and p.price between 0 and 50";
+                            break;
+                        case '50-100':
+                            $sql .= " and p.price between 50 and 100";
+                            break;
+                        case '100-150':
+                            $sql .= " and p.price between 100 and 150";
+                            break;
+                        case '150-200':
+                            $sql .= " and p.price between 150 and 200";
+                            break;
+                        case '200-above':
+                            $sql .= " and p.price > 200";
+                            break;
+                    }
+                }
+
+                $sql .= " order by relevance_score desc, p.product_id";
+
                 $stid = oci_parse($connection, $sql);
+                oci_bind_by_name($stid, ':search', $search);
+
+                if ($categoryFilter) {
+                    oci_bind_by_name($stid, ':categoryFilter', $categoryFilter);
+                }
+
                 oci_execute($stid);
+                $rows = [];
                 while ($row = oci_fetch_assoc($stid)) {
-                    $productId = htmlspecialchars($row['PRODUCT_ID']);
-                    $name = htmlspecialchars($row['NAME']);
-                    $price = htmlspecialchars($row['PRICE']);
-                    $image = htmlspecialchars($row['IMAGE']);
-                    $shopId = htmlspecialchars($row['SHOP_ID']);
+                    $rows[] = $row;
+                }
 
-                    echo "<div>
-                    <div class=\"card border-0 shadow product-item\">
-                        <a href=\"../products/productspage.php?product_id=$productId&shop_id=$shopId\" class=\"text-decoration-none text-dark\">
+                if (empty($rows)) {
+                    echo "<div class='col-span-4 text-center text-gray-500' style='font-size:80px'>No Result Found!!!</div>";
+                } else {
+                    foreach ($rows as $row) {
+                        $productId = htmlspecialchars($row['PRODUCT_ID']);
+                        $name = htmlspecialchars($row['NAME']);
+                        $price = htmlspecialchars($row['PRICE']);
+                        $image = htmlspecialchars($row['IMAGE']);
+                        $shopId = htmlspecialchars($row['SHOP_ID']);
 
-                            <div class=\"product-image\">
-                                <img src=\"../traderdashboard/productsImages/$image\" class=\"card-img-top\" alt=\"Product Image\">
-                            </div>
-                            <div class=\"product-info\">
-                                <h3 class=\"product-name\">$name</h3>
-                                <div class=\"product-rating\">
-                                    <i class=\"fas fa-star\"></i>
-                                    <i class=\"fas fa-star\"></i>
-                                    <i class=\"fas fa-star\"></i>
-                                    <i class=\"fas fa-star\"></i>
-                                    <i class=\"far fa-star\"></i>
+                        echo "<div>
+                        <div class=\"card border-0 shadow product-item\">
+                            <a href=\"../products/productspage.php?product_id=$productId&shop_id=$shopId\" class=\"text-decoration-none text-dark\">
+                                <div class=\"product-image\">
+                                    <img src=\"../traderdashboard/productsImages/$image\" class=\"card-img-top\" alt=\"Product Image\">
                                 </div>
-                                <div class=\"product-price\">£ $price</div>
-
-                            </div>
-                        </a>
-                        <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
-                    </div>
-
-                </div>";
+                                <div class=\"product-info\">
+                                    <h3 class=\"product-name\">$name</h3>
+                                    <div class=\"product-rating\">
+                                        <i class=\"fas fa-star\"></i>
+                                        <i class=\"fas fa-star\"></i>
+                                        <i class=\"fas fa-star\"></i>
+                                        <i class=\"fas fa-star\"></i>
+                                        <i class=\"far fa-star\"></i>
+                                    </div>
+                                    <div class=\"product-price\">£ $price</div>
+                                </div>
+                            </a>
+                            <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
+                        </div>
+                    </div>";
+                    }
                 }
                 ?>
             </div>
