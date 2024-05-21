@@ -65,7 +65,7 @@
             <div class="swiper card-swiper-container">
                 <div class="swiper-wrapper">
                     <?php
-                    $sql = "select * from (select p.product_id,p.name,p.price,p.image,p.shop_id FROM product p ORDER BY DBMS_RANDOM.VALUE) where ROWNUM <= 8 ";
+                    $sql = "select * from (select p.product_id,p.name,p.price,p.image,p.shop_id FROM product p where p.status = '1' ORDER BY DBMS_RANDOM.VALUE) where ROWNUM <= 8 ";
                     $stid = oci_parse($connection, $sql);
                     oci_execute($stid);
 
@@ -122,6 +122,7 @@
                     // Fetch products for the shop
                     $sql = "select * from (select p.product_id,p.name,p.price,p.image,p.shop_id,sum(oi.quantity) from order_item oi 
                     inner join product p on oi.product_id = p.product_id
+                    where p.status = '1'
                     group by p.product_id, p.name, p.price, p.image, p.shop_id
                     order by sum(oi.quantity) desc) where ROWNUM <=8";
                     $stid = oci_parse($connection, $sql);

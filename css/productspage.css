@@ -326,9 +326,9 @@ html {
 
 .similar-product-image img {
   width: 100%;
+  max-width: 800px;
   height: auto;
-  border-bottom: 1px solid #ddd;
-  margin-left: 110px;
+  border-bottom: 1px solid #000000;
 }
 
 .similar-product-info {
