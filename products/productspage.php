@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,11 +26,11 @@
             cursor: pointer;
         }
 
-        .star-rating input:checked ~ label {
+        .star-rating input:checked~label {
             color: #f2b600;
         }
 
-    
+
 
         .review-popup-box {
             display: none;
@@ -64,7 +65,7 @@
         $userId = $_POST['user_id'];
         $productId = $_POST['product_id'];
         $action = $_POST['action'];
-        
+
         if ($action == 'add') {
             // Prepare the SQL statement to insert the favorite item
             $sql = "INSERT INTO FAVOURITE_ITEM (FAVOURITE_ITEM_ID, USER_ID, PRODUCT_ID) VALUES (null, :user_id, :product_id)";
@@ -78,9 +79,9 @@
             oci_bind_by_name($stid, ':user_id', $user_id);
             oci_bind_by_name($stid, ':product_id', $productId);
         }
-        
+
         $flag = true;
- 
+
         if (empty($user_id)) {
             $flag = false;
             echo "<script>alert('You have to be logged in!!!')</script>";
@@ -163,7 +164,7 @@
             <input type="hidden" name="action" id="favoriteAction" value="">
         </form>
 
-      
+
         <div class="reviews-section">
             <h2>Reviews</h2>
             <?php
@@ -340,7 +341,7 @@
                                 <p class=\"similar-product-price\">£$pPrice</p>
                             </div>
                         </a>
-                        <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
+                        <button class=\"btn btn-success btn-add-to-cart\" style=\"margin-left:10px;\">Add to Cart</button>
                     </div>
                 ";
             }
@@ -397,72 +398,73 @@
             event.stopPropagation();
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-                document.getElementById('heart').addEventListener('click', function () {
-                    this.classList.toggle('fas');
-                    this.classList.toggle('far');
-                    this.classList.toggle('favorited'); // Toggles the red color
-                });
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('heart').addEventListener('click', function() {
+                this.classList.toggle('fas');
+                this.classList.toggle('far');
+                this.classList.toggle('favorited'); // Toggles the red color
+            });
+        });
+
+        // Quantity selector
+        document.addEventListener('DOMContentLoaded', function() {
+            var quantityInput = document.getElementById('quantity');
+            var minusButton = document.querySelector('.quantity-control.minus');
+            var plusButton = document.querySelector('.quantity-control.plus');
+
+            minusButton.addEventListener('click', function() {
+                var currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                }
             });
 
-            // Quantity selector
-            document.addEventListener('DOMContentLoaded', function () {
-                var quantityInput = document.getElementById('quantity');
-                var minusButton = document.querySelector('.quantity-control.minus');
-                var plusButton = document.querySelector('.quantity-control.plus');
+            plusButton.addEventListener('click', function() {
+                var currentValue = parseInt(quantityInput.value);
+                quantityInput.value = currentValue + 1;
+            });
+        });
 
-                minusButton.addEventListener('click', function () {
-                    var currentValue = parseInt(quantityInput.value);
-                    if (currentValue > 1) {
-                        quantityInput.value = currentValue - 1;
+        // Toggle review popup
+        function toggleReviewPopup(event) {
+            console.log("Toggling review popup...");
+            var overlay = document.getElementById('overlay');
+            var popup = document.getElementById('review-popup');
+            overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+            popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+            event.stopPropagation(); // Prevent click event from propagating to overlay
+        }
+
+        function closeReviewPopup() {
+            console.log("Closing review popup...");
+            var overlay = document.getElementById('overlay');
+            var popup = document.getElementById('review-popup');
+            overlay.style.display = 'none';
+            popup.style.display = 'none';
+        }
+
+        function stopPropagation(event) {
+            console.log("Stopping event propagation...");
+            event.stopPropagation();
+        }
+
+        // Star rating for popup
+        document.addEventListener('DOMContentLoaded', function() {
+            const popupStars = document.querySelectorAll('#popup-star-rating .star');
+            popupStars.forEach(star => {
+                star.addEventListener('click', function() {
+                    popupStars.forEach(s => s.style.color = '#bbb');
+                    this.style.color = '#f2b600';
+                    let prev = this.previousElementSibling;
+                    while (prev) {
+                        prev.style.color = '#f2b600';
+                        prev = prev.previousElementSibling;
                     }
                 });
-
-                plusButton.addEventListener('click', function () {
-                    var currentValue = parseInt(quantityInput.value);
-                    quantityInput.value = currentValue + 1;
-                });
             });
-
-            // Toggle review popup
-            function toggleReviewPopup(event) {
-                console.log("Toggling review popup...");
-                var overlay = document.getElementById('overlay');
-                var popup = document.getElementById('review-popup');
-                overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
-                popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
-                event.stopPropagation(); // Prevent click event from propagating to overlay
-            }
-
-            function closeReviewPopup() {
-                console.log("Closing review popup...");
-                var overlay = document.getElementById('overlay');
-                var popup = document.getElementById('review-popup');
-                overlay.style.display = 'none';
-                popup.style.display = 'none';
-            }
-
-            function stopPropagation(event) {
-                console.log("Stopping event propagation...");
-                event.stopPropagation();
-            }
-
-            // Star rating for popup
-            document.addEventListener('DOMContentLoaded', function () {
-                const popupStars = document.querySelectorAll('#popup-star-rating .star');
-                popupStars.forEach(star => {
-                    star.addEventListener('click', function () {
-                        popupStars.forEach(s => s.style.color = '#bbb');
-                        this.style.color = '#f2b600';
-                        let prev = this.previousElementSibling;
-                        while (prev) {
-                            prev.style.color = '#f2b600';
-                            prev = prev.previousElementSibling;
-                        }
-                    });
-                });
-            });
+        });
     </script>
     <?php require('../inc/footer.php'); ?>
 </body>
+
 </html>

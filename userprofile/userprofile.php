@@ -1,75 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+include('../connection.php');
+session_start();
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php require('../inc/links.php'); ?>
-    <title>User Profile</title>
-    <link rel="stylesheet" href="../css/userprofile.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-</head>
+$isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
 
-<body>
-    <?php
-    include('../connection.php');
-    session_start();
+if (!$isLoggedIn || !isset($_SESSION['userID'])) {
+    header('Location: ../login/login.php');
+    exit;
+}
 
-    $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
+$userID = $_SESSION['userID'];
+$error_message1 = null;
+$error_message2 = null;
 
-    if (!$isLoggedIn || !isset($_SESSION['userID'])) {
-        header('Location: ../login/login.php');
-        exit;
+function getUserDetails($connection, $userID)
+{
+    $sql = 'SELECT * FROM "USER" u INNER JOIN customer c ON c.user_id = u.user_id WHERE u.USER_ID = :userid';
+    $stmt = oci_parse($connection, $sql);
+    oci_bind_by_name($stmt, ':userid', $userID);
+    if (!oci_execute($stmt)) {
+        $e = oci_error($stmt);
+        echo "Error executing query: " . $e['message'];
+        return false;
     }
+    $result = oci_fetch_assoc($stmt);
+    if (!$result) {
+        echo "No user details found for USER_ID = $userID";
+    }
+    return $result;
+}
 
-    // Fetch the user ID from the session
-    $userID = $_SESSION['userID'];
-    $error_message1 = null;
-    $error_message2 = null;
+$userDetails = getUserDetails($connection, $userID);
 
-    function getUserDetails($connection, $userID)
-    {
-        $sql = 'SELECT * FROM "USER" u INNER JOIN customer c ON c.user_id = u.user_id WHERE u.USER_ID = :userid';
-        $stmt = oci_parse($connection, $sql);
-        oci_bind_by_name($stmt, ':userid', $userID);
-        if (!oci_execute($stmt)) {
-            $e = oci_error($stmt);
-            echo "Error executing query: " . $e['message'];
-            return false;
+if (!$userDetails) {
+    exit;
+}
+
+$changesSaved = false;
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $firstName = $_POST['first_name'] ?? $userDetails['FIRST_NAME'];
+    $lastName = $_POST['last_name'] ?? $userDetails['LAST_NAME'];
+    $username = $_POST['username'] ?? $userDetails['USERNAME'];
+    $contactNumber = $_POST['contact_number'] ?? $userDetails['CONTACT_NUMBER'];
+    $address = $_POST['address'] ?? $userDetails['ADDRESS'];
+    $profilePicture = $_POST['profile_picture'] ?? $userDetails['PROFILE_PICTURE'];
+
+    $imgName = $_FILES['profile_picture']['name'];
+    $imgSize = $_FILES['profile_picture']['size'];
+    $imgType = $_FILES['profile_picture']['type'];
+    $tmp = $_FILES['profile_picture']['tmp_name'];
+
+    if (!preg_match('/^\d{10}$/', $contactNumber)) {
+        $error_message2 = 'Contact number must be exactly 10 digits.';
+    } else {
+        $sql = "SELECT count(*) FROM \"USER\" WHERE username = '$username' AND user_id != '$userID'";
+        $stid = oci_parse($connection, $sql);
+        oci_execute($stid);
+        if (!oci_execute($stid)) {
+            $error = oci_error($stid);
+            throw new Exception($error['message']);
         }
-        $result = oci_fetch_assoc($stmt);
-        if (!$result) {
-            echo "No user details found for USER_ID = $userID";
+
+        if ($row = oci_fetch_assoc($stid)) {
+            $count = $row['COUNT(*)'];
         }
-        return $result;
-    }
-
-    $userDetails = getUserDetails($connection, $userID);
-
-    if (!$userDetails) {
-        exit;
-    }
-
-    $changesSaved = false;
-
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $firstName = $_POST['first_name'] ?? $userDetails['FIRST_NAME'];
-        $lastName = $_POST['last_name'] ?? $userDetails['LAST_NAME'];
-        $username = $_POST['username'] ?? $userDetails['USERNAME'];
-        $contactNumber = $_POST['contact_number'] ?? $userDetails['CONTACT_NUMBER'];
-        $address = $_POST['address'] ?? $userDetails['ADDRESS'];
-        $profilePicture = $_POST['profile_picture'] ?? $userDetails['PROFILE_PICTURE'];
-
-        $imgName = $_FILES['profile_picture']['name'];
-        $imgSize = $_FILES['profile_picture']['size'];
-        $imgType = $_FILES['profile_picture']['type'];
-        $tmp = $_FILES['profile_picture']['tmp_name'];
-
-
-        if (!preg_match('/^\d{10}$/', $contactNumber)) {
-            $contactNumberError = 'Contact number must be exactly 10 digits.';
+        if ($count != 0) {
+            $error_message1 = 'Username Already Exists !!!.';
         } else {
-            $sql = "SELECT count(*) FROM \"USER\" WHERE username = '$username' AND user_id != '$userID'";
+            $sql = "SELECT count(*) FROM \"USER\" WHERE contact_number = '$contactNumber' AND user_id != '$userID'";
             $stid = oci_parse($connection, $sql);
             oci_execute($stid);
             if (!oci_execute($stid)) {
@@ -81,46 +80,20 @@
                 $count = $row['COUNT(*)'];
             }
             if ($count != 0) {
-                $error_message1 = 'Username Already Exists !!!.';
+                $error_message2 = 'Contact Number Already Exists !!!.';
             } else {
-                $sql = "SELECT count(*) FROM \"USER\" WHERE contact_number = '$contactNumber' AND user_id != '$userID'";
-                $stid = oci_parse($connection, $sql);
-                oci_execute($stid);
-                if (!oci_execute($stid)) {
-                    $error = oci_error($stid);
-                    throw new Exception($error['message']);
-                }
-
-                if ($row = oci_fetch_assoc($stid)) {
-                    $count = $row['COUNT(*)'];
-                }
-                if ($count != 0) {
-                    $error_message2 = 'Contact Number Already Exists !!!.';
-                } else {
-                    // Handle profile picture upload
-                    if (!empty($_FILES['profile_picture']['name'])) {
+                // Handle profile picture upload
+                if (!empty($_FILES['profile_picture']['name'])) {
+                    $validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                    if (in_array($imgType, $validTypes)) {
                         $uploadFile = "image/" . $imgName;
                         if (move_uploaded_file($tmp, $uploadFile)) {
-                            echo "<script>alert('Profile Picture updated.')</script>";
+                            // Update profile picture in the database
+                        } else {
+                            $error_message2 = 'Error occurred while uploading picture.';
                         }
-                        // $filetype = strtolower(pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION));
-                        // $allowed = array('jpg', 'jpeg', 'png', 'gif'); // Allowed file types
-
-                        // if (in_array($filetype, $allowed)) {
-                        //     $newFilename = uniqid('IMG-', true) . '.' . $filetype;
-                        //     $uploadDir = 'image/';
-                        //     $destination = $uploadDir . $newFilename;
-
-                        //     if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $destination)) {
-                        //         // Update the profile picture path in the database
-                        //         $profilePicture = 'image/' . $newFilename;
-                        //     } else {
-                        //         echo "<script>alert('Error uploading file.');</script>";
-                        //     }
-                    } else if ($imgType == "profile_picture/jpeg" || $imgType == "profile_picture/jpg" || $imgType == "profile_picture/png" || $imgType == "profile_picture/gif") {
-                        echo "<script>alert('Invalid file type.');</script>";
                     } else {
-                        echo "<script>alert('Error occured while uploading picture.');</script>";
+                        $error_message2 = 'Invalid file type. Only JPEG, JPG, PNG, and GIF are allowed.';
                     }
                 }
 
@@ -136,7 +109,7 @@
                 oci_bind_by_name($updateStmt, ':contactnumber', $contactNumber);
                 oci_bind_by_name($updateStmt, ':userid', $userID);
                 oci_bind_by_name($updateStmt2, ':address', $address);
-                oci_bind_by_name($updateStmt2, ':profile_picture', $profilePicture);
+                oci_bind_by_name($updateStmt2, ':profile_picture', $imgName);
                 oci_bind_by_name($updateStmt2, ':userid', $userID);
 
                 if (!oci_execute($updateStmt) || !oci_execute($updateStmt2)) {
@@ -150,16 +123,28 @@
             }
         }
     }
+}
 
+if ($isLoggedIn) {
+    include('../inc/loggedin_header.php');
+} else {
+    include('../inc/header.php');
+}
+?>
 
-    if ($isLoggedIn) {
-        include('../inc/loggedin_header.php');
-    } else {
-        include('../inc/header.php');
-    }
-    ?>
+<!DOCTYPE html>
+<html lang="en">
 
-    <!-- Side Bar-->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php require('../inc/links.php'); ?>
+    <title>User Profile</title>
+    <link rel="stylesheet" href="../css/userprofile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
     <div class="container">
         <div class="sidebar">
             <a href="userprofile.php">Profile</a>
@@ -169,7 +154,6 @@
             <a href="../logout/logout.php">Log out</a>
         </div>
 
-        <!-- Profile Form-->
         <div class="main-content">
             <div class="profile-form">
                 <div class="profile-header">
@@ -177,20 +161,22 @@
                 </div>
                 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data" class="profile-info-form">
                     <div style="text-align: right;">
-                        <button type="button" onclick="makeEditable()" class="btn btn-info" style="background-color: #007bff; border: none; color: white; padding: 5px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 14px; margin: 4px 2px; cursor: pointer; border-radius: 16px;"><i class="bi bi-pencil-square"></i> </button>
+                        <button type="button" onclick="makeEditable()" class="btn btn-info" style="background-color: #007bff; border: none; color: white; padding: 5px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 14px; margin: 4px 2px; cursor: pointer; border-radius: 16px;"><i class="bi bi-pencil-square"></i></button>
                     </div>
                     <br>
                     <div class="profile-picture">
-                        <img id="profile-image" src="<?php echo $userDetails['PROFILE_PICTURE'] ? $userDetails['PROFILE_PICTURE'] : 'https://i1.sndcdn.com/avatars-1qRoSxBGYeTS8vdw-VUsyDw-t240x240.jpg'; ?>" alt="Profile Picture">
+                        <?php
+                        $profilePicture = !empty($userDetails['PROFILE_PICTURE']) ? 'image/' . htmlspecialchars($userDetails['PROFILE_PICTURE']) : 'https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg';
+                        ?>
+                        <img id="profile-image" src="<?php echo $profilePicture; ?>" alt="Profile Picture">
                         <input type="file" name="profile_picture" id="file-input" accept="image/*" style="display: none;">
                         <label for="file-input" id="upload-icon" class="upload-icon" style="display: none;">
                             <i class="fas fa-camera"></i>
                         </label>
-                        <button id="delete-image" class="delete-icon" style="display: none;">
+                        <button type="button" id="delete-image" class="delete-icon" style="display: none;">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
-
                     <br>
                     <div class="flex-row">
                         <div class="form-group">
@@ -233,7 +219,6 @@
             });
             document.querySelector('.profile-info-form input[type="submit"]').disabled = false;
 
-            // Show the profile picture editing buttons
             document.getElementById('upload-icon').style.display = 'inline-block';
             document.getElementById('delete-image').style.display = 'inline-block';
         }
@@ -258,9 +243,7 @@
         <?php endif; ?>
     </script>
 
-
     <?php require('../inc/footer.php'); ?>
-
 </body>
 
 </html>
