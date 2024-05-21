@@ -138,7 +138,19 @@
         <!-- Profile Form-->
         <div class="main-content">
             <div class="profile-form">
-                <h1>Profile</h1>
+                <div class="profile-header">
+                    <h1>Profile</h1>
+                    <div class="profile-picture">
+                        <img id="profile-image" src="https://i1.sndcdn.com/avatars-1qRoSxBGYeTS8vdw-VUsyDw-t240x240.jpg" alt="Profile Picture">
+                        <input type="file" id="file-input" accept="image/*" style="display: none;">
+                        <label for="file-input" class="upload-icon">
+                            <i class="fas fa-camera"></i>
+                        </label>
+                        <button id="delete-image" class="delete-icon">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
                 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" class="profile-info-form">
                     <div style="text-align: right;">
                         <button type="button" onclick="makeEditable()" class="btn btn-info" style="background-color: #007bff; border: none; color: white; padding: 5px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 14px; margin: 4px 2px; cursor: pointer; border-radius: 16px;"><i class="bi bi-pencil-square"></i> </button>
@@ -168,7 +180,6 @@
                     </div>
                     <div class="error" style="color: red;"><?php if (!empty($error_message2)) echo "<p class='error'>$error_message2</p>"; ?></div>
                     <div class="d-flex justify-content-evenly mb-2">
-
                         <input type="submit" value="Save Changes" class="btn btn-primary" disabled>
                         <button type="button" onclick="window.location.reload()" class="btn btn-default" style="background-color: #6c757d; border: none; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 16px;">Cancel</button>
                     </div>
@@ -185,6 +196,21 @@
             });
             document.querySelector('.profile-info-form input[type="submit"]').disabled = false;
         }
+
+        document.getElementById('file-input').addEventListener('change', function (event) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const img = document.getElementById('profile-image');
+                img.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        });
+
+        document.getElementById('delete-image').addEventListener('click', function () {
+            const img = document.getElementById('profile-image');
+            img.src = 'https://i1.sndcdn.com/avatars-1qRoSxBGYeTS8vdw-VUsyDw-t240x240.jpg';
+            document.getElementById('file-input').value = '';
+        });
 
         <?php if ($changesSaved) : ?>
             alert('Changes saved successfully!');
