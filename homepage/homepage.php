@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php require('../inc/links.php');
+    <?php require ('../inc/links.php');
     ?>
     <title>CleckShopHub</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -16,14 +16,14 @@
 <body>
     <?php
     session_start();
-    include('../connection.php');
+    include ('../connection.php');
     $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
     $user_id = null;
     if ($isLoggedIn) {
         $user_id = $_SESSION['userID'];
-        include('../inc/loggedin_header.php');
+        include ('../inc/loggedin_header.php');
     } else {
-        include('../inc/header.php');
+        include ('../inc/header.php');
         $user_id = 1;
     }
 
@@ -96,8 +96,9 @@
                                             </div>
                                             <div class='product-price'>£ $price</div>
                                     </div>
-                                    </a>
                                     <button class='btn btn-success btn-add-to-cart'>Add to Cart</button>
+                                    </a>
+                                    
                                 </div>
                             </div>";
                     }
@@ -134,7 +135,7 @@
                         $price = htmlspecialchars($row['PRICE']);
                         $image = htmlspecialchars($row['IMAGE']);
                         $shopId = htmlspecialchars($row['SHOP_ID']); // Assuming shop_id is part of the product table
-
+                    
                         echo "
         <div class='swiper-slide'>
             <div class='card border-0 shadow product-item'>
@@ -156,8 +157,9 @@
                         </div>
                         <div class='product-price'>£ $price</div>
                     </div>
+                    <button class='btn btn-success btn-add-to-cart'>Add to Cart</button>
                 </a>
-                <button class='btn btn-success btn-add-to-cart'>Add to Cart</button>
+                
             </div>
         </div>";
                     }
@@ -177,7 +179,9 @@
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-8 p-4 mb-lg-0 mb-3 bg-gray rounded">
 
-                <iframe class="w-100 rounded" height="320px" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.817147278988!2d85.31712757608553!3d27.692045826165188!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb190022762715%3A0xbd8f893a64dc355a!2sCleckShopHub!5e0!3m2!1sen!2snp!4v1711702498567!5m2!1sen!2snp" loading="lazy"></iframe>
+                <iframe class="w-100 rounded" height="320px"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.817147278988!2d85.31712757608553!3d27.692045826165188!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb190022762715%3A0xbd8f893a64dc355a!2sCleckShopHub!5e0!3m2!1sen!2snp!4v1711702498567!5m2!1sen!2snp"
+                    loading="lazy"></iframe>
             </div>
             <div class="col-lg-4 col-md-4">
                 <div class="bg-gray p-4 rounded mb-4">
@@ -222,8 +226,10 @@
 
 
 
-    <?php require('../inc/footer.php'); ?>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <?php require ('../inc/footer.php'); ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         var swiper = new Swiper(".swiper-container", {
@@ -291,12 +297,6 @@
                 slideShadows: true,
             },
             disableOnInteraction: false,
-        });
-        document.querySelectorAll('.btn-add-to-cart').forEach(button => {
-            button.addEventListener('click', function() {
-                alert('Added to cart!');
-                // Implement additional functionality here, such as updating cart count
-            });
         });
     </script>
 </body>

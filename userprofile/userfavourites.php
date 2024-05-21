@@ -80,8 +80,9 @@
                                             </div>
                                             <div class='product-price' style='color: black;'>£ $price</div>
                                     </div>
-                                    </a>
                                     <button class='btn btn-success btn-add-to-cart'>Add to Cart</button>
+                                    </a>
+                                    
                                 </div>";
                             }
                             ?>

@@ -94,8 +94,9 @@
                   <i class=\"far fa-star\"></i>
                 </div>
                 <div class=\"product-price\">£ $price</div>
-                </a>
                 <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
+                </a>
+                
               </div>
           </div>";
         }

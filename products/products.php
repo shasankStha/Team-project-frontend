@@ -142,8 +142,9 @@
                                 <div class=\"product-price\">£ $price</div>
 
                             </div>
+                            <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
                         </a>
-                        <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
+                        
                     </div>
 
                 </div>";
