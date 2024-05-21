@@ -5,7 +5,14 @@ if (session_status() == PHP_SESSION_NONE) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
   $_SESSION['search'] = $_POST['search'];
-  header("Location: ../products/products.php");
+  if (!empty($_SESSION['search'])) {
+    header("Location: ../products/products.php");
+  } else {
+    echo "<script>
+    alert('Search bar is empty!!!');
+    window.location.href = window.location.href;
+    </script>";
+  }
   exit();
 }
 ?>
@@ -445,7 +452,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
 
   function getShopNames($connection)
   {
-    $sql = 'SELECT SHOP_ID, SHOP_NAME FROM SHOP';
+    $sql = "SELECT s.SHOP_ID, s.SHOP_NAME FROM SHOP s inner join trader t on t.user_id = s.user_id where t.status = '1' ";
     $stmt = oci_parse($connection, $sql);
     if (!oci_execute($stmt)) {
       $e = oci_error($stmt);

@@ -223,7 +223,7 @@
             <?php
             $shop_id = (int)$_GET['shop_id'];
             // Fetch products for the shop
-            $sql = "SELECT * FROM PRODUCT WHERE SHOP_ID = $shop_id and product_id != $productId";
+            $sql = "SELECT * FROM PRODUCT WHERE SHOP_ID = $shop_id and product_id != $productId and status ='1'";
             $stid = oci_parse($connection, $sql);
             oci_execute($stid);
 
