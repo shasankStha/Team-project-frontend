@@ -29,7 +29,8 @@
     // Handle delete action
     if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
         $productID = $_GET['id'];
-        $sql = "UPDATE product SET STATUS = 0 WHERE PRODUCT_ID = :productID";
+        $newProductName = "delete " . $productID;
+        $sql = "UPDATE product SET STATUS = 0, name = '$newProductName' WHERE PRODUCT_ID = :productID";
         $stid = oci_parse($connection, $sql);
         oci_bind_by_name($stid, ':productID', $productID);
         oci_execute($stid);
@@ -276,17 +277,17 @@
                                         echo "    <td>" . htmlspecialchars($row['MAX_ORDER']) . "</td>\n";
                                         echo "    <td>" . htmlspecialchars($row['DISCOUNT_ID']) . "</td>\n";
                                         echo "    <td><button type='button' class='btn btn-dark shadow-none btn-sm' data-bs-toggle='modal' data-bs-target='#edit-modal' 
-          data-name='" . htmlspecialchars($row['NAME']) . "' 
-          data-price='" . htmlspecialchars($row['PRICE']) . "'
-          data-stock='" . htmlspecialchars($row['STOCK_AVAILABLE']) . "'
-          data-minorder='" . htmlspecialchars($row['MIN_ORDER']) . "'
-          data-maxorder='" . htmlspecialchars($row['MAX_ORDER']) . "'
-          data-discount='" . htmlspecialchars($row['DISCOUNT_ID']) . "'
-          data-description='" . htmlspecialchars($row['DESCRIPTION']) . "'
-          data-allergyinfo='" . htmlspecialchars($row['ALLERGY_INFORMATION']) . "'
-          data-image='" . htmlspecialchars($row['IMAGE']) . "'
-          data-id='" . htmlspecialchars($row['PRODUCT_ID']) . "'> 
-          <i class='bi bi-pencil-square'></i> EDIT</button></td>\n";
+                                                    data-name='" . htmlspecialchars($row['NAME']) . "' 
+                                                    data-price='" . htmlspecialchars($row['PRICE']) . "'
+                                                    data-stock='" . htmlspecialchars($row['STOCK_AVAILABLE']) . "'
+                                                    data-minorder='" . htmlspecialchars($row['MIN_ORDER']) . "'
+                                                    data-maxorder='" . htmlspecialchars($row['MAX_ORDER']) . "'
+                                                    data-discount='" . htmlspecialchars($row['DISCOUNT_ID']) . "'
+                                                    data-description='" . htmlspecialchars($row['DESCRIPTION']) . "'
+                                                    data-allergyinfo='" . htmlspecialchars($row['ALLERGY_INFORMATION']) . "'
+                                                    data-image='" . htmlspecialchars($row['IMAGE']) . "'
+                                                    data-id='" . htmlspecialchars($row['PRODUCT_ID']) . "'> 
+                                                    <i class='bi bi-pencil-square'></i> EDIT</button></td>\n";
                                         echo "    <td><a class='btn btn-danger' href='?action=delete&id=" . htmlspecialchars($row['PRODUCT_ID']) . "' onclick='return confirm(\"Are you sure you want to delete this item?\")'>Delete</a></td>\n";
                                         // echo "    <td><button type='button' class='btn btn-dark shadow-none btn-sm' data-bs-toggle='modal' data-bs-target='#review-modal'> <i class='bi bi-pencil-square'></i> View Reviews</button></td>\n";
                                         echo "</tr>\n";

@@ -51,12 +51,13 @@
     <?php
     session_start();
     include('../connection.php');
-    $user_id = $_SESSION['userID'];
+    $user_id = 0;
     $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
     $loggedInUserID = $_SESSION['userID'] ?? null;
 
     if ($isLoggedIn) {
         include('../inc/loggedin_header.php');
+        $user_id = $_SESSION['userID'];
     } else {
         include('../inc/header.php');
     }
