@@ -29,10 +29,7 @@
             color: #f2b600;
         }
 
-        .star-rating label:hover,
-        .star-rating label:hover ~ label {
-            color: #f2b600;
-        }
+    
 
         .review-popup-box {
             display: none;
