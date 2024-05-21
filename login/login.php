@@ -12,8 +12,8 @@
 <body style="display: flex; flex-direction: column;">
     <?php
     session_start();
-    include ("../connection.php");
-    require ('../inc/header1.php');
+    include("../connection.php");
+    require('../inc/header1.php');
     echo "<br><br>";
     $error = ''; // Initialize the error message variable
     if (isset($_POST['btnSignInLogin'])) {
@@ -87,6 +87,7 @@
             }
         } elseif ($role == "A") {
             $_SESSION["admin"] = $username;
+            $_SESSION["admin_id"] = $user_id;
             $_SESSION["loggedinUser"] = TRUE;
             $sql = "update \"USER\" set LAST_LOGGEDIN_DATE = sysdate where user_id = '$user_id'";
             $stid = oci_parse($connection, $sql);
@@ -119,7 +120,7 @@
                 <div class="inputBx">
                     <label for="passwordLogin">Password</label>
                     <input type="password" id="passwordLogin" name="passwordLogin" required>
-                    <?php if (!empty($error)): ?>
+                    <?php if (!empty($error)) : ?>
                         <div style="color: red;"><?= $error ?></div>
                     <?php endif; ?>
                 </div>
