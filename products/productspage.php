@@ -8,6 +8,46 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="../css/productspage.css">
+    <style>
+        /* Additional CSS for the star rating and popup */
+        .star-rating {
+            direction: rtl;
+            display: inline-block;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            color: #bbb;
+            font-size: 20px;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .star-rating input:checked ~ label {
+            color: #f2b600;
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #f2b600;
+        }
+
+        .review-popup-box {
+            display: none;
+            position: fixed;
+            z-index: 2;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+        }
+    </style>
 </head>
 
 <body>
@@ -26,7 +66,7 @@
 
     $productId = null;
     $productName = null;
-    $productImag = null;
+    $productImage = null;
     $productDescription = null;
     $productPrice = null;
     $StockAvailable = null;
@@ -123,13 +163,20 @@
                                     <i class=\"fa-solid fa-user\"></i>
                                     $usernameReview
                                 </div>
-                                
                                 <div class=\"review-stars\">
-                                    <i class=\"fas fa-star\"></i>
-                                    <i class=\"fas fa-star\"></i>
-                                    <i class=\"fas fa-star\"></i>
-                                    <i class=\"fas fa-star\"></i>
-                                    <i class=\"far fa-star\"></i>
+                ";
+
+                // Display filled stars
+                for ($i = 0; $i < $rating; $i++) {
+                    echo "<i class=\"fas fa-star\"></i>";
+                }
+
+                // Display empty stars
+                for ($i = $rating; $i < 5; $i++) {
+                    echo "<i class=\"far fa-star\"></i>";
+                }
+
+                echo "
                                 </div>
                             </div>
                             <div class=\"date\">$rDate</div>
@@ -178,6 +225,18 @@
             ?>
 
             <form method="POST" action="">
+                <div class="star-rating" id="popup-star-rating">
+                    <input type="radio" id="popup-1-star" name="rating" value="1" />
+                    <label for="popup-1-star" class="star">&#9733;</label>
+                    <input type="radio" id="popup-2-stars" name="rating" value="2" />
+                    <label for="popup-2-stars" class="star">&#9733;</label>
+                    <input type="radio" id="popup-3-stars" name="rating" value="3" />
+                    <label for="popup-3-stars" class="star">&#9733;</label>
+                    <input type="radio" id="popup-4-stars" name="rating" value="4" />
+                    <label for="popup-4-stars" class="star">&#9733;</label>
+                    <input type="radio" id="popup-5-stars" name="rating" value="5" />
+                    <label for="popup-5-stars" class="star">&#9733;</label>
+                </div>
                 <textarea class="review-input" placeholder="Write your review here..." name="review"></textarea>
                 <button class="submit-button" type="submit" name="submit">Submit</button>
             </form>
@@ -186,7 +245,7 @@
             if (isset($_POST['submit'])) {
                 $review = $_POST['review'];
                 $userId = $loggedInUserID;
-                $rating = 3; // Example rating value. This should be fetched from user input if you have a rating system in the form.
+                $rating = $_POST['rating']; // Fetch the rating from user input
 
                 $sql = "INSERT INTO review (review_id, rating, user_comment, review_date, status, product_id, user_id)
                     VALUES (null, :rating, :review, SYSDATE, '1', :product_id, :user_id)";
@@ -241,11 +300,19 @@
                     </div>
                     <div class=\"similar-product-info\">
                         <h3 class=\"similar-product-name\">$pName</h3>
-                        <i class=\"fas fa-star\"></i>
-                        <i class=\"fas fa-star\"></i>
-                        <i class=\"fas fa-star\"></i>
-                        <i class=\"fas fa-star\"></i>
-                        <i class=\"far fa-star\"></i>
+                ";
+
+                // Display filled stars
+                for ($i = 0; $i < $rating; $i++) {
+                    echo "<i class=\"fas fa-star\"></i>";
+                }
+
+                // Display empty stars
+                for ($i = $rating; $i < 5; $i++) {
+                    echo "<i class=\"far fa-star\"></i>";
+                }
+
+                echo "
                         <p class=\"similar-product-price\">£$pPrice</p>
                         </a>
                         <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
@@ -258,62 +325,71 @@
         </div>
 
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                document.getElementById('heart').addEventListener('click', function() {
+            document.addEventListener('DOMContentLoaded', function () {
+                document.getElementById('heart').addEventListener('click', function () {
                     this.classList.toggle('fas');
                     this.classList.toggle('far');
                     this.classList.toggle('favorited'); // Toggles the red color
                 });
             });
 
-            //quantity selector 
-            document.addEventListener('DOMContentLoaded', function() {
+            // Quantity selector
+            document.addEventListener('DOMContentLoaded', function () {
                 var quantityInput = document.getElementById('quantity');
                 var minusButton = document.querySelector('.quantity-control.minus');
                 var plusButton = document.querySelector('.quantity-control.plus');
 
-                minusButton.addEventListener('click', function() {
+                minusButton.addEventListener('click', function () {
                     var currentValue = parseInt(quantityInput.value);
                     if (currentValue > 1) {
                         quantityInput.value = currentValue - 1;
                     }
                 });
 
-                plusButton.addEventListener('click', function() {
+                plusButton.addEventListener('click', function () {
                     var currentValue = parseInt(quantityInput.value);
                     quantityInput.value = currentValue + 1;
                 });
             });
 
-
-            //-------------for more review--------------------//
-
+            // Toggle review popup
             function toggleReviewPopup(event) {
                 console.log("Toggling review popup...");
-                var overlay = document.getElementById('review-popup');
-                overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
-                event.stopPropagation(); // Prevent click event from propagating to overlay
-            }
-            // Function to toggle the display of overlay and review popup box
-            function togglePopup() {
                 var overlay = document.getElementById('overlay');
-                var popup = document.getElementById('reviewPopup');
+                var popup = document.getElementById('review-popup');
                 overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
                 popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+                event.stopPropagation(); // Prevent click event from propagating to overlay
             }
 
             function closeReviewPopup() {
                 console.log("Closing review popup...");
-                var overlay = document.getElementById('review-popup');
+                var overlay = document.getElementById('overlay');
+                var popup = document.getElementById('review-popup');
                 overlay.style.display = 'none';
+                popup.style.display = 'none';
             }
 
             function stopPropagation(event) {
                 console.log("Stopping event propagation...");
                 event.stopPropagation();
             }
-            // Select the submit button
-            var submitButton = document.querySelector('.submit-button');
+
+            // Star rating for popup
+            document.addEventListener('DOMContentLoaded', function () {
+                const popupStars = document.querySelectorAll('#popup-star-rating .star');
+                popupStars.forEach(star => {
+                    star.addEventListener('click', function () {
+                        popupStars.forEach(s => s.style.color = '#bbb');
+                        this.style.color = '#f2b600';
+                        let prev = this.previousElementSibling;
+                        while (prev) {
+                            prev.style.color = '#f2b600';
+                            prev = prev.previousElementSibling;
+                        }
+                    });
+                });
+            });
         </script>
         <?php require('../inc/footer.php'); ?>
 </body>
