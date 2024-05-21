@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,12 +8,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="../css/productspage.css">
 </head>
-
 <body>
     <?php
     session_start();
     include('../connection.php');
-
+    $user_id = $_SESSION['userID'];
     $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
     $loggedInUserID = $_SESSION['userID'] ?? null;
 
@@ -24,21 +22,41 @@
         include('../inc/header.php');
     }
 
-    $productId = null;
-    $productName = null;
-    $productImag = null;
-    $productDescription = null;
-    $productPrice = null;
-    $StockAvailable = null;
-    $minOrder = null;
-    $allergyInfo = null;
-    $usernameReview = null;
-    $userComment = null;
-    $rating = null;
-    $rDate = null;
-    ?>
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id']) && isset($_POST['product_id'])) {
+        $userId = $_POST['user_id'];
+        $productId = $_POST['product_id'];
+        $action = $_POST['action'];
+        
+        if ($action == 'add') {
+            // Prepare the SQL statement to insert the favorite item
+            $sql = "INSERT INTO FAVOURITE_ITEM (FAVOURITE_ITEM_ID, USER_ID, PRODUCT_ID) VALUES (null, :user_id, :product_id)";
+            $stid = oci_parse($connection, $sql);
+            oci_bind_by_name($stid, ':user_id', $user_id);
+            oci_bind_by_name($stid, ':product_id', $productId);
+        } else if ($action == 'remove') {
+            // Prepare the SQL statement to delete the favorite item
+            $sql = "DELETE FROM FAVOURITE_ITEM WHERE USER_ID = :user_id AND PRODUCT_ID = :product_id";
+            $stid = oci_parse($connection, $sql);
+            oci_bind_by_name($stid, ':user_id', $user_id);
+            oci_bind_by_name($stid, ':product_id', $productId);
+        }
+        
+        $flag = true;
+ 
+        if (empty($user_id)) {
+            $flag = false;
+            echo "<script>alert('You have to be logged in!!!')</script>";
+            echo "<script>window.location.href = '../login/login.php';</script>";
+        }
+        // Execute the statement
+        if ($flag) {
+            oci_execute($stid);
+            echo "<script>
+            window.location.href = window.location.href;
+            </script>";
+        }
+    }
 
-    <?php
     $productId = $_GET['product_id'];
     $sql = "SELECT * FROM PRODUCT WHERE PRODUCT_ID = '$productId'";
     $stid = oci_parse($connection, $sql);
@@ -56,6 +74,13 @@
         $allergyInfo = $row['ALLERGY_INFORMATION'];
     }
 
+    $sql = "SELECT count(*) FROM favourite_item WHERE PRODUCT_ID = '$productId' and user_id = '$user_id'";
+    $stid = oci_parse($connection, $sql);
+    oci_execute($stid);
+    $count = null;
+    if ($row = oci_fetch_assoc($stid)) {
+        $count = $row["COUNT(*)"];
+    }
     ?>
 
     <div class="main-container">
@@ -84,7 +109,7 @@
                             </div>
                         </div>
                         <div class="favorite-icon-container">
-                            <i id="heart" class="far fa-heart favorite-icon"></i>
+                            <i id="heart" class="<?php echo ($count == 1) ? 'fas fa-heart favorite-icon favorited' : 'far fa-heart favorite-icon'; ?>"></i>
                         </div>
                     </div>
                     <div class="actions">
@@ -93,6 +118,12 @@
                 </div>
             </div>
         </div>
+
+        <form id="favoriteForm" method="POST" style="display: none;">
+            <input type="hidden" name="user_id" value="<?php echo $loggedInUserID; ?>">
+            <input type="hidden" name="product_id" value="<?php echo $productId; ?>">
+            <input type="hidden" name="action" id="favoriteAction" value="">
+        </form>
 
         <div class="reviews-section">
             <h2>Reviews</h2>
@@ -149,11 +180,14 @@
             <span class="close-button" onclick="closeReviewPopup()">&times;</span>
             <h1 class="more-review-title">More Review</h1><br>
             <?php
-            $product_id = $_GET['product_id'];
-            // Fetch products for the shop
-            $sql = "select r.review_id, r.rating,r.user_comment,r.review_date, u.first_name ||' '||u.last_name as name from review r
-                    inner join \"USER\" u on u.user_id = r.user_id where r.product_id = $product_id and r.status = '1'";
+            // Fetch all reviews for the product
+            $sql = "SELECT r.review_id, r.rating, r.user_comment, r.review_date, u.first_name ||' '|| u.last_name AS name
+                    FROM review r
+                    INNER JOIN \"USER\" u ON u.user_id = r.user_id
+                    WHERE r.product_id = :product_id AND r.status = '1'
+                    ORDER BY r.review_date DESC";
             $stid = oci_parse($connection, $sql);
+            oci_bind_by_name($stid, ':product_id', $product_id);
             oci_execute($stid);
 
             while ($row = oci_fetch_assoc($stid)) {
@@ -164,8 +198,8 @@
 
                 echo "
                     <div class=\"username-container\">
-                    <img src=\"user_profile.jpg\" class=\"profile-pic\" alt=\"Profile Picture\">
-                    <h5 class=\"username\">$usernameReview</h5>
+                        <img src=\"user_profile.jpg\" class=\"profile-pic\" alt=\"Profile Picture\">
+                        <h5 class=\"username\">$usernameReview</h5>
                     </div>
                     <b>
                         <p class=\"dates\">$rDate</p>
@@ -173,7 +207,7 @@
                     <div class=\"review-border\">
                         <p class=\"review-text\">$userComment</p>
                     </div><br>
-                    ";
+                ";
             }
             ?>
 
@@ -200,9 +234,9 @@
 
                 if ($result) {
                     echo "<script>
-                alert('Review submitted successfully!');
-                window.location.href = window.location.href + '?success=1';
-                </script>";
+                    alert('Review submitted successfully!');
+                    window.location.href = window.location.href + '?success=1';
+                    </script>";
                     exit();
                 } else {
                     $e = oci_error($stid);
@@ -210,21 +244,19 @@
                 }
             }
             ?>
-
         </div>
     </div>
-    </div>
-    </div>
-    </div>
+
     <div class="similar-products-section">
         <h2>Similar Products</h2>
-
         <div class="similar-products-container">
             <?php
             $shop_id = (int)$_GET['shop_id'];
             // Fetch products for the shop
-            $sql = "SELECT * FROM PRODUCT WHERE SHOP_ID = $shop_id and product_id != $productId and status ='1'";
+            $sql = "SELECT * FROM PRODUCT WHERE SHOP_ID = :shop_id AND PRODUCT_ID != :product_id AND STATUS = '1'";
             $stid = oci_parse($connection, $sql);
+            oci_bind_by_name($stid, ':shop_id', $shop_id);
+            oci_bind_by_name($stid, ':product_id', $productId);
             oci_execute($stid);
 
             while ($row = oci_fetch_assoc($stid)) {
@@ -234,88 +266,78 @@
                 $pImage = $row['IMAGE'];
 
                 echo "
-                <div class=\"similar-product-item\">
-                <a href=\"?product_id=$productId&shop_id=$shop_id\" class=\"text-decoration-none text-dark\">
-                    <div class=\"similar-product-image\">
-                        <img src=\"../traderdashboard/productsImages/$pImage\" alt=\"Product Image\" style=\"width:110px;\" />
-                    </div>
-                    <div class=\"similar-product-info\">
-                        <h3 class=\"similar-product-name\">$pName</h3>
-                        <i class=\"fas fa-star\"></i>
-                        <i class=\"fas fa-star\"></i>
-                        <i class=\"fas fa-star\"></i>
-                        <i class=\"fas fa-star\"></i>
-                        <i class=\"far fa-star\"></i>
-                        <p class=\"similar-product-price\">£$pPrice</p>
+                    <div class=\"similar-product-item\">
+                        <a href=\"?product_id=$productId&shop_id=$shop_id\" class=\"text-decoration-none text-dark\">
+                            <div class=\"similar-product-image\">
+                                <img src=\"../traderdashboard/productsImages/$pImage\" alt=\"Product Image\" style=\"width:110px;\" />
+                            </div>
+                            <div class=\"similar-product-info\">
+                                <h3 class=\"similar-product-name\">$pName</h3>
+                                <i class=\"fas fa-star\"></i>
+                                <i class=\"fas fa-star\"></i>
+                                <i class=\"fas fa-star\"></i>
+                                <i class=\"fas fa-star\"></i>
+                                <i class=\"far fa-star\"></i>
+                                <p class=\"similar-product-price\">£$pPrice</p>
+                            </div>
                         </a>
                         <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
                     </div>
-
-                </div>
-            ";
+                ";
             }
             ?>
         </div>
+    </div>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                document.getElementById('heart').addEventListener('click', function() {
-                    this.classList.toggle('fas');
-                    this.classList.toggle('far');
-                    this.classList.toggle('favorited'); // Toggles the red color
-                });
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('heart').addEventListener('click', function() {
+                var favoriteForm = document.getElementById('favoriteForm');
+                var favoriteAction = document.getElementById('favoriteAction');
+                if (this.classList.contains('fas')) {
+                    favoriteAction.value = 'remove';
+                } else {
+                    favoriteAction.value = 'add';
+                }
+                favoriteForm.submit();
+            });
+        });
+
+        // Quantity selector 
+        document.addEventListener('DOMContentLoaded', function() {
+            var quantityInput = document.getElementById('quantity');
+            var minusButton = document.querySelector('.quantity-control.minus');
+            var plusButton = document.querySelector('.quantity-control.plus');
+
+            minusButton.addEventListener('click', function() {
+                var currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                }
             });
 
-            //quantity selector 
-            document.addEventListener('DOMContentLoaded', function() {
-                var quantityInput = document.getElementById('quantity');
-                var minusButton = document.querySelector('.quantity-control.minus');
-                var plusButton = document.querySelector('.quantity-control.plus');
-
-                minusButton.addEventListener('click', function() {
-                    var currentValue = parseInt(quantityInput.value);
-                    if (currentValue > 1) {
-                        quantityInput.value = currentValue - 1;
-                    }
-                });
-
-                plusButton.addEventListener('click', function() {
-                    var currentValue = parseInt(quantityInput.value);
-                    quantityInput.value = currentValue + 1;
-                });
+            plusButton.addEventListener('click', function() {
+                var currentValue = parseInt(quantityInput.value);
+                quantityInput.value = currentValue + 1;
             });
+        });
 
+        // For more review
+        function toggleReviewPopup(event) {
+            var overlay = document.getElementById('review-popup');
+            overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+            event.stopPropagation(); // Prevent click event from propagating to overlay
+        }
 
-            //-------------for more review--------------------//
+        function closeReviewPopup() {
+            var overlay = document.getElementById('review-popup');
+            overlay.style.display = 'none';
+        }
 
-            function toggleReviewPopup(event) {
-                console.log("Toggling review popup...");
-                var overlay = document.getElementById('review-popup');
-                overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
-                event.stopPropagation(); // Prevent click event from propagating to overlay
-            }
-            // Function to toggle the display of overlay and review popup box
-            function togglePopup() {
-                var overlay = document.getElementById('overlay');
-                var popup = document.getElementById('reviewPopup');
-                overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
-                popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
-            }
-
-            function closeReviewPopup() {
-                console.log("Closing review popup...");
-                var overlay = document.getElementById('review-popup');
-                overlay.style.display = 'none';
-            }
-
-            function stopPropagation(event) {
-                console.log("Stopping event propagation...");
-                event.stopPropagation();
-            }
-            // Select the submit button
-            var submitButton = document.querySelector('.submit-button');
-        </script>
-        <?php require('../inc/footer.php'); ?>
+        function stopPropagation(event) {
+            event.stopPropagation();
+        }
+    </script>
+    <?php require('../inc/footer.php'); ?>
 </body>
-
 </html>
