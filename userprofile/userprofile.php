@@ -18,7 +18,7 @@
     $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
 
     if (!$isLoggedIn || !isset($_SESSION['userID'])) {
-        header('Location: login.php');
+        header('Location: ../login/login.php');
         exit;
     }
 
@@ -130,7 +130,6 @@
             <a href="userprofile.php">Profile</a>
             <a href="userorderhistory.php">Orders History</a>
             <a href="userfavourites.php">Favourites</a>
-            <a href="usermycarts.php">My carts</a>
             <a href="userchangepassword.php">Change Password</a>
             <a href="../logout/logout.php">Log out</a>
         </div>
