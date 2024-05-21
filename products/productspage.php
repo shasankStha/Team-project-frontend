@@ -342,7 +342,7 @@
                                 <p class=\"similar-product-price\">£$pPrice</p>
                             </div>
                         </a>
-                        <button class=\"btn btn-success btn-add-to-cart\" style=\"margin-left:10px;\">Add to Cart</button>
+                        <button class=\"btn btn-success btn-add-to-cart\" style=\"margin-left:150px;\">Add to Cart</button>
                     </div>
                 ";
             }
