@@ -28,11 +28,11 @@
     }
     ?>
 
-    <div class="flex">
+    <div class="flex flex-wrap md:flex-nowrap">
         <!-- Sidebar -->
-        <div class="sidebar-box w-1/4 px-0">
+        <div class="sidebar-box w-full md:w-1/4 px-0">
             <div class="px-4 mt-2 flex gap-6">
-                <div class="w-3/4 px-0">
+                <div class="w-full px-0">
                     <div class="mt-3">
                         <h1>Categories</h1>
                         <div class="mt-3">
@@ -99,7 +99,7 @@
             </div>
         </div>
 
-        <div class="w-3/4">
+        <div class="w-full md:w-3/4">
             <div class="flex justify-between">
                 <h2 class="text-xl font-bold my-4">All Products</h2>
             </div>
