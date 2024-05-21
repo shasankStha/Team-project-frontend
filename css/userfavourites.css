@@ -72,7 +72,12 @@ body {
 .favourites {
     width: 100%;
     max-width: 600px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
 }
+
 
 .favourites h1 {
     text-align: center;
@@ -99,6 +104,53 @@ body {
     background-color: #f4f4f4;
 }
 
+.product-item {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 200px;
+    margin-left: -130px;
+    margin-bottom: 20px;
+}
+
+.product-image img {
+    width: 100%;
+    /* Adjust according to your design preference */
+    border-radius: 5px;
+}
+
+.product-name {
+    font-size: 18px;
+    color: #333;
+    margin-top: 10px;
+}
+
+.product-rating {
+    color: #ffc107;
+}
+
+.product-price {
+    font-size: 24px;
+    color: #28a745;
+    margin-top: 5px;
+}
+
+.btn-add-to-cart {
+    background-color: #28a745;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
 /* Responsive CSS */
 @media (max-width: 768px) {
     .container {
@@ -118,6 +170,7 @@ body {
 }
 
 @media (max-width: 480px) {
+
     .form-group input[type="text"],
     .form-group select,
     input[type="text"],

@@ -141,7 +141,7 @@
                     <div class='product-image'>
                         <img src='../traderdashboard/productsImages/$image' alt='Product Image' style='width:110px;' />
                         <div class='favorite-icon' onclick='toggleFavorite(this)' data-product-id='$productId'>
-                            <i class='far fa-heart'></i>
+                            
                         </div>
                     </div>
                     <div class='product-info'>
