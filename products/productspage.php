@@ -314,7 +314,7 @@
             <?php
             $shop_id = (int)$_GET['shop_id'];
             // Fetch products for the shop
-            $sql = "SELECT * FROM PRODUCT WHERE SHOP_ID = :shop_id AND PRODUCT_ID != :product_id AND STATUS = '1'";
+            $sql = "select * from (SELECT * FROM PRODUCT WHERE SHOP_ID = :shop_id AND PRODUCT_ID != :product_id AND STATUS = '1') where rownum<5";
             $stid = oci_parse($connection, $sql);
             oci_bind_by_name($stid, ':shop_id', $shop_id);
             oci_bind_by_name($stid, ':product_id', $productId);
@@ -330,19 +330,21 @@
                     <div class=\"similar-product-item\">
                         <a href=\"?product_id=$productId&shop_id=$shop_id\" class=\"text-decoration-none text-dark\">
                             <div class=\"similar-product-image\">
-                                <img src=\"../traderdashboard/productsImages/$pImage\" alt=\"Product Image\" style=\"width:110px;\" />
+                                <img src=\"../traderdashboard/productsImages/$pImage\" alt=\"Product Image\" style=\"width:240px; height:160px;\" />
                             </div>
                             <div class=\"similar-product-info\">
                                 <h3 class=\"similar-product-name\">$pName</h3>
+                                <div class=\"product-rating\">
                                 <i class=\"fas fa-star\"></i>
                                 <i class=\"fas fa-star\"></i>
                                 <i class=\"fas fa-star\"></i>
                                 <i class=\"fas fa-star\"></i>
                                 <i class=\"far fa-star\"></i>
-                                <p class=\"similar-product-price\">£$pPrice</p>
+                                </div>
+                                <div class=\"similar-product-price\">£ $pPrice</div>
                             </div>
+                        <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
                         </a>
-                        <button class=\"btn btn-success btn-add-to-cart\" style=\"margin-left:150px;\">Add to Cart</button>
                     </div>
                 ";
             }

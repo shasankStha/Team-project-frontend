@@ -18,6 +18,7 @@
     $search = $_SESSION['search'] ?? $_GET['search'];
     $categoryFilter = $_GET['category'] ?? null;
     $priceFilter = $_GET['price'] ?? null;
+    $sortOrder = $_GET['sort'] ?? null;
     $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
 
     if ($isLoggedIn) {
@@ -72,6 +73,28 @@
                             ?>
                         </div>
                     </div>
+                    <br>
+                    <div class="mt-3">
+                        <h1>Sort By</h1>
+                        <div class="mt-3">
+                            <div class="flex justify-between mt-1">
+                                <div>
+                                    <p class="text-gray-500">Price low to high</p>
+                                </div>
+                                <div class="w-[50px] h-[18px]">
+                                    <input type="radio" name="sort" class="w-full h-full text-xs" onchange="window.location.href='products.php?sort=low-to-high'" <?= $sortOrder == 'low-to-high' ? 'checked' : '' ?> />
+                                </div>
+                            </div>
+                            <div class="flex justify-between mt-1">
+                                <div>
+                                    <p class="text-gray-500">Price high to low</p>
+                                </div>
+                                <div class="w-[50px] h-[18px]">
+                                    <input type="radio" name="sort" class="w-full h-full text-xs" onchange="window.location.href='products.php?sort=high-to-low'" <?= $sortOrder == 'high-to-low' ? 'checked' : '' ?> />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -82,7 +105,7 @@
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
                 <?php
-                $sql = "select p.product_id,p.name,p.price,p.image,p.shop_id,
+                $sql = "select p.product_id, p.name, p.price, p.image, p.shop_id,
                 case 
                     when p.name like '%' || :search || '%' then 3
                     when c.category_name like '%' || :search || '%' then 2
@@ -119,7 +142,13 @@
                     }
                 }
 
-                $sql .= " order by relevance_score desc, p.product_id";
+                if ($sortOrder == 'low-to-high') {
+                    $sql .= " order by p.price asc, relevance_score desc, p.product_id";
+                } elseif ($sortOrder == 'high-to-low') {
+                    $sql .= " order by p.price desc, relevance_score desc, p.product_id";
+                } else {
+                    $sql .= " order by relevance_score desc, p.product_id";
+                }
 
                 $stid = oci_parse($connection, $sql);
                 oci_bind_by_name($stid, ':search', $search);
@@ -145,26 +174,30 @@
                         $shopId = htmlspecialchars($row['SHOP_ID']);
 
                         echo "<div>
-                        <div class=\"card border-0 shadow product-item\">
-                            <a href=\"../products/productspage.php?product_id=$productId&shop_id=$shopId\" class=\"text-decoration-none text-dark\">
-                                <div class=\"product-image\">
-                                    <img src=\"../traderdashboard/productsImages/$image\" class=\"card-img-top\" alt=\"Product Image\">
+                    <div class=\"card border-0 shadow product-item\">
+                        <a href=\"../products/productspage.php?product_id=$productId&shop_id=$shopId\" class=\"text-decoration-none text-dark\">
+
+                            <div class=\"product-image\">
+                                <img src=\"../traderdashboard/productsImages/$image\" class=\"card-img-top\" alt=\"Product Image\" style=\"width:240px; height:160px;\" \">
+                            </div>
+                            <div class=\"product-info\">
+                                <h3 class=\"product-name\">$name</h3>
+                                <div class=\"product-rating\">
+                                    <i class=\"fas fa-star\"></i>
+                                    <i class=\"fas fa-star\"></i>
+                                    <i class=\"fas fa-star\"></i>
+                                    <i class=\"fas fa-star\"></i>
+                                    <i class=\"far fa-star\"></i>
                                 </div>
-                                <div class=\"product-info\">
-                                    <h3 class=\"product-name\">$name</h3>
-                                    <div class=\"product-rating\">
-                                        <i class=\"fas fa-star\"></i>
-                                        <i class=\"fas fa-star\"></i>
-                                        <i class=\"fas fa-star\"></i>
-                                        <i class=\"fas fa-star\"></i>
-                                        <i class=\"far fa-star\"></i>
-                                    </div>
-                                    <div class=\"product-price\">£ $price</div>
-                                </div>
-                            </a>
+                                <div class=\"product-price\">£ $price</div>
+
+                            </div>
                             <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
-                        </div>
-                    </div>";
+                        </a>
+                        
+                    </div>
+
+                </div>";
                     }
                 }
                 ?>

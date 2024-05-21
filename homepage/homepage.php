@@ -81,7 +81,7 @@
                                 <div class='card border-0 shadow product-item'>
                                     <a href='../products/productspage.php?product_id=$productId&shop_id=$shopId' class='text-decoration-none text-dark'>
                                     <div class='product-image'>
-                                        <img src='../traderdashboard/productsImages/$image' alt='Product Image' style='width:110px;' />
+                                        <img src='../traderdashboard/productsImages/$image' alt='Product Image' style=\"width:240px; height:160px;\" />
                                         <div class='favorite-icon' onclick='toggleFavorite(this)' data-product-id='$productId'>
                                         </div>
                                     </div>
@@ -96,8 +96,9 @@
                                             </div>
                                             <div class='product-price'>£ $price</div>
                                     </div>
-                                    </a>
                                     <button class='btn btn-success btn-add-to-cart'>Add to Cart</button>
+                                    </a>
+                                    
                                 </div>
                             </div>";
                     }
@@ -140,9 +141,9 @@
             <div class='card border-0 shadow product-item'>
                 <a href='../products/productspage.php?product_id=$productId&shop_id=$shopId' class='text-decoration-none text-dark'>
                     <div class='product-image'>
-                        <img src='../traderdashboard/productsImages/$image' alt='Product Image' style='width:110px;' />
+                        <img src='../traderdashboard/productsImages/$image' alt='Product Image' style=\"width:240px; height:160px;\" />
                         <div class='favorite-icon' onclick='toggleFavorite(this)' data-product-id='$productId'>
-                            <i class='far fa-heart'></i>
+                            
                         </div>
                     </div>
                     <div class='product-info'>
@@ -156,8 +157,9 @@
                         </div>
                         <div class='product-price'>£ $price</div>
                     </div>
+                    <button class='btn btn-success btn-add-to-cart'>Add to Cart</button>
                 </a>
-                <button class='btn btn-success btn-add-to-cart'>Add to Cart</button>
+                
             </div>
         </div>";
                     }
@@ -291,12 +293,6 @@
                 slideShadows: true,
             },
             disableOnInteraction: false,
-        });
-        document.querySelectorAll('.btn-add-to-cart').forEach(button => {
-            button.addEventListener('click', function() {
-                alert('Added to cart!');
-                // Implement additional functionality here, such as updating cart count
-            });
         });
     </script>
 </body>

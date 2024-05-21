@@ -309,13 +309,13 @@ html {
 
 .similar-product-item {
   background-color: #ffffff;
-  width: calc(25% - 20px);
-  /* Adjusted for 4 items per row */
-  margin-bottom: 10px;
-  /* Space between rows */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
   overflow: hidden;
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -326,13 +326,11 @@ html {
 
 .similar-product-image img {
   width: 100%;
-  max-width: 800px;
   height: auto;
-  border-bottom: 1px solid #000000;
+  border-radius: 10px;
 }
 
 .similar-product-info {
-  padding: 10px;
   text-align: center;
 }
 
@@ -344,7 +342,7 @@ html {
 .similar-product-price {
   font-size: 1.2em;
   font-weight: bold;
-  color: black;
+  margin-top: 10px;
 }
 
 .product-rating {
@@ -354,7 +352,8 @@ html {
 
 .product-rating .fas,
 .product-rating .far {
-  color: inherit;
+  color: #ffd700;
+  cursor: pointer;
 }
 
 .product-rating .far {

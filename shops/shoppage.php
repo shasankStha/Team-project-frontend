@@ -64,7 +64,7 @@
       <div class="products-grid">
         <?php
         // Fetch products for the shop
-        $sql = "SELECT * FROM PRODUCT WHERE SHOP_ID = :shop_id and status = '1'";
+        $sql = "select * from (SELECT * FROM PRODUCT WHERE SHOP_ID = :shop_id and status = '1') where ROWNUM <7";
         $stid = oci_parse($connection, $sql);
         oci_bind_by_name($stid, ':shop_id', $shopId);
         oci_execute($stid);
@@ -80,9 +80,7 @@
           <div class=\"product-item\">
           <a href='../products/productspage.php?product_id=$productId&shop_id=$shopId' class='text-decoration-none text-dark'>
               <div class=\"product-image\">
-                <img src=\"../traderdashboard/productsImages/$image\" alt=\"Product Image\" style=\"width:110px;\" />
-                <div class=\"favorite-icon\" onclick=\"toggleFavorite(this)\" data-product-id=\"$productId\">
-                </div>
+                <img src=\"../traderdashboard/productsImages/$image\" alt=\"Product Image\" style=\"width:240px; height:160px;\" />
               </div>
               <div class=\"product-info\">
                 <h3 class=\"product-name\">$name</h3>
@@ -94,8 +92,9 @@
                   <i class=\"far fa-star\"></i>
                 </div>
                 <div class=\"product-price\">£ $price</div>
-                </a>
                 <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
+                </a>
+                
               </div>
           </div>";
         }
