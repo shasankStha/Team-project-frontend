@@ -67,6 +67,8 @@ body {
 .flex-row {
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
+  position: relative;
 }
 
 .flex-row .form-group {
@@ -135,8 +137,10 @@ input[type="submit"]:hover {
 }
 
 .profile-picture {
-  position: relative;
+  position: absolute;
   display: inline-block;
+  margin-left: 300px;
+  margin-top: -80px;
 }
 
 .profile-picture img {

@@ -7,6 +7,46 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="../css/productspage.css">
+    <style>
+        /* Additional CSS for the star rating and popup */
+        .star-rating {
+            direction: rtl;
+            display: inline-block;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            color: #bbb;
+            font-size: 20px;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .star-rating input:checked ~ label {
+            color: #f2b600;
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #f2b600;
+        }
+
+        .review-popup-box {
+            display: none;
+            position: fixed;
+            z-index: 2;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
     <?php
@@ -22,41 +62,21 @@
         include('../inc/header.php');
     }
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id']) && isset($_POST['product_id'])) {
-        $userId = $_POST['user_id'];
-        $productId = $_POST['product_id'];
-        $action = $_POST['action'];
-        
-        if ($action == 'add') {
-            // Prepare the SQL statement to insert the favorite item
-            $sql = "INSERT INTO FAVOURITE_ITEM (FAVOURITE_ITEM_ID, USER_ID, PRODUCT_ID) VALUES (null, :user_id, :product_id)";
-            $stid = oci_parse($connection, $sql);
-            oci_bind_by_name($stid, ':user_id', $user_id);
-            oci_bind_by_name($stid, ':product_id', $productId);
-        } else if ($action == 'remove') {
-            // Prepare the SQL statement to delete the favorite item
-            $sql = "DELETE FROM FAVOURITE_ITEM WHERE USER_ID = :user_id AND PRODUCT_ID = :product_id";
-            $stid = oci_parse($connection, $sql);
-            oci_bind_by_name($stid, ':user_id', $user_id);
-            oci_bind_by_name($stid, ':product_id', $productId);
-        }
-        
-        $flag = true;
- 
-        if (empty($user_id)) {
-            $flag = false;
-            echo "<script>alert('You have to be logged in!!!')</script>";
-            echo "<script>window.location.href = '../login/login.php';</script>";
-        }
-        // Execute the statement
-        if ($flag) {
-            oci_execute($stid);
-            echo "<script>
-            window.location.href = window.location.href;
-            </script>";
-        }
-    }
+    $productId = null;
+    $productName = null;
+    $productImage = null;
+    $productDescription = null;
+    $productPrice = null;
+    $StockAvailable = null;
+    $minOrder = null;
+    $allergyInfo = null;
+    $usernameReview = null;
+    $userComment = null;
+    $rating = null;
+    $rDate = null;
+    ?>
 
+    <?php
     $productId = $_GET['product_id'];
     $sql = "SELECT * FROM PRODUCT WHERE PRODUCT_ID = '$productId'";
     $stid = oci_parse($connection, $sql);
@@ -154,13 +174,20 @@
                                     <i class=\"fa-solid fa-user\"></i>
                                     $usernameReview
                                 </div>
-                                
                                 <div class=\"review-stars\">
-                                    <i class=\"fas fa-star\"></i>
-                                    <i class=\"fas fa-star\"></i>
-                                    <i class=\"fas fa-star\"></i>
-                                    <i class=\"fas fa-star\"></i>
-                                    <i class=\"far fa-star\"></i>
+                ";
+
+                // Display filled stars
+                for ($i = 0; $i < $rating; $i++) {
+                    echo "<i class=\"fas fa-star\"></i>";
+                }
+
+                // Display empty stars
+                for ($i = $rating; $i < 5; $i++) {
+                    echo "<i class=\"far fa-star\"></i>";
+                }
+
+                echo "
                                 </div>
                             </div>
                             <div class=\"date\">$rDate</div>
@@ -212,6 +239,18 @@
             ?>
 
             <form method="POST" action="">
+                <div class="star-rating" id="popup-star-rating">
+                    <input type="radio" id="popup-1-star" name="rating" value="1" />
+                    <label for="popup-1-star" class="star">&#9733;</label>
+                    <input type="radio" id="popup-2-stars" name="rating" value="2" />
+                    <label for="popup-2-stars" class="star">&#9733;</label>
+                    <input type="radio" id="popup-3-stars" name="rating" value="3" />
+                    <label for="popup-3-stars" class="star">&#9733;</label>
+                    <input type="radio" id="popup-4-stars" name="rating" value="4" />
+                    <label for="popup-4-stars" class="star">&#9733;</label>
+                    <input type="radio" id="popup-5-stars" name="rating" value="5" />
+                    <label for="popup-5-stars" class="star">&#9733;</label>
+                </div>
                 <textarea class="review-input" placeholder="Write your review here..." name="review"></textarea>
                 <button class="submit-button" type="submit" name="submit">Submit</button>
             </form>
@@ -220,7 +259,7 @@
             if (isset($_POST['submit'])) {
                 $review = $_POST['review'];
                 $userId = $loggedInUserID;
-                $rating = 3; // Example rating value. This should be fetched from user input if you have a rating system in the form.
+                $rating = $_POST['rating']; // Fetch the rating from user input
 
                 $sql = "INSERT INTO review (review_id, rating, user_comment, review_date, status, product_id, user_id)
                     VALUES (null, :rating, :review, SYSDATE, '1', :product_id, :user_id)";
@@ -266,20 +305,19 @@
                 $pImage = $row['IMAGE'];
 
                 echo "
-                    <div class=\"similar-product-item\">
-                        <a href=\"?product_id=$productId&shop_id=$shop_id\" class=\"text-decoration-none text-dark\">
-                            <div class=\"similar-product-image\">
-                                <img src=\"../traderdashboard/productsImages/$pImage\" alt=\"Product Image\" style=\"width:110px;\" />
-                            </div>
-                            <div class=\"similar-product-info\">
-                                <h3 class=\"similar-product-name\">$pName</h3>
-                                <i class=\"fas fa-star\"></i>
-                                <i class=\"fas fa-star\"></i>
-                                <i class=\"fas fa-star\"></i>
-                                <i class=\"fas fa-star\"></i>
-                                <i class=\"far fa-star\"></i>
-                                <p class=\"similar-product-price\">£$pPrice</p>
-                            </div>
+                <div class=\"similar-product-item\">
+                <a href=\"?product_id=$productId&shop_id=$shop_id\" class=\"text-decoration-none text-dark\">
+                    <div class=\"similar-product-image\">
+                        <img src=\"../traderdashboard/productsImages/$pImage\" alt=\"Product Image\" style=\"width:110px;\" />
+                    </div>
+                    <div class=\"similar-product-info\">
+                        <h3 class=\"similar-product-name\">$pName</h3>
+                        <i class=\"fas fa-star\"></i>
+                        <i class=\"fas fa-star\"></i>
+                        <i class=\"fas fa-star\"></i>
+                        <i class=\"fas fa-star\"></i>
+                        <i class=\"far fa-star\"></i>
+                        <p class=\"similar-product-price\">£$pPrice</p>
                         </a>
                         <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
                     </div>
@@ -289,55 +327,64 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('heart').addEventListener('click', function() {
-                var favoriteForm = document.getElementById('favoriteForm');
-                var favoriteAction = document.getElementById('favoriteAction');
-                if (this.classList.contains('fas')) {
-                    favoriteAction.value = 'remove';
-                } else {
-                    favoriteAction.value = 'add';
-                }
-                favoriteForm.submit();
-            });
-        });
-
-        // Quantity selector 
-        document.addEventListener('DOMContentLoaded', function() {
-            var quantityInput = document.getElementById('quantity');
-            var minusButton = document.querySelector('.quantity-control.minus');
-            var plusButton = document.querySelector('.quantity-control.plus');
-
-            minusButton.addEventListener('click', function() {
-                var currentValue = parseInt(quantityInput.value);
-                if (currentValue > 1) {
-                    quantityInput.value = currentValue - 1;
-                }
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('heart').addEventListener('click', function() {
+                    this.classList.toggle('fas');
+                    this.classList.toggle('far');
+                    this.classList.toggle('favorited'); // Toggles the red color
+                });
             });
 
-            plusButton.addEventListener('click', function() {
-                var currentValue = parseInt(quantityInput.value);
-                quantityInput.value = currentValue + 1;
+            //quantity selector 
+            document.addEventListener('DOMContentLoaded', function() {
+                var quantityInput = document.getElementById('quantity');
+                var minusButton = document.querySelector('.quantity-control.minus');
+                var plusButton = document.querySelector('.quantity-control.plus');
+
+                minusButton.addEventListener('click', function() {
+                    var currentValue = parseInt(quantityInput.value);
+                    if (currentValue > 1) {
+                        quantityInput.value = currentValue - 1;
+                    }
+                });
+
+                plusButton.addEventListener('click', function() {
+                    var currentValue = parseInt(quantityInput.value);
+                    quantityInput.value = currentValue + 1;
+                });
             });
-        });
 
-        // For more review
-        function toggleReviewPopup(event) {
-            var overlay = document.getElementById('review-popup');
-            overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
-            event.stopPropagation(); // Prevent click event from propagating to overlay
-        }
 
-        function closeReviewPopup() {
-            var overlay = document.getElementById('review-popup');
-            overlay.style.display = 'none';
-        }
+            //-------------for more review--------------------//
 
-        function stopPropagation(event) {
-            event.stopPropagation();
-        }
-    </script>
-    <?php require('../inc/footer.php'); ?>
+            function toggleReviewPopup(event) {
+                console.log("Toggling review popup...");
+                var overlay = document.getElementById('review-popup');
+                overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+                event.stopPropagation(); // Prevent click event from propagating to overlay
+            }
+            // Function to toggle the display of overlay and review popup box
+            function togglePopup() {
+                var overlay = document.getElementById('overlay');
+                var popup = document.getElementById('reviewPopup');
+                overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+                popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+            }
+
+            function closeReviewPopup() {
+                console.log("Closing review popup...");
+                var overlay = document.getElementById('review-popup');
+                overlay.style.display = 'none';
+            }
+
+            function stopPropagation(event) {
+                console.log("Stopping event propagation...");
+                event.stopPropagation();
+            }
+            // Select the submit button
+            var submitButton = document.querySelector('.submit-button');
+        </script>
+        <?php require('../inc/footer.php'); ?>
 </body>
 </html>
