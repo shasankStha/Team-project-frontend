@@ -12,7 +12,7 @@
 <body>
   <?php
   session_start();
-  include ('../connection.php');
+  include('../connection.php');
   $shopId = $_GET['shop_id'];
 
   // Fetch shop information in a single query
@@ -33,9 +33,9 @@
   // Determine header based on login status
   $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
   if ($isLoggedIn) {
-    include ('../inc/loggedin_header.php');
+    include('../inc/loggedin_header.php');
   } else {
-    include ('../inc/header.php');
+    include('../inc/header.php');
   }
   ?>
 
@@ -45,7 +45,7 @@
   <div class="content-wrapper">
     <div class="shop-main-container">
       <div class="shop-image">
-      <?php echo "<img src=../shop_image/$image alt=\"Product Image\"/>" ?>
+        <?php echo "<img src=../shop_image/$image alt=\"Product Image\"/>" ?>
       </div>
 
       <div class="description-container">
@@ -64,7 +64,7 @@
       <div class="products-grid">
         <?php
         // Fetch products for the shop
-        $sql = "SELECT * FROM PRODUCT WHERE SHOP_ID = :shop_id";
+        $sql = "SELECT * FROM PRODUCT WHERE SHOP_ID = :shop_id and status = '1'";
         $stid = oci_parse($connection, $sql);
         oci_bind_by_name($stid, ':shop_id', $shopId);
         oci_execute($stid);
@@ -105,7 +105,7 @@
       </div>
     </div>
   </div>
-  <?php require ('../inc/footer.php'); ?>
+  <?php require('../inc/footer.php'); ?>
   <script>
     // JavaScript for handling favorites and ratings
     document.addEventListener("DOMContentLoaded", (event) => {
@@ -114,7 +114,7 @@
       ratingContainers.forEach((container) => {
         const stars = container.querySelectorAll(".fas, .far");
         stars.forEach((star) => {
-          star.addEventListener("click", function () {
+          star.addEventListener("click", function() {
             setRating(star, container);
           });
         });
@@ -157,15 +157,15 @@
 
     function updateFavoriteStatus(productId, isFavorite) {
       fetch("update_favorite_status.php", {
-        method: "POST",
-        body: JSON.stringify({
-          productId: productId,
-          isFavorite: isFavorite
-        }),
-        headers: {
-          "Content-Type": "application/json"
-        },
-      })
+          method: "POST",
+          body: JSON.stringify({
+            productId: productId,
+            isFavorite: isFavorite
+          }),
+          headers: {
+            "Content-Type": "application/json"
+          },
+        })
         .then(response => response.json())
         .then(data => console.log(data.message))
         .catch(error => console.error("Error:", error));

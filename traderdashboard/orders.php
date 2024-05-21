@@ -11,8 +11,12 @@
 
 <body class="bg-light">
 
-  <?php require('traderdashboardheader.php');
-  require('../connection.php'); ?>
+  <?php
+  session_start();
+  require('traderdashboardheader.php');
+  require('../connection.php');
+  $traderUser = $_SESSION["traderUser"];
+  ?>
 
   <div class="container-fluid" id="main-content">
     <div class="row">
@@ -34,7 +38,13 @@
                 </thead>
                 <tbody id="">
                   <?php
-                  $query = "SELECT ORDER_ID, ORDER_DATE, TOTAL_PRICE FROM \"ORDER\"";
+                  $query = "SELECT o.ORDER_ID, o.ORDER_DATE, o.TOTAL_PRICE FROM trader t
+                  INNER JOIN \"USER\" u on u.user_id = t.user_id
+                  INNER JOIN shop s ON s.user_id = t.user_id
+                  INNER JOIN product p ON p.shop_id = s.shop_id
+                  INNER JOIN order_item oi on oi.product_id = p.product_id
+                  INNER JOIN \"ORDER\" o on o.order_id=oi.order_id
+                  WHERE u.username = '$traderUser' or u.email='$traderUser' ";
                   $stid = oci_parse($connection, $query);
                   if (!oci_execute($stid)) {
                     $err = oci_error($stid);
