@@ -1,6 +1,7 @@
 <?php
 if (session_status() == PHP_SESSION_NONE) {
   session_start();
+  $user_id = $_SESSION['userID'];
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
@@ -191,6 +192,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       /* z-index: 1; */
     }
 
+    #backgroundBlur {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      /* Initially hidden */
+      z-index: 1000;
+    }
+
     .user-icon:hover #dropdown-menu,
     .notification-icon:hover #notification-dropdown {
       display: flex;
@@ -257,14 +270,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: white;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      width: 90%;
-      max-width: 400px;
+      width: 40%;
+      max-height: 80%;
+      overflow-y: auto;
+      background-color: white;
       padding: 20px;
-      border-radius: 10px;
-      z-index: 1001;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       display: none;
+      z-index: 1001;
     }
 
     .cart-popup h2 {
@@ -291,7 +304,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       cursor: pointer;
       margin-bottom: 20px;
       font-size: 14px;
-      margin-left: 250px;
+      margin-left: 450px;
       margin-top: 12px;
     }
 
@@ -465,6 +478,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
     }
     return $shops;
   }
+
+  if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+    $user_id = $_SESSION['userID'];
+  }
+
+
+  if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
+    if ($_POST['action'] == 'update_quantity') {
+      $product_id = $_POST['product_id'];
+      $new_quantity = $_POST['quantity'];
+      $sql = "UPDATE cart_item SET quantity = :quantity 
+              WHERE product_id = :product_id 
+              AND cart_id IN (SELECT cart_id FROM cart WHERE user_id = :user_id)";
+      $stmt = oci_parse($connection, $sql);
+      oci_bind_by_name($stmt, ':quantity', $new_quantity);
+      oci_bind_by_name($stmt, ':product_id', $product_id);
+      oci_bind_by_name($stmt, ':user_id', $user_id);
+      oci_execute($stmt);
+      exit();
+    }
+    if ($_POST['action'] == 'delete_item') {
+      $product_id = $_POST['product_id'];
+      $sql = "DELETE FROM cart_item 
+              WHERE product_id = :product_id 
+              AND cart_id IN (SELECT cart_id FROM cart WHERE user_id = :user_id)";
+      $stmt = oci_parse($connection, $sql);
+      oci_bind_by_name($stmt, ':product_id', $product_id);
+      oci_bind_by_name($stmt, ':user_id', $user_id);
+      oci_execute($stmt);
+      exit();
+    }
+  }
   ?>
   <?php
   // Fetch shop names from the database
@@ -523,71 +569,106 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
     <a href="../aboutus/aboutus.php">About us</a>
   </div>
 
-  <div class="background-blur" id="backgroundBlur"></div>
+  <div class="background-blur" id="backgroundBlur">
 
-  <div class="cart-popup" id="cartPopup">
-    <h2>
-      Your Cart
-      <span class="close-btn" onclick="toggleCartPopup()">×</span>
-    </h2>
-    <button class="clear-cart-btn" onclick="clearCart()">Clear Cart</button>
-    <div class="cart-items" id="cartItems">
-      <div class="cart-item">
-        <div class="quantity-wrapper">
-          <img src="https://via.placeholder.com/50" alt="Product">
-          <div class="quantity-controls">
-            <button onclick="decreaseQuantity(this)">-</button>
-            <span>1</span>
-            <button onclick="increaseQuantity(this)">+</button>
+    <div class="cart-popup" id="cartPopup">
+      <h2>
+        Your Cart
+        <span class="close-btn" onclick="toggleCartPopup()">×</span>
+      </h2>
+      <form method="post"><button type="submit" name="clear_cart" class="clear-cart-btn" onclick="clearCart()">Clear Cart</button></form>
+      <div class="cart-items" id="cartItems">
+        <?php
+        $user_id = $_SESSION['userID'];
+        $sql = "select p.product_id,p.name,p.image,p.price, ci.quantity, p.max_order
+          from cart c
+          inner join cart_item ci on ci.cart_id = c.cart_id
+          inner join product p on p.product_id = ci.product_id
+          where c.user_id = '$user_id' ";
+        $stid = oci_parse($connection, $sql);
+        oci_execute($stid);
+        $total = 0;
+        while ($row = oci_fetch_assoc($stid)) {
+          $product_id = $row['PRODUCT_ID'];
+          $name = $row['NAME'];
+          $image = $row['IMAGE'];
+          $price = $row['PRICE'];
+          $quantity = $row['QUANTITY'];
+          $max_order = $row['MAX_ORDER'];
+          $calc = $price * $quantity;
+          $total += $calc;
+          echo "<div class=\"cart-item\" data-product-id=\"$product_id\" data-max-order=\"$max_order\">
+          <div class=\"quantity-wrapper\">
+            <img src=\"../traderdashboard/productsImages/$image\" alt=\"Product\" style=\"width:80px; height:60px;\">
+            <div class=\"quantity-controls\">
+              <button onclick=\"decreaseQuantity(this)\">-</button>
+              <span>$quantity</span>
+              <button onclick=\"increaseQuantity(this)\">+</button>
+            </div>
           </div>
-        </div>
-        <div class="product-details">
-          <span>Product Name</span>
-        </div>
-        <div class="price-wrapper">
-          <span>$3.99</span>
-          <i class="fas fa-trash" onclick="removeItem(this)"></i>
-        </div>
-      </div>
-      <div class="cart-item">
-        <div class="quantity-wrapper">
-          <img src="https://via.placeholder.com/50" alt="Product">
-          <div class="quantity-controls">
-            <button onclick="decreaseQuantity(this)">-</button>
-            <span>2</span>
-            <button onclick="increaseQuantity(this)">+</button>
+          <div class=\"product-details\">
+            <span>$name</span>
           </div>
-        </div>
-        <div class="product-details">
-          <span>Product Name</span>
-        </div>
-        <div class="price-wrapper">
-          <span>$2.99</span>
-          <i class="fas fa-trash" onclick="removeItem(this)"></i>
-        </div>
+          <div class=\"price-wrapper\">
+            <span>£ $calc</span>
+            <i class=\"fas fa-trash\" onclick=\"removeItem(this)\"></i>
+          </div>
+        </div>";
+        }
+        ?>
       </div>
-    </div>
-    <div class="subtotal">
+      <?php
+      echo "<div class=\"subtotal\">
       <span>Sub-Total:</span>
-      <span id="subtotal">$9.97</span>
+      <span id=\"subtotal\">$total</span>
+    </div>";
+      ?>
+      <button class="checkout">Checkout</button>
     </div>
-    <button class="checkout">Checkout</button>
   </div>
+
+  <?php
+  if (isset($_POST['clear_cart'])) {
+
+    $sql = "delete from cart_item where cart_id in (select cart_id from cart where user_id = '$user_id')";
+    $stid = oci_parse($connection, $sql);
+    $exe = oci_execute($stid);
+    if (!$exe) {
+      echo "<script>alert(Error: 'oci_error($stid)')</script>";
+    }
+  }
+  ?>
 
   <script>
     function toggleCartPopup() {
       const cartPopup = document.getElementById('cartPopup');
       const backgroundBlur = document.getElementById('backgroundBlur');
-      cartPopup.style.display = cartPopup.style.display === 'none' ? 'block' : 'none';
-      backgroundBlur.style.display = backgroundBlur.style.display === 'none' ? 'block' : 'none';
+      const isClosing = cartPopup.style.display !== 'none';
+
+      cartPopup.style.display = isClosing ? 'none' : 'block';
+      backgroundBlur.style.display = isClosing ? 'none' : 'block';
+
+      if (isClosing) {
+        const currentUrl = window.location.href;
+        const newUrl = currentUrl.slice(0, -1);
+        window.location.href = newUrl;
+      }
     }
 
     function increaseQuantity(button) {
       const quantityElement = button.previousElementSibling;
       let quantity = parseInt(quantityElement.textContent, 10);
-      quantity++;
-      quantityElement.textContent = quantity;
-      updateSubtotal();
+      const cartItem = button.closest('.cart-item');
+      const maxOrder = parseInt(cartItem.dataset.maxOrder, 10); // Get max_order value
+
+      if (quantity < maxOrder) { // Check if the current quantity is less than max_order
+        quantity++;
+        quantityElement.textContent = quantity;
+        updateQuantity(cartItem.dataset.productId, quantity);
+        updateSubtotal();
+      } else {
+        alert(`You can order a maximum of ${maxOrder} units for this product.`);
+      }
     }
 
     function decreaseQuantity(button) {
@@ -596,8 +677,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       if (quantity > 1) {
         quantity--;
         quantityElement.textContent = quantity;
+        updateQuantity(button.closest('.cart-item').dataset.productId, quantity);
         updateSubtotal();
       }
+    }
+
+    function updateQuantity(productId, quantity) {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '', true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          console.log('Quantity updated');
+        }
+      };
+      xhr.send('action=update_quantity&product_id=' + productId + '&quantity=' + quantity);
     }
 
     function clearCart() {
@@ -610,17 +704,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       const cartItems = document.querySelectorAll('.cart-item');
       let subtotal = 0;
       cartItems.forEach(item => {
-        const price = parseFloat(item.querySelector('.price-wrapper span').textContent.replace('$', ''));
+        const price = parseFloat(item.querySelector('.price-wrapper span').textContent.replace('£ ', ''));
         const quantity = parseInt(item.querySelector('.quantity-controls span').textContent, 10);
         subtotal += price * quantity;
       });
-      document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById('subtotal').textContent = `£ ${subtotal.toFixed(2)}`;
     }
 
     function removeItem(trashIcon) {
       const cartItem = trashIcon.closest('.cart-item');
+      const productId = cartItem.dataset.productId;
       cartItem.remove();
       updateSubtotal();
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '', true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          console.log('Item removed');
+        }
+      };
+      xhr.send('action=delete_item&product_id=' + productId);
+    }
+
+    function clearCart() {
+      const cartItems = document.getElementById('cartItems');
+      cartItems.innerHTML = '';
+      updateSubtotal();
+    }
+
+    function updateSubtotal() {
+      const cartItems = document.querySelectorAll('.cart-item');
+      let subtotal = 0;
+      cartItems.forEach(item => {
+        const price = parseFloat(item.querySelector('.price-wrapper span').textContent.replace('£ ', ''));
+        const quantity = parseInt(item.querySelector('.quantity-controls span').textContent, 10);
+        subtotal += price * quantity;
+      });
+      document.getElementById('subtotal').textContent = `£ ${subtotal.toFixed(2)}`;
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -628,7 +750,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       document.getElementById('backgroundBlur').style.display = 'none';
     });
 
-    // Function to toggle the menu for the hamburger button
     document.querySelector('.toggle-button').addEventListener('click', function() {
       document.querySelector('.menu').classList.toggle('active');
     });

@@ -142,13 +142,13 @@ html {
   margin-bottom: 12.5px;
   font-size: 20px;
   border: 1.25px solid #ddd;
-  background-color: #000000;
+  background-color: #2b2f33;
   cursor: pointer;
   color: white;
 }
 
 .add-to-cart:hover {
-  background-color: rgb(88, 121, 40);
+  background-color: rgb(89, 193, 29);
 }
 
 .buy-now {
@@ -286,7 +286,7 @@ html {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   flex: 1 1 calc(50% - 20px); /* Adjust the width to take up half the available space */
   box-sizing: border-box; /* Include padding and border in the element's total width and height */
-  margin-left:60px;
+  margin-left: 60px;
 }
 
 .similar-product-item:hover {

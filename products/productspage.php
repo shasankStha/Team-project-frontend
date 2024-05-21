@@ -182,6 +182,7 @@
             $exe = oci_execute($stid);
             if ($exe) {
                 echo "<script>alert('Added to cart.')</script>";
+                echo "<script>window.location.href = window.location.href;</script>";
             } else {
                 echo "<script>alert('Error!!!')</script>";
             }
