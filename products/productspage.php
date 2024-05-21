@@ -52,9 +52,9 @@
     session_start();
     include('../connection.php');
     $user_id = 0;
-    $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
     $loggedInUserID = $_SESSION['userID'] ?? null;
 
+    $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
     if ($isLoggedIn) {
         include('../inc/loggedin_header.php');
         $user_id = $_SESSION['userID'];
@@ -130,64 +130,80 @@
             </div>
             <div class="right-section">
                 <div class="product-details">
-                    <h1 class="product-name"><?php echo "$productName"; ?></h1>
-                    <div class="product-meta-info">
-                        <p class="product-desc"><?php echo "$productDescription"; ?></p>
-                        <p class="product-price">Price: £<?php echo "$productPrice"; ?></p>
-                        <p class="product-stock">Stock Available: <?php echo "$StockAvailable"; ?></p>
-                        <p class="product-min">Min-Order: <?php echo "$minOrder"; ?></p>
-                        <p class="product-max">Max-Order: <?php echo "$maxOrder"; ?></p>
-                        <p class="product-allergy">Allergy Information: <?php echo "$allergyInfo"; ?></p>
-                    </div>
-                    <div class="quantity-and-favorite">
-                        <div class="quantity-selector">
-                            <label for="quantity" class="quantity-label">Quantity</label>
-                            <div class="quantity-controls">
-                                <button type="button" class="quantity-control minus">−</button>
-                                <input type="number" id="quantity" class="quantity-value" value="1">
-                                <button type="button" class="quantity-control plus">+</button>
+                    <form method="post">
+                        <h1 class="product-name"><?php echo "$productName"; ?></h1>
+                        <div class="product-meta-info">
+                            <p class="product-desc"><?php echo "$productDescription"; ?></p>
+                            <p class="product-price">Price: £<?php echo "$productPrice"; ?></p>
+                            <p class="product-stock">Stock Available: <?php echo "$StockAvailable"; ?></p>
+                            <p class="product-min">Min-Order: <?php echo "$minOrder"; ?></p>
+                            <p class="product-max">Max-Order: <?php echo "$maxOrder"; ?></p>
+                            <p class="product-allergy">Allergy Information: <?php echo "$allergyInfo"; ?></p>
+                        </div>
+                        <div class="quantity-and-favorite">
+                            <div class="quantity-selector">
+                                <label for="quantity" class="quantity-label">Quantity</label>
+                                <div class="quantity-controls">
+                                    <button type="button" class="quantity-control minus">−</button>
+                                    <input name='quantity' type="number" id="quantity" class="quantity-value" value="1">
+                                    <button type="button" class="quantity-control plus">+</button>
+                                </div>
+                            </div>
+                            <div class="favorite-icon-container">
+                                <i id="heart" class="<?php echo ($count == 1) ? 'fas fa-heart favorite-icon favorited' : 'far fa-heart favorite-icon'; ?>"></i>
                             </div>
                         </div>
-                        <div class="favorite-icon-container">
-                            <i id="heart" class="<?php echo ($count == 1) ? 'fas fa-heart favorite-icon favorited' : 'far fa-heart favorite-icon'; ?>"></i>
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <button class="add-to-cart">Add to Cart</button>
-                    </div>
+                        <div class="actions">
+
+                            <button id="add-to-cart" type="submit" class="add-to-cart" name="add-to-cart">Add to Cart</button>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
 
-        <form id="favoriteForm" method="POST" style="display: none;">
-            <input type="hidden" name="user_id" value="<?php echo $loggedInUserID; ?>">
-            <input type="hidden" name="product_id" value="<?php echo $productId; ?>">
-            <input type="hidden" name="action" id="favoriteAction" value="">
-        </form>
+    <?php
+    if (isset($_POST['add-to-cart'])) {
+        if (!$isLoggedIn) {
+            echo "<script>alert('You have to login first.')</script>";
+            echo "<script>window.location.href = '../login/login.php';</script>";
+        } else {
+            $quantity = $_POST['quantity'];
+            echo "<script>alert('$quantity')</script>";
+        }
+    }
+    ?>
 
 
-        <div class="reviews-section">
-            <h2>Reviews</h2>
-            <?php
-            $product_id = $_GET['product_id'];
-            // Fetch products for the shop
-            $sql = "SELECT * FROM (
+    <form id="favoriteForm" method="POST" style="display: none;">
+        <input type="hidden" name="user_id" value="<?php echo $loggedInUserID; ?>">
+        <input type="hidden" name="product_id" value="<?php echo $productId; ?>">
+        <input type="hidden" name="action" id="favoriteAction" value="">
+    </form>
+
+
+    <div class="reviews-section">
+        <h2>Reviews</h2>
+        <?php
+        $product_id = $_GET['product_id'];
+        // Fetch products for the shop
+        $sql = "SELECT * FROM (
                 SELECT r.review_id, r.rating, r.user_comment, r.review_date, u.first_name || ' ' || u.last_name AS name
                 FROM review r
                 INNER JOIN \"USER\" u ON u.user_id = r.user_id
                 WHERE r.product_id = $product_id and r.status = '1'
                 ORDER BY r.review_date DESC
             ) WHERE ROWNUM < 5";
-            $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
+        $stid = oci_parse($connection, $sql);
+        oci_execute($stid);
 
-            while ($row = oci_fetch_assoc($stid)) {
-                $usernameReview = $row['NAME'];
-                $userComment = $row['USER_COMMENT'];
-                $rating = $row['RATING'];
-                $rDate = $row['REVIEW_DATE'];
+        while ($row = oci_fetch_assoc($stid)) {
+            $usernameReview = $row['NAME'];
+            $userComment = $row['USER_COMMENT'];
+            $rating = $row['RATING'];
+            $rDate = $row['REVIEW_DATE'];
 
-                echo "
+            echo "
                     <div class=\"review\">
                         <div class=\"review-header\">
                             <div class=\"username-and-stars\">
@@ -198,17 +214,17 @@
                                 <div class=\"review-stars\">
                 ";
 
-                // Display filled stars
-                for ($i = 0; $i < $rating; $i++) {
-                    echo "<i class=\"fas fa-star\"></i>";
-                }
+            // Display filled stars
+            for ($i = 0; $i < $rating; $i++) {
+                echo "<i class=\"fas fa-star\"></i>";
+            }
 
-                // Display empty stars
-                for ($i = $rating; $i < 5; $i++) {
-                    echo "<i class=\"far fa-star\"></i>";
-                }
+            // Display empty stars
+            for ($i = $rating; $i < 5; $i++) {
+                echo "<i class=\"far fa-star\"></i>";
+            }
 
-                echo "
+            echo "
                                 </div>
                             </div>
                             <div class=\"date\">$rDate</div>
@@ -218,30 +234,30 @@
                         </div>
                     </div>
                 ";
-            }
-            ?>
-        </div>
+        }
+        ?>
+    </div>
 
-        <button class="popup-button" onclick="toggleReviewPopup(event)">More Review</button>
-        <div class="overlay" id="overlay" onclick="closeReviewPopup()" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; height: 100%; width: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.5);"></div>
-        <div class="review-popup-box" id="review-popup" onclick="stopPropagation(event)">
-            <span class="close-button" onclick="closeReviewPopup()">&times;</span>
-            <h1 class="more-review-title">More Review</h1><br>
-            <?php
-            $product_id = $_GET['product_id'];
-            // Fetch products for the shop
-            $sql = "select r.review_id, r.rating,r.user_comment,r.review_date, u.first_name ||' '||u.last_name as name from review r
+    <button class="popup-button" onclick="toggleReviewPopup(event)">More Review</button>
+    <div class="overlay" id="overlay" onclick="closeReviewPopup()" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; height: 100%; width: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.5);"></div>
+    <div class="review-popup-box" id="review-popup" onclick="stopPropagation(event)">
+        <span class="close-button" onclick="closeReviewPopup()">&times;</span>
+        <h1 class="more-review-title">More Review</h1><br>
+        <?php
+        $product_id = $_GET['product_id'];
+        // Fetch products for the shop
+        $sql = "select r.review_id, r.rating,r.user_comment,r.review_date, u.first_name ||' '||u.last_name as name from review r
                     inner join \"USER\" u on u.user_id = r.user_id where r.product_id = $product_id and r.status = '1'";
-            $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
+        $stid = oci_parse($connection, $sql);
+        oci_execute($stid);
 
-            while ($row = oci_fetch_assoc($stid)) {
-                $usernameReview = $row['NAME'];
-                $userComment = $row['USER_COMMENT'];
-                $rating = $row['RATING'];
-                $rDate = $row['REVIEW_DATE'];
+        while ($row = oci_fetch_assoc($stid)) {
+            $usernameReview = $row['NAME'];
+            $userComment = $row['USER_COMMENT'];
+            $rating = $row['RATING'];
+            $rDate = $row['REVIEW_DATE'];
 
-                echo "
+            echo "
                     <div class=\"username-container\">
                     <img src=\"user_profile.jpg\" class=\"profile-pic\" alt=\"Profile Picture\">
                     <h5 class=\"username\">$usernameReview</h5>
@@ -253,56 +269,56 @@
                         <p class=\"review-text\">$userComment</p>
                     </div><br>
                     ";
-            }
-            ?>
+        }
+        ?>
 
-            <form method="POST" action="">
-                <div class="star-rating" id="popup-star-rating">
-                    <input type="radio" id="popup-1-star" name="rating" value="1" />
-                    <label for="popup-1-star" class="star">&#9733;</label>
-                    <input type="radio" id="popup-2-stars" name="rating" value="2" />
-                    <label for="popup-2-stars" class="star">&#9733;</label>
-                    <input type="radio" id="popup-3-stars" name="rating" value="3" />
-                    <label for="popup-3-stars" class="star">&#9733;</label>
-                    <input type="radio" id="popup-4-stars" name="rating" value="4" />
-                    <label for="popup-4-stars" class="star">&#9733;</label>
-                    <input type="radio" id="popup-5-stars" name="rating" value="5" />
-                    <label for="popup-5-stars" class="star">&#9733;</label>
-                </div>
-                <textarea class="review-input" placeholder="Write your review here..." name="review"></textarea>
-                <button class="submit-button" type="submit" name="submit">Submit</button>
-            </form>
+        <form method="POST" action="">
+            <div class="star-rating" id="popup-star-rating">
+                <input type="radio" id="popup-1-star" name="rating" value="1" />
+                <label for="popup-1-star" class="star">&#9733;</label>
+                <input type="radio" id="popup-2-stars" name="rating" value="2" />
+                <label for="popup-2-stars" class="star">&#9733;</label>
+                <input type="radio" id="popup-3-stars" name="rating" value="3" />
+                <label for="popup-3-stars" class="star">&#9733;</label>
+                <input type="radio" id="popup-4-stars" name="rating" value="4" />
+                <label for="popup-4-stars" class="star">&#9733;</label>
+                <input type="radio" id="popup-5-stars" name="rating" value="5" />
+                <label for="popup-5-stars" class="star">&#9733;</label>
+            </div>
+            <textarea class="review-input" placeholder="Write your review here..." name="review"></textarea>
+            <button class="submit-button" type="submit" name="submit">Submit</button>
+        </form>
 
-            <?php
-            if (isset($_POST['submit'])) {
-                $review = $_POST['review'];
-                $userId = $loggedInUserID;
-                $rating = $_POST['rating']; // Fetch the rating from user input
+        <?php
+        if (isset($_POST['submit'])) {
+            $review = $_POST['review'];
+            $userId = $loggedInUserID;
+            $rating = $_POST['rating']; // Fetch the rating from user input
 
-                $sql = "INSERT INTO review (review_id, rating, user_comment, review_date, status, product_id, user_id)
+            $sql = "INSERT INTO review (review_id, rating, user_comment, review_date, status, product_id, user_id)
                     VALUES (null, :rating, :review, SYSDATE, '1', :product_id, :user_id)";
-                $stid = oci_parse($connection, $sql);
-                oci_bind_by_name($stid, ':rating', $rating);
-                oci_bind_by_name($stid, ':review', $review);
-                oci_bind_by_name($stid, ':product_id', $product_id);
-                oci_bind_by_name($stid, ':user_id', $userId);
+            $stid = oci_parse($connection, $sql);
+            oci_bind_by_name($stid, ':rating', $rating);
+            oci_bind_by_name($stid, ':review', $review);
+            oci_bind_by_name($stid, ':product_id', $product_id);
+            oci_bind_by_name($stid, ':user_id', $userId);
 
-                $result = oci_execute($stid);
+            $result = oci_execute($stid);
 
-                if ($result) {
-                    echo "<script>
+            if ($result) {
+                echo "<script>
                 alert('Review submitted successfully!');
                 window.location.href = window.location.href + '?success=1';
                 </script>";
-                    exit();
-                } else {
-                    $e = oci_error($stid);
-                    echo "<script>alert('Error: " . htmlentities($e['message']) . "');</script>";
-                }
+                exit();
+            } else {
+                $e = oci_error($stid);
+                echo "<script>alert('Error: " . htmlentities($e['message']) . "');</script>";
             }
-            ?>
+        }
+        ?>
 
-        </div>
+    </div>
     </div>
     </div>
     </div>
