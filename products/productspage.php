@@ -177,14 +177,29 @@
             if ($row = oci_fetch_assoc($stid)) {
                 $cart_id = $row['CART_ID'];
             }
-            $sql = "insert into cart_item values(null,'$cart_id','$productId','$quantity')";
+
+            $sql = "select count(*) from cart_item where cart_id ='$cart_id' and product_id = '$product_id'";
             $stid = oci_parse($connection, $sql);
-            $exe = oci_execute($stid);
-            if ($exe) {
-                echo "<script>alert('Added to cart.')</script>";
-                echo "<script>window.location.href = window.location.href;</script>";
+            oci_execute($stid);
+            $count = null;
+            if ($row = oci_fetch_assoc($stid)) {
+                $count = $row['COUNT(*)'];
+            }
+            if ($count == 1) {
+                echo "<script>alert('The item is already in the cart.')</script>";
+                exit();
             } else {
-                echo "<script>alert('Error!!!')</script>";
+
+
+                $sql = "insert into cart_item values(null,'$cart_id','$productId','$quantity')";
+                $stid = oci_parse($connection, $sql);
+                $exe = oci_execute($stid);
+                if ($exe) {
+                    echo "<script>alert('Added to cart.')</script>";
+                    echo "<script>window.location.href = window.location.href;</script>";
+                } else {
+                    echo "<script>alert('Error!!!')</script>";
+                }
             }
         }
     }
