@@ -55,8 +55,8 @@
         </div>
       </div>
       <div class="shop-info">
-        <p class="contact">Contact Number: <?php echo htmlspecialchars($contact_number); ?></p>
-        <p class="location">Location: <?php echo htmlspecialchars($location); ?></p>
+        <p class="contact"><i class="fas fa-phone-alt"></i> Contact Number: <em style="font-size:20px;margin-left:12px;-webkit-text-stroke: 1px #001f3f;"><?php echo htmlspecialchars($contact_number); ?></em></p>
+        <p class="location"><i class="fas fa-map-marker-alt"></i> Location: <em style="font-size:20px;margin-left:13px;-webkit-text-stroke: 1px #001f3f;"><?php echo htmlspecialchars($location); ?></em></p>
       </div>
     </div>
     <div class="products-container">
@@ -98,7 +98,6 @@
                 </a>
                 <button class=\"btn btn-success btn-add-to-cart\">Add to Cart</button>
               </div>
-            
           </div>";
         }
         ?>
