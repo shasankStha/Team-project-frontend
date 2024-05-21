@@ -169,7 +169,22 @@
             echo "<script>window.location.href = '../login/login.php';</script>";
         } else {
             $quantity = $_POST['quantity'];
-            echo "<script>alert('$quantity')</script>";
+            // echo "<script>alert('$quantity')</script>";
+            $sql = "select cart_id from cart where user_id = '$user_id'";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
+            $cart_id = null;
+            if ($row = oci_fetch_assoc($stid)) {
+                $cart_id = $row['CART_ID'];
+            }
+            $sql = "insert into cart_item values(null,'$cart_id','$productId','$quantity')";
+            $stid = oci_parse($connection, $sql);
+            $exe = oci_execute($stid);
+            if ($exe) {
+                echo "<script>alert('Added to cart.')</script>";
+            } else {
+                echo "<script>alert('Error!!!')</script>";
+            }
         }
     }
     ?>
@@ -426,23 +441,23 @@
         });
 
         // Quantity selector
-        document.addEventListener('DOMContentLoaded', function() {
-            var quantityInput = document.getElementById('quantity');
-            var minusButton = document.querySelector('.quantity-control.minus');
-            var plusButton = document.querySelector('.quantity-control.plus');
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     var quantityInput = document.getElementById('quantity');
+        //     var minusButton = document.querySelector('.quantity-control.minus');
+        //     var plusButton = document.querySelector('.quantity-control.plus');
 
-            minusButton.addEventListener('click', function() {
-                var currentValue = parseInt(quantityInput.value);
-                if (currentValue > 1) {
-                    quantityInput.value = currentValue - 1;
-                }
-            });
+        //     minusButton.addEventListener('click', function() {
+        //         var currentValue = parseInt(quantityInput.value);
+        //         if (currentValue > 1) {
+        //             quantityInput.value = currentValue - 1;
+        //         }
+        //     });
 
-            plusButton.addEventListener('click', function() {
-                var currentValue = parseInt(quantityInput.value);
-                quantityInput.value = currentValue + 1;
-            });
-        });
+        //     plusButton.addEventListener('click', function() {
+        //         var currentValue = parseInt(quantityInput.value);
+        //         quantityInput.value = currentValue + 1;
+        //     });
+        // });
 
         // Toggle review popup
         function toggleReviewPopup(event) {
