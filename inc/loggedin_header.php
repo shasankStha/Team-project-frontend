@@ -513,7 +513,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
   }
   ?>
   <?php
-  // Fetch shop names from the database
   $shops = getShopNames($connection);
   ?>
   <nav class="navbar">
@@ -534,7 +533,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       </div>
       <?php
       if (isset($_SESSION['search'])) {
-        $search = $_SESSION['search'];
+        $search = strtolower($_SESSION['search']);
       }
       ?>
       <div class="notification-icon">
