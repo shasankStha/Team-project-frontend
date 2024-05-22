@@ -47,7 +47,6 @@
                 if ($row = oci_fetch_assoc($stid)) {
                     $count = $row['CNT'];
 
-
                     if ($count == 1) {
                         try {
                             $sql = "UPDATE \"USER\" SET password = password_encrypt('$confirmPassword') WHERE user_id = '$user_id'";
@@ -55,7 +54,6 @@
                             $exe = oci_execute($stid);
 
                             if ($exe) {
-                                // echo "<script>alert('Your password has been changed successfully.')</script>";
                                 $message = "Password has been changed successfully.";
                             } else {
                                 $error_message = "An error occurred while updating the password.";
@@ -78,7 +76,8 @@
 
     <!-- Side Bar-->
     <div class="container">
-        <div class="sidebar">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="sidebar" id="sidebar">
             <a href="userprofile.php">Profile</a>
             <a href="userorderhistory.php">Orders History</a>
             <a href="userfavourites.php">Favourites</a>
@@ -126,6 +125,13 @@
     </div>
 
     <?php require('../inc/footer.php'); ?>
+
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('expanded');
+        }
+    </script>
 </body>
 
 </html>

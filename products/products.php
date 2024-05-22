@@ -15,7 +15,8 @@
     <?php
     include('../connection.php');
     session_start();
-    $search = $_SESSION['search'] ?? $_GET['search'] || "";
+    $search = isset($_SESSION['search']) ? $_SESSION['search'] : ($_GET['search'] ?? "");
+
     $categoryFilter = $_GET['category'] ?? null;
     $priceFilter = $_GET['price'] ?? null;
     $sortOrder = $_GET['sort'] ?? null;
