@@ -496,9 +496,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       oci_bind_by_name($stmt, ':quantity', $new_quantity);
       oci_bind_by_name($stmt, ':product_id', $product_id);
       oci_bind_by_name($stmt, ':user_id', $user_id);
-      if (!oci_execute($stmt)) {
-        oci_error($stmt);
-      }
+      oci_execute($stmt);
+      exit();
     }
     if ($_POST['action'] == 'delete_item') {
       $product_id = $_POST['product_id'];
@@ -508,9 +507,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       $stmt = oci_parse($connection, $sql);
       oci_bind_by_name($stmt, ':product_id', $product_id);
       oci_bind_by_name($stmt, ':user_id', $user_id);
-      if (!oci_execute($stmt)) {
-        oci_error($stmt);
-      }
+      oci_execute($stmt);
+      exit();
     }
   }
   ?>
@@ -603,9 +601,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
           <div class=\"quantity-wrapper\">
             <img src=\"../traderdashboard/productsImages/$image\" alt=\"Product\" style=\"width:80px; height:60px;\">
             <div class=\"quantity-controls\">
-              <button onclick=\"decreaseQuantity(this)\">-</button>
+              <button type=\"button\" onclick=\"decreaseQuantity(this)\">-</button>
               <span>$quantity</span>
-              <button onclick=\"increaseQuantity(this)\">+</button>
+              <button type=\"button\" onclick=\"increaseQuantity(this)\">+</button>
             </div>
           </div>
           <div class=\"product-details\">
@@ -673,7 +671,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
         quantity++;
         quantityElement.textContent = quantity;
         updateQuantity(cartItem.dataset.productId, quantity);
-        updateSubtotal();
       } else {
         alert(`You can order a maximum of ${maxOrder} units for this product.`);
       }
@@ -686,9 +683,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
         quantity--;
         quantityElement.textContent = quantity;
         updateQuantity(button.closest('.cart-item').dataset.productId, quantity);
-        updateSubtotal();
       }
     }
+
 
     function updateQuantity(productId, quantity) {
       const xhr = new XMLHttpRequest();
@@ -697,6 +694,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
           console.log('Quantity updated');
+          updateSubtotal();
         }
       };
       xhr.send('action=update_quantity&product_id=' + productId + '&quantity=' + quantity);
