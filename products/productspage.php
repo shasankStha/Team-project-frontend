@@ -31,7 +31,6 @@
         }
 
 
-
         .review-popup-box {
             display: none;
             position: fixed;
@@ -43,6 +42,10 @@
             padding: 20px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
             border-radius: 8px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 80%;
+            overflow-y: auto;
         }
     </style>
 </head>
@@ -292,12 +295,27 @@
 
             echo "
                     <div class=\"username-container\">
-                    <img src=\"../userprofile/image/$profile\" class=\"profile-pic\" alt=\"Profile Picture\"\">
+                    <img src=\"../userprofile/image/$profile\" class=\"profile-pic\" alt=\"Profile Picture\">
                     <h5 class=\"username\">$usernameReview</h5>
                     </div>
                     <b>
                         <p class=\"dates\">$rDate</p>
                     </b>
+                    <div class=\"review-stars-card\">
+            ";
+
+            // Display filled stars
+            for ($i = 0; $i < $rating; $i++) {
+                echo "<i class=\"fas fa-star\"></i>";
+            }
+
+            // Display empty stars
+            for ($i = $rating; $i < 5; $i++) {
+                echo "<i class=\"far fa-star\"></i>";
+            }
+
+            echo "
+                    </div>
                     <div class=\"review-border\">
                         <p class=\"review-text\">$userComment</p>
                     </div><br>
