@@ -496,8 +496,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       oci_bind_by_name($stmt, ':quantity', $new_quantity);
       oci_bind_by_name($stmt, ':product_id', $product_id);
       oci_bind_by_name($stmt, ':user_id', $user_id);
-      oci_execute($stmt);
-      exit();
+      if (!oci_execute($stmt)) {
+        oci_error($stmt);
+      }
     }
     if ($_POST['action'] == 'delete_item') {
       $product_id = $_POST['product_id'];
@@ -507,8 +508,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       $stmt = oci_parse($connection, $sql);
       oci_bind_by_name($stmt, ':product_id', $product_id);
       oci_bind_by_name($stmt, ':user_id', $user_id);
-      oci_execute($stmt);
-      exit();
+      if (!oci_execute($stmt)) {
+        oci_error($stmt);
+      }
     }
   }
   ?>
@@ -665,9 +667,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       const quantityElement = button.previousElementSibling;
       let quantity = parseInt(quantityElement.textContent, 10);
       const cartItem = button.closest('.cart-item');
-      const maxOrder = parseInt(cartItem.dataset.maxOrder, 10); // Get max_order value
+      const maxOrder = parseInt(cartItem.dataset.maxOrder, 10);
 
-      if (quantity < maxOrder) { // Check if the current quantity is less than max_order
+      if (quantity < maxOrder) {
         quantity++;
         quantityElement.textContent = quantity;
         updateQuantity(cartItem.dataset.productId, quantity);
@@ -734,22 +736,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       xhr.send('action=delete_item&product_id=' + productId);
     }
 
-    function clearCart() {
-      const cartItems = document.getElementById('cartItems');
-      cartItems.innerHTML = '';
-      updateSubtotal();
-    }
-
-    function updateSubtotal() {
-      const cartItems = document.querySelectorAll('.cart-item');
-      let subtotal = 0;
-      cartItems.forEach(item => {
-        const price = parseFloat(item.querySelector('.price-wrapper span').textContent.replace('£ ', ''));
-        const quantity = parseInt(item.querySelector('.quantity-controls span').textContent, 10);
-        subtotal += price * quantity;
-      });
-      document.getElementById('subtotal').textContent = `£ ${subtotal.toFixed(2)}`;
-    }
 
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('cartPopup').style.display = 'none';
