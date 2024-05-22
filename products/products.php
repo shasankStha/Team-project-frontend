@@ -116,7 +116,7 @@
                 product p
                 inner join product_category c on p.category_id = c.category_id
                 inner join shop s on p.shop_id = s.shop_id
-                where (p.name like '%' || :search || '%' or c.category_name like '%' || :search || '%' or s.shop_name like '%' || :search || '%') and p.status = '1'";
+                where (UPPER(p.name) like '%' || UPPER(:search) || '%' or UPPER(c.category_name) like '%' || UPPER(:search) || '%' or UPPER(s.shop_name) like '%' || UPPER(:search) || '%') and p.status = '1'";
 
                 if ($categoryFilter) {
                     $sql .= " and c.category_name = :categoryFilter";

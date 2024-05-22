@@ -513,7 +513,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
   }
   ?>
   <?php
-  // Fetch shop names from the database
   $shops = getShopNames($connection);
   ?>
   <nav class="navbar">
@@ -633,8 +632,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
     $sql = "delete from cart_item where cart_id in (select cart_id from cart where user_id = '$user_id')";
     $stid = oci_parse($connection, $sql);
     $exe = oci_execute($stid);
-    if (!$exe) {
-      echo "<script>alert(Error: 'oci_error($stid)')</script>";
+    if ($exe) {
+      echo "<script>const currentUrl = window.location.href;
+    const newUrl = currentUrl.slice(0, -1);
+    window.location.href = newUrl;</script>";
+    } else {
+      echo oci_error($stid);
     }
   }
   ?>

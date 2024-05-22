@@ -68,13 +68,11 @@
         $action = $_POST['action'];
 
         if ($action == 'add') {
-            // Prepare the SQL statement to insert the favorite item
             $sql = "INSERT INTO FAVOURITE_ITEM (FAVOURITE_ITEM_ID, USER_ID, PRODUCT_ID) VALUES (null, :user_id, :product_id)";
             $stid = oci_parse($connection, $sql);
             oci_bind_by_name($stid, ':user_id', $user_id);
             oci_bind_by_name($stid, ':product_id', $productId);
         } else if ($action == 'remove') {
-            // Prepare the SQL statement to delete the favorite item
             $sql = "DELETE FROM FAVOURITE_ITEM WHERE USER_ID = :user_id AND PRODUCT_ID = :product_id";
             $stid = oci_parse($connection, $sql);
             oci_bind_by_name($stid, ':user_id', $user_id);
