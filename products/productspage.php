@@ -346,6 +346,11 @@
             $userId = $loggedInUserID;
             $rating = $_POST['rating'] || 1;
 
+            if (empty($userId) || $userId == null) {
+                echo "<script>alert('You have to be logged in!!!');</script>";
+                echo "<script>window.location.href = '../login/login.php';</script>";
+                exit();
+            }
             $sql = "INSERT INTO review (review_id, rating, user_comment, review_date, status, product_id, user_id)
                     VALUES (null, :rating, :review, SYSDATE, '1', :product_id, :user_id)";
             $stid = oci_parse($connection, $sql);
