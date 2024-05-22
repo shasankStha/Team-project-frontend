@@ -426,7 +426,10 @@
 
             plusButton.addEventListener('click', function() {
                 var currentValue = parseInt(quantityInput.value);
-                quantityInput.value = currentValue + 1;
+                if (currentValue < <?php echo "$maxOrder" ?>)
+                    quantityInput.value = currentValue + 1;
+                else
+                    alert(`You can order a maximum of <?php echo "$maxOrder" ?> units for this product.`);
             });
         });
 
