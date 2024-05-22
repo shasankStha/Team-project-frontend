@@ -32,7 +32,7 @@ section {
 
 .form-image {
   flex: 1;
-  background: url("../images/fish.jpg") center/cover no-repeat;
+  background: url("../images/loginpic.jpeg") center/cover no-repeat;
   min-height: 500px;
 }
 

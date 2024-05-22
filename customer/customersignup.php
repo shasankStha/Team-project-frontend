@@ -260,7 +260,7 @@
                 </div>
             </form>
         </div>
-        <div class="image-container" style="background: url('../images/fish.jpg') center/cover no-repeat;"></div>
+        <div class="image-container" style="background: url('../images/customersignup.jpeg') center/cover no-repeat;"></div>
     </div>
 
     <!-- Include Bootstrap JavaScript for form validation -->
