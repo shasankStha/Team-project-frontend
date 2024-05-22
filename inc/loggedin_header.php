@@ -513,6 +513,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
   }
   ?>
   <?php
+  // Fetch shop names from the database
   $shops = getShopNames($connection);
   ?>
   <nav class="navbar">
@@ -533,7 +534,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       </div>
       <?php
       if (isset($_SESSION['search'])) {
-        $search = strtolower($_SESSION['search']);
+        $search = $_SESSION['search'];
       }
       ?>
       <div class="notification-icon">
@@ -609,7 +610,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
             <span>$name</span>
           </div>
           <div class=\"price-wrapper\">
-            <span>£ $price x $quantity = £ $calc</span>
+            <span>£ $calc</span>
             <i class=\"fas fa-trash\" onclick=\"removeItem(this)\"></i>
           </div>
         </div>";
@@ -634,9 +635,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
     $exe = oci_execute($stid);
     if (!$exe) {
       echo "<script>alert(Error: 'oci_error($stid)')</script>";
-    } else {
-      echo "<script>alert('Your cart is empty.')</script>";
-      echo "<script>windows.href.location = windows.href.location</script>";
     }
   }
   ?>
