@@ -513,6 +513,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
   }
   ?>
   <?php
+  // Fetch shop names from the database
   $shops = getShopNames($connection);
   ?>
   <nav class="navbar">
@@ -533,7 +534,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       </div>
       <?php
       if (isset($_SESSION['search'])) {
-        $search = strtolower($_SESSION['search']);
+        $search = $_SESSION['search'];
       }
       ?>
       <div class="notification-icon">
@@ -600,16 +601,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
           <div class=\"quantity-wrapper\">
             <img src=\"../traderdashboard/productsImages/$image\" alt=\"Product\" style=\"width:80px; height:60px;\">
             <div class=\"quantity-controls\">
-              <button onclick=\"decreaseQuantity(this)\">-</button>
+              <button type=\"button\" onclick=\"decreaseQuantity(this)\">-</button>
               <span>$quantity</span>
-              <button onclick=\"increaseQuantity(this)\">+</button>
+              <button type=\"button\" onclick=\"increaseQuantity(this)\">+</button>
             </div>
           </div>
           <div class=\"product-details\">
             <span>$name</span>
           </div>
           <div class=\"price-wrapper\">
-            <span>£ $price x $quantity = £ $calc</span>
+            <span>£ $calc</span>
             <i class=\"fas fa-trash\" onclick=\"removeItem(this)\"></i>
           </div>
         </div>";
@@ -632,12 +633,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
     $sql = "delete from cart_item where cart_id in (select cart_id from cart where user_id = '$user_id')";
     $stid = oci_parse($connection, $sql);
     $exe = oci_execute($stid);
-    if ($exe) {
-      echo "<script>const currentUrl = window.location.href;
-    const newUrl = currentUrl.slice(0, -1);
-    window.location.href = newUrl;</script>";
+    if (!$exe) {
+      echo "<script>alert(Error: 'oci_error($stid)')</script>";
     } else {
-      echo oci_error($stid);
+      echo "<script>
+      const currentUrl = window.location.href;
+      const newUrl = currentUrl.slice(0, -1);
+      window.location.href = newUrl;
+      </script>";
     }
   }
   ?>
@@ -662,13 +665,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       const quantityElement = button.previousElementSibling;
       let quantity = parseInt(quantityElement.textContent, 10);
       const cartItem = button.closest('.cart-item');
-      const maxOrder = parseInt(cartItem.dataset.maxOrder, 10); // Get max_order value
+      const maxOrder = parseInt(cartItem.dataset.maxOrder, 10);
 
-      if (quantity < maxOrder) { // Check if the current quantity is less than max_order
+      if (quantity < maxOrder) {
         quantity++;
         quantityElement.textContent = quantity;
         updateQuantity(cartItem.dataset.productId, quantity);
-        updateSubtotal();
       } else {
         alert(`You can order a maximum of ${maxOrder} units for this product.`);
       }
@@ -681,9 +683,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
         quantity--;
         quantityElement.textContent = quantity;
         updateQuantity(button.closest('.cart-item').dataset.productId, quantity);
-        updateSubtotal();
       }
     }
+
 
     function updateQuantity(productId, quantity) {
       const xhr = new XMLHttpRequest();
@@ -692,6 +694,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
           console.log('Quantity updated');
+          updateSubtotal();
         }
       };
       xhr.send('action=update_quantity&product_id=' + productId + '&quantity=' + quantity);
@@ -731,22 +734,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       xhr.send('action=delete_item&product_id=' + productId);
     }
 
-    function clearCart() {
-      const cartItems = document.getElementById('cartItems');
-      cartItems.innerHTML = '';
-      updateSubtotal();
-    }
-
-    function updateSubtotal() {
-      const cartItems = document.querySelectorAll('.cart-item');
-      let subtotal = 0;
-      cartItems.forEach(item => {
-        const price = parseFloat(item.querySelector('.price-wrapper span').textContent.replace('£ ', ''));
-        const quantity = parseInt(item.querySelector('.quantity-controls span').textContent, 10);
-        subtotal += price * quantity;
-      });
-      document.getElementById('subtotal').textContent = `£ ${subtotal.toFixed(2)}`;
-    }
 
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('cartPopup').style.display = 'none';

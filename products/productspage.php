@@ -68,11 +68,13 @@
         $action = $_POST['action'];
 
         if ($action == 'add') {
+            // Prepare the SQL statement to insert the favorite item
             $sql = "INSERT INTO FAVOURITE_ITEM (FAVOURITE_ITEM_ID, USER_ID, PRODUCT_ID) VALUES (null, :user_id, :product_id)";
             $stid = oci_parse($connection, $sql);
             oci_bind_by_name($stid, ':user_id', $user_id);
             oci_bind_by_name($stid, ':product_id', $productId);
         } else if ($action == 'remove') {
+            // Prepare the SQL statement to delete the favorite item
             $sql = "DELETE FROM FAVOURITE_ITEM WHERE USER_ID = :user_id AND PRODUCT_ID = :product_id";
             $stid = oci_parse($connection, $sql);
             oci_bind_by_name($stid, ':user_id', $user_id);
@@ -166,8 +168,8 @@
             echo "<script>alert('You have to login first.')</script>";
             echo "<script>window.location.href = '../login/login.php';</script>";
         } else {
+            $productId = $_GET['product_id'];
             $quantity = $_POST['quantity'];
-            // echo "<script>alert('$quantity')</script>";
             $sql = "select cart_id from cart where user_id = '$user_id'";
             $stid = oci_parse($connection, $sql);
             oci_execute($stid);
@@ -175,8 +177,7 @@
             if ($row = oci_fetch_assoc($stid)) {
                 $cart_id = $row['CART_ID'];
             }
-
-            $sql = "select count(*) from cart_item where cart_id ='$cart_id' and product_id = '$product_id'";
+            $sql = "select count(*) from cart_item where cart_id ='$cart_id' and product_id = '$productId'";
             $stid = oci_parse($connection, $sql);
             oci_execute($stid);
             $count = null;
@@ -192,8 +193,8 @@
                 $stid = oci_parse($connection, $sql);
                 $exe = oci_execute($stid);
                 if ($exe) {
-                    // echo "<script>alert('Added to cart.')</script>";
-                    echo "<script>window.location.reload();</script>";
+                    echo "<script>alert('Added to cart.')</script>";
+                    echo "<script>window.location.href = window.location.href;</script>";
                 } else {
                     echo "<script>alert('Error!!!')</script>";
                 }
