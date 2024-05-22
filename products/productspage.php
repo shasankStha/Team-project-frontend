@@ -68,11 +68,13 @@
         $action = $_POST['action'];
 
         if ($action == 'add') {
+            // Prepare the SQL statement to insert the favorite item
             $sql = "INSERT INTO FAVOURITE_ITEM (FAVOURITE_ITEM_ID, USER_ID, PRODUCT_ID) VALUES (null, :user_id, :product_id)";
             $stid = oci_parse($connection, $sql);
             oci_bind_by_name($stid, ':user_id', $user_id);
             oci_bind_by_name($stid, ':product_id', $productId);
         } else if ($action == 'remove') {
+            // Prepare the SQL statement to delete the favorite item
             $sql = "DELETE FROM FAVOURITE_ITEM WHERE USER_ID = :user_id AND PRODUCT_ID = :product_id";
             $stid = oci_parse($connection, $sql);
             oci_bind_by_name($stid, ':user_id', $user_id);
@@ -185,6 +187,7 @@
             }
             if ($count == 1) {
                 echo "<script>alert('The item is already in the cart.')</script>";
+                exit();
             } else {
 
 
@@ -192,8 +195,8 @@
                 $stid = oci_parse($connection, $sql);
                 $exe = oci_execute($stid);
                 if ($exe) {
-                    // echo "<script>alert('Added to cart.')</script>";
-                    echo "<script>window.location.reload();</script>";
+                    echo "<script>alert('Added to cart.')</script>";
+                    echo "<script>window.location.href = window.location.href;</script>";
                 } else {
                     echo "<script>alert('Error!!!')</script>";
                 }
@@ -425,10 +428,7 @@
 
             plusButton.addEventListener('click', function() {
                 var currentValue = parseInt(quantityInput.value);
-                if (currentValue < <?php echo "$maxOrder" ?>)
-                    quantityInput.value = currentValue + 1;
-                else
-                    alert(`You can order a maximum of <?php echo "$maxOrder" ?> units for this product.`);
+                quantityInput.value = currentValue + 1;
             });
         });
 
