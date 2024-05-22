@@ -635,6 +635,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
     $exe = oci_execute($stid);
     if (!$exe) {
       echo "<script>alert(Error: 'oci_error($stid)')</script>";
+    } else {
+      echo "<script>
+      const currentUrl = window.location.href;
+      const newUrl = currentUrl.slice(0, -1);
+      window.location.href = newUrl;
+      </script>";
     }
   }
   ?>
