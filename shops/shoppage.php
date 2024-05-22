@@ -21,13 +21,17 @@
   oci_bind_by_name($stid, ':shop_id', $shopId);
   oci_execute($stid);
 
-  $shop_name = $description = $contact_number = $location = null;
+  $shop_name = null;
+  $description = null;
+  $contact_number = null;
+  $location = null;
+  $shop_image = null;
   if ($row = oci_fetch_assoc($stid)) {
     $shop_name = $row['SHOP_NAME'];
     $description = $row['SHOP_DESCRIPTION'];
     $contact_number = $row['CONTACT_NUMBER'];
     $location = $row['LOCATION'];
-    $image = $row['PICTURE'];
+    $shop_image = $row['PICTURE'];
   }
 
   // Determine header based on login status
@@ -38,14 +42,13 @@
     include('../inc/header.php');
   }
   ?>
-
   <div class="shop-name">
     <h1><?php echo htmlspecialchars($shop_name); ?></h1>
   </div>
   <div class="content-wrapper">
     <div class="shop-main-container">
       <div class="shop-image">
-        <?php echo "<img src=../shop_image/$image alt=\"Product Image\"/>" ?>
+        <?php echo "<img src=../shop_image/$shop_image alt=\"Product Image\" style = \"width = 600px; height= 400px\"/>" ?>
       </div>
 
       <div class="description-container">

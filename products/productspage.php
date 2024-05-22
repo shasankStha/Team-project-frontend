@@ -187,7 +187,6 @@
             }
             if ($count == 1) {
                 echo "<script>alert('The item is already in the cart.')</script>";
-                exit();
             } else {
 
 
@@ -195,8 +194,8 @@
                 $stid = oci_parse($connection, $sql);
                 $exe = oci_execute($stid);
                 if ($exe) {
-                    echo "<script>alert('Added to cart.')</script>";
-                    echo "<script>window.location.href = window.location.href;</script>";
+                    // echo "<script>alert('Added to cart.')</script>";
+                    echo "<script>window.location.reload();</script>";
                 } else {
                     echo "<script>alert('Error!!!')</script>";
                 }
@@ -428,7 +427,10 @@
 
             plusButton.addEventListener('click', function() {
                 var currentValue = parseInt(quantityInput.value);
-                quantityInput.value = currentValue + 1;
+                if (currentValue < <?php echo "$maxOrder" ?>)
+                    quantityInput.value = currentValue + 1;
+                else
+                    alert(`You can order a maximum of <?php echo "$maxOrder" ?> units for this product.`);
             });
         });
 

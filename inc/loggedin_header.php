@@ -610,7 +610,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
             <span>$name</span>
           </div>
           <div class=\"price-wrapper\">
-            <span>£ $calc</span>
+            <span>£ $price x $quantity = £ $calc</span>
             <i class=\"fas fa-trash\" onclick=\"removeItem(this)\"></i>
           </div>
         </div>";
@@ -635,6 +635,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
     $exe = oci_execute($stid);
     if (!$exe) {
       echo "<script>alert(Error: 'oci_error($stid)')</script>";
+    } else {
+      echo "<script>alert('Your cart is empty.')</script>";
+      echo "<script>windows.href.location = windows.href.location</script>";
     }
   }
   ?>

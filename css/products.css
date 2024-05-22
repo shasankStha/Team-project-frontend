@@ -1,149 +1,150 @@
 .sidebar-box {
-    border: 1px solid #e2e8f0;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-right: 1rem;
-    background-color: #2b2f33;
-    color: #fff;
-    width: 100%;
-    max-width: 300px;
+  border: 1px solid #e2e8f0;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-right: 1rem;
+  background-color: #2b2f33;
+  color: #fff;
+  width: 100%;
+  max-width: 300px;
 }
 
 .sidebar a {
-    color: #fff;
-    text-decoration: none;
-    transition: background-color 0.3s, color 0.3s;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .sidebar a:hover {
-    background-color: #3a3f44;
-    color: #dcdcdc;
+  background-color: #3a3f44;
+  color: #dcdcdc;
 }
 
 .fa-star {
-    color: #ffd700;
+  color: #ffd700;
 }
 
 .card {
-    width: 100%;
-    max-width: 340px;
-    margin: 10px;
-    border: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 340px;
+  margin: 10px;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .product-item {
-    background-color: #FFFFFF;
-    padding: 20px;
-    border-radius: 10px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .product-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .product-image img {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
 }
 
 .product-info {
-    text-align: center;
-    padding: 10px 0;
+  text-align: center;
+  padding: 10px 0;
 }
 
 .product-name,
 .product-price {
-    font-size: 1.2em;
-    margin-top: 10px;
-    font-weight: bold;
+  font-size: 1.2em;
+  margin-top: 10px;
+  font-weight: bold;
 }
 
 .product-rating {
-    margin: 10px 0;
-    color: #ffd700;
+  margin: 10px 0;
+  color: #ffd700;
 }
 
 .btn-add-to-cart {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 5px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 60px;
 }
 
 .btn-add-to-cart:hover {
-    background-color: #218838;
+  background-color: #218838;
 }
 
 .price-range-block {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .price-range-block label {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .price-range-block input[type="checkbox"] {
-    flex-shrink: 0;
+  flex-shrink: 0;
 }
 
 /* Responsive CSS */
 @media (max-width: 768px) {
-    .flex-col {
-        flex-direction: column;
-    }
+  .flex-col {
+    flex-direction: column;
+  }
 
-    .sidebar-box {
-        width: 100%;
-        margin-bottom: 20px;
-        margin-left:40px;
-    }
+  .sidebar-box {
+    width: 100%;
+    margin-bottom: 20px;
+    margin-left: 40px;
+  }
 
-    .sidebar-box .px-4 {
-        padding: 0;
-    }
+  .sidebar-box .px-4 {
+    padding: 0;
+  }
 
-    .w-full.md\:w-3\/4 {
-        width: 100%;
-    }
+  .w-full.md\:w-3\/4 {
+    width: 100%;
+  }
 
-    .w-full.md\:w-1\/4 {
-        width: 100%;
-    }
+  .w-full.md\:w-1\/4 {
+    width: 100%;
+  }
 
-    .gap-6 {
-        gap: 2rem;
-    }
+  .gap-6 {
+    gap: 2rem;
+  }
 
-    .mt-3 {
-        margin-top: 1rem;
-    }
+  .mt-3 {
+    margin-top: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
-    .product-item {
-        padding: 10px;
-    }
+  .product-item {
+    padding: 10px;
+  }
 
-    .product-name,
-    .product-price {
-        font-size: 1em;
-    }
+  .product-name,
+  .product-price {
+    font-size: 1em;
+  }
 
-    .product-rating i {
-        font-size: 0.8em;
-    }
+  .product-rating i {
+    font-size: 0.8em;
+  }
 
-    .btn-add-to-cart {
-        padding: 5px;
-        font-size: 12px;
-    }
+  .btn-add-to-cart {
+    padding: 5px;
+    font-size: 12px;
+  }
 }
