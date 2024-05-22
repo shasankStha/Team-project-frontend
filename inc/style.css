@@ -1,0 +1,126 @@
+/* Base settings */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #212529;
+    margin: 0;
+    padding: 0;
+}
+
+/* Styling for the main container */
+.container {
+    max-width: 900px;
+    margin: 30px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+/* Typography and spacing for headings */
+h2 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+label {
+    
+    margin-bottom: .5rem;
+    font-weight: bold;
+    color: #495057;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 5px;
+}
+
+input[type="date"],
+input[type="text"] {
+    width: 100%;
+    padding: .375rem .75rem;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    font-size: 1rem;
+}
+
+/* Collection time input styles */
+.collection-time {
+    margin-top: 1rem;
+}
+
+input[type="radio"] {
+    margin-right: 10px;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-top: -1px;
+}
+
+/* Order summary styles */
+.order-summary {
+    padding-top: 20px;
+}
+
+#subtotal, #total {
+    font-size: 1.2rem;
+    color: #28a745;
+}
+
+input[type="text"] {
+    width: 100px;
+    text-align: right;
+}
+
+/* Terms and conditions */
+.terms {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+input[type="checkbox"] {
+    vertical-align: middle;
+    margin-top: -1px; /* Adjusts the alignment relative to the label */
+}
+
+
+/* Button styling for a professional look, excluding search button */
+button.btn {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: .25rem;
+    font-size: 1.2rem;
+    transition: background-color .3s;
+}
+
+button.btn:hover {
+    background-color: #0056b3;
+}
+
+
+
+/* Flexbox settings */
+.row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Space between the two columns */
+}
+
+.collection-slot, .order-summary {
+    flex: 1; /* Each takes equal space */
+    padding: 20px;
+}
+
+/* Ensure the form is responsive on mobile devices */
+@media (max-width: 768px) {
+    .container {
+        margin: 10px;
+        width: calc(100% - 20px);
+    }
+
+    header {
+        border-radius: 0;
+    }
+}

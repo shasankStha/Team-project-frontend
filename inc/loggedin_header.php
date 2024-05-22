@@ -14,7 +14,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
     window.location.href = window.location.href;
     </script>";
   }
-  exit();
+}
+if (isset($_SESSION['search'])) {
+  $search = isset($_SESSION['search']) ? $_SESSION['search'] : ($_GET['search'] ?? "");
 }
 ?>
 <!DOCTYPE html>
@@ -462,7 +464,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
 <body>
   <?php
   include('../connection.php');
-
+  if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
+    if ($_POST['action'] == 'update_quantity') {
+      $product_id = $_POST['product_id'];
+      $new_quantity = $_POST['quantity'];
+      $sql = "UPDATE cart_item SET quantity = $new_quantity
+              WHERE product_id =  $product_id 
+              AND cart_id IN (SELECT cart_id FROM cart WHERE user_id = $user_id)";
+      $stmt = oci_parse($connection, $sql);
+      oci_execute($stmt);
+    }
+    if ($_POST['action'] == 'delete_item') {
+      $product_id = $_POST['product_id'];
+      $sql = "DELETE FROM cart_item 
+              WHERE product_id = $product_id
+              AND cart_id IN (SELECT cart_id FROM cart WHERE user_id = $user_id)";
+      $stmt = oci_parse($connection, $sql);
+      oci_execute($stmt);
+    }
+  }
+  ?>
+  <?php
   function getShopNames($connection)
   {
     $sql = "SELECT s.SHOP_ID, s.SHOP_NAME FROM SHOP s inner join trader t on t.user_id = s.user_id where t.status = '1' ";
@@ -478,42 +500,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
     }
     return $shops;
   }
-
-  if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-    $user_id = $_SESSION['userID'];
-  }
-
-
-  if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
-    if ($_POST['action'] == 'update_quantity') {
-      $product_id = $_POST['product_id'];
-      $new_quantity = $_POST['quantity'];
-      $sql = "UPDATE cart_item SET quantity = :quantity 
-              WHERE product_id = :product_id 
-              AND cart_id IN (SELECT cart_id FROM cart WHERE user_id = :user_id)";
-      $stmt = oci_parse($connection, $sql);
-      oci_bind_by_name($stmt, ':quantity', $new_quantity);
-      oci_bind_by_name($stmt, ':product_id', $product_id);
-      oci_bind_by_name($stmt, ':user_id', $user_id);
-      oci_execute($stmt);
-      exit();
-    }
-    if ($_POST['action'] == 'delete_item') {
-      $product_id = $_POST['product_id'];
-      $sql = "DELETE FROM cart_item 
-              WHERE product_id = :product_id 
-              AND cart_id IN (SELECT cart_id FROM cart WHERE user_id = :user_id)";
-      $stmt = oci_parse($connection, $sql);
-      oci_bind_by_name($stmt, ':product_id', $product_id);
-      oci_bind_by_name($stmt, ':user_id', $user_id);
-      oci_execute($stmt);
-      exit();
-    }
-  }
-  ?>
-  <?php
-  // Fetch shop names from the database
   $shops = getShopNames($connection);
   ?>
   <nav class="navbar">
@@ -532,11 +518,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
           <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
         </form>
       </div>
-      <?php
-      if (isset($_SESSION['search'])) {
-        $search = $_SESSION['search'];
-      }
-      ?>
       <div class="notification-icon">
         <a href="#"><i class="fas fa-bell"></i><span class="label noti">Notifications</span></a>
         <div id="notification-dropdown">
@@ -597,23 +578,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
           $max_order = $row['MAX_ORDER'];
           $calc = $price * $quantity;
           $total += $calc;
+
           echo "<div class=\"cart-item\" data-product-id=\"$product_id\" data-max-order=\"$max_order\">
-          <div class=\"quantity-wrapper\">
-            <img src=\"../traderdashboard/productsImages/$image\" alt=\"Product\" style=\"width:80px; height:60px;\">
-            <div class=\"quantity-controls\">
-              <button type=\"button\" onclick=\"decreaseQuantity(this)\">-</button>
-              <span>$quantity</span>
-              <button type=\"button\" onclick=\"increaseQuantity(this)\">+</button>
+            <div class=\"quantity-wrapper\">
+              <img src=\"../traderdashboard/productsImages/$image\" alt=\"Product\" style=\"width:80px; height:60px;\">
+              <div class=\"quantity-controls\">
+                <button type=\"button\" onclick=\"decreaseQuantity(this)\">-</button>
+                <span>$quantity</span>
+                <button type=\"button\" onclick=\"increaseQuantity(this)\">+</button>
+              </div>
             </div>
-          </div>
-          <div class=\"product-details\">
-            <span>$name</span>
-          </div>
-          <div class=\"price-wrapper\">
-            <span>£ $calc</span>
-            <i class=\"fas fa-trash\" onclick=\"removeItem(this)\"></i>
-          </div>
-        </div>";
+            <div class=\"product-details\">
+              <span>$name</span>
+            </div>
+            <div class=\"price-wrapper\">
+              <span>£ $calc</span>
+              <i class=\"fas fa-trash\" onclick=\"removeItem(this)\"></i>
+            </div>
+          </div>";
         }
         ?>
       </div>
@@ -678,11 +660,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
 
     function decreaseQuantity(button) {
       const quantityElement = button.nextElementSibling;
+      const cartItem = button.closest('.cart-item');
       let quantity = parseInt(quantityElement.textContent, 10);
       if (quantity > 1) {
         quantity--;
         quantityElement.textContent = quantity;
-        updateQuantity(button.closest('.cart-item').dataset.productId, quantity);
+        updateQuantity(cartItem.dataset.productId, quantity);
       }
     }
 

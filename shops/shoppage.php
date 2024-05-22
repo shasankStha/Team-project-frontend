@@ -13,6 +13,12 @@
   <?php
   session_start();
   include('../connection.php');
+  $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
+  if ($isLoggedIn) {
+    include('../inc/loggedin_header.php');
+  } else {
+    include('../inc/header.php');
+  }
   $shopId = $_GET['shop_id'];
 
   // Fetch shop information in a single query
@@ -34,13 +40,7 @@
     $shop_image = $row['PICTURE'];
   }
 
-  // Determine header based on login status
-  $isLoggedIn = isset($_SESSION['loggedinUser']) && $_SESSION['loggedinUser'] === TRUE;
-  if ($isLoggedIn) {
-    include('../inc/loggedin_header.php');
-  } else {
-    include('../inc/header.php');
-  }
+
   ?>
   <div class="shop-name">
     <h1><?php echo htmlspecialchars($shop_name); ?></h1>

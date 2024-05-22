@@ -217,9 +217,10 @@
         $product_id = $_GET['product_id'];
         // Fetch products for the shop
         $sql = "SELECT * FROM (
-                SELECT r.review_id, r.rating, r.user_comment, r.review_date, u.first_name || ' ' || u.last_name AS name
+                SELECT r.review_id, r.rating, r.user_comment, r.review_date, u.first_name || ' ' || u.last_name AS name, c.PROFILE_PICTURE
                 FROM review r
                 INNER JOIN \"USER\" u ON u.user_id = r.user_id
+                inner join customer c on c.user_id = r.user_id
                 WHERE r.product_id = $product_id and r.status = '1'
                 ORDER BY r.review_date DESC
             ) WHERE ROWNUM < 5";
@@ -231,13 +232,13 @@
             $userComment = $row['USER_COMMENT'];
             $rating = $row['RATING'];
             $rDate = $row['REVIEW_DATE'];
-
+            $picture = $row['PROFILE_PICTURE'];
             echo "
                     <div class=\"review\">
                         <div class=\"review-header\">
                             <div class=\"username-and-stars\">
                                 <div class=\"username\">
-                                    <i class=\"fa-solid fa-user\"></i>
+                                    <img src=\"../userprofile/image/$picture\" class=\"profile-pic\" alt=\"Profile Picture\"\">
                                     $usernameReview
                                 </div>
                                 <div class=\"review-stars\">
@@ -275,8 +276,9 @@
         <?php
         $product_id = $_GET['product_id'];
         // Fetch products for the shop
-        $sql = "select r.review_id, r.rating,r.user_comment,r.review_date, u.first_name ||' '||u.last_name as name from review r
-                    inner join \"USER\" u on u.user_id = r.user_id where r.product_id = $product_id and r.status = '1'";
+        $sql = "select r.review_id, r.rating,r.user_comment,r.review_date, u.first_name ||' '||u.last_name as name, c.PROFILE_PICTURE from review r
+                    inner join \"USER\" u on u.user_id = r.user_id
+                    inner join customer c on c.user_id = r.user_id where r.product_id = $product_id and r.status = '1'";
         $stid = oci_parse($connection, $sql);
         oci_execute($stid);
 
@@ -285,10 +287,12 @@
             $userComment = $row['USER_COMMENT'];
             $rating = $row['RATING'];
             $rDate = $row['REVIEW_DATE'];
+            $profile = $row['PROFILE_PICTURE'];
+
 
             echo "
                     <div class=\"username-container\">
-                    <img src=\"user_profile.jpg\" class=\"profile-pic\" alt=\"Profile Picture\">
+                    <img src=\"../userprofile/image/$profile\" class=\"profile-pic\" alt=\"Profile Picture\"\">
                     <h5 class=\"username\">$usernameReview</h5>
                     </div>
                     <b>
