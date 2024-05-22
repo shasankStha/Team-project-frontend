@@ -146,7 +146,8 @@ if ($isLoggedIn) {
 
 <body>
     <div class="container">
-        <div class="sidebar">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="sidebar" id="sidebar">
             <a href="userprofile.php">Profile</a>
             <a href="userorderhistory.php">Orders History</a>
             <a href="userfavourites.php">Favourites</a>
@@ -241,6 +242,11 @@ if ($isLoggedIn) {
         <?php if ($changesSaved) : ?>
             alert('Changes saved successfully!');
         <?php endif; ?>
+
+        function toggleSidebar() {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('expanded');
+        }
     </script>
 
     <?php require('../inc/footer.php'); ?>

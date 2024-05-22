@@ -21,6 +21,11 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.sidebar.expanded {
+    transform: translateX(0);
 }
 
 .sidebar h2 {
@@ -75,9 +80,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-
 }
-
 
 .favourites h1 {
     text-align: center;
@@ -121,7 +124,6 @@ body {
 
 .product-image img {
     width: 100%;
-    /* Adjust according to your design preference */
     border-radius: 5px;
 }
 
@@ -151,6 +153,21 @@ body {
     cursor: pointer;
 }
 
+/* New CSS for sidebar toggle */
+.sidebar-toggle {
+    display: none;
+    background-color: #2b2f33;
+    color: #fff;
+    border: none;
+    padding: 5px 5px;
+    cursor: pointer;
+    font-size: 24px;
+    position: fixed;
+    top: 140px;
+    left: 0px;
+    z-index: 1000;
+}
+
 /* Responsive CSS */
 @media (max-width: 768px) {
     .container {
@@ -161,16 +178,44 @@ body {
     .sidebar {
         width: 100%;
         margin-bottom: 20px;
+        transform: translateX(-100%);
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 999;
+    }
+
+    .sidebar.expanded {
+        transform: translateX(0);
     }
 
     .main-content {
         width: 100%;
         padding: 10px;
     }
+
+    .flex-row {
+        flex-direction: column;
+    }
+
+    .profile-picture {
+        margin-left: 0;
+        margin-top: 0;
+        text-align: center;
+    }
+
+    .profile-picture img {
+        width: 150px;
+        height: 150px;
+    }
+
+    .sidebar-toggle {
+        display: block;
+    }
 }
 
 @media (max-width: 480px) {
-
     .form-group input[type="text"],
     .form-group select,
     input[type="text"],
