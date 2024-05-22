@@ -1,8 +1,8 @@
 <?php
 if (session_status() == PHP_SESSION_NONE) {
   session_start();
-  $user_id = $_SESSION['userID'];
 }
+$user_id = $_SESSION['userID'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
   $_SESSION['search'] = $_POST['search'];
@@ -671,6 +671,7 @@ if (isset($_SESSION['search'])) {
 
 
     function updateQuantity(productId, quantity) {
+      console.log('test');
       const xhr = new XMLHttpRequest();
       xhr.open('POST', '', true);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
