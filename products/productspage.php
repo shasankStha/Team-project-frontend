@@ -268,7 +268,7 @@
         ?>
     </div>
 
-    <button class="popup-button" onclick="toggleReviewPopup(event)">More Review</button>
+    <button class="popup-button" onclick="toggleReviewPopup(event)">Write a Review</button>
     <div class="overlay" id="overlay" onclick="closeReviewPopup()" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; height: 100%; width: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.5);"></div>
     <div class="review-popup-box" id="review-popup" onclick="stopPropagation(event)">
         <span class="close-button" onclick="closeReviewPopup()">&times;</span>
@@ -326,7 +326,7 @@
         if (isset($_POST['submit'])) {
             $review = $_POST['review'];
             $userId = $loggedInUserID;
-            $rating = $_POST['rating']; // Fetch the rating from user input
+            $rating = $_POST['rating'] || 1;
 
             $sql = "INSERT INTO review (review_id, rating, user_comment, review_date, status, product_id, user_id)
                     VALUES (null, :rating, :review, SYSDATE, '1', :product_id, :user_id)";
