@@ -533,7 +533,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
       </div>
       <?php
       if (isset($_SESSION['search'])) {
-        $search = $_SESSION['search'];
+        $search = strtolower($_SESSION['search']);
       }
       ?>
       <div class="notification-icon">
@@ -609,7 +609,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
             <span>$name</span>
           </div>
           <div class=\"price-wrapper\">
-            <span>£ $calc</span>
+            <span>£ $price x $quantity = £ $calc</span>
             <i class=\"fas fa-trash\" onclick=\"removeItem(this)\"></i>
           </div>
         </div>";
