@@ -18,7 +18,7 @@
   $adminUser = $_SESSION["admin"];
   ?>
 
-<div class="container-fluid" id="main-content">
+  <div class="container-fluid" id="main-content">
     <div class="row">
       <div class="col-lg-10 ms-auto p-4 overflow-hidden">
         <h3 class="mb-4">ORDER HISTORY</h3>
@@ -110,7 +110,7 @@
     });
 
     function fetchOrderDetails(orderId) {
-      fetch(`fetch_order_details.php?order_id=${orderId}`)
+      fetch(`../traderdashboard/fetch_order_details.php?order_id=${orderId}`)
         .then(response => response.json())
         .then(data => {
           const orderDetailsContainer = document.getElementById('order-details');

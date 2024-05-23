@@ -25,7 +25,7 @@
                         <div class="card text-center text-primary p-3">
                             <h6>Total Users</h6>
                             <?php
-                            $query = "select count(*) as total_users from \"USER\" u left join customer c on c.user_id = u.user_id where u.role = 'T' or (u.role = 'C' and c.status != '0')";
+                            $query = "select count(*) as total_users from \"USER\" u left join customer c on c.user_id = u.user_id where u.role = 'T' or (u.role = 'C' and c.status = '1')";
                             $stmp = oci_parse($connection, $query);
                             oci_execute($stmp);
                             $row = oci_fetch_array($stmp, OCI_ASSOC);
