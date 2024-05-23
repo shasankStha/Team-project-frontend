@@ -26,20 +26,10 @@
     $paypalURL = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
     $paypalID = 'sb-l3squ30556079@business.example.com'; //Business Email
     ?>
-
-    <?php
-    $sql = "select slot_date from collection_slot where slot_date>(select sysdate+1 from dual) group by slot_date";
-    $stid = oci_parse($connection, $sql);
-    oci_execute($stid);
-    $slots = [];
-    while ($row = oci_fetch_assoc($stid)) {
-        $slots[] = $row;
-    }
-    ?>
     <div class="container">
-        <h2>Please choose your collection time</h2>
 
-        <form action="<?php echo $paypalURL; ?>" method="post">
+
+        <form method="post">
             <div class="row">
                 <div class="order-summary">
                     <h2>Order Summary</h2><br>
@@ -106,18 +96,6 @@
                         </tbody>
                     </table>
 
-                    <!-- Specify URLs -->
-                    <input type='hidden' name='cancel_return' value='http://localhost/paypal_jatin/cancel.php'>
-                    <input type='hidden' name='return' value='http://localhost/teamProject/Team-project-frontend/inc/order_confirmation.php'>
-
-                    <div class="terms">
-                        <label>
-                            <input type="checkbox" id="terms" name="terms" required> 
-                            I have read and agree to the website <a href="../terms/terms.php">Terms and Conditions</a>
-                        </label>
-                    </div>
-
-                    <button type="submit" class="btn">Confirm Order</button>
                 </div>
 
                 <div class="collection-slot">
@@ -125,7 +103,15 @@
                     <br>
                     <label for="date">Select Date:</label>
                     <select id="date" name="date">
-                        <?php foreach ($slots as $slot) : ?>
+                        <?php
+                        $sql = "select slot_date from collection_slot where slot_date>(select sysdate+1 from dual) group by slot_date";
+                        $stid = oci_parse($connection, $sql);
+                        oci_execute($stid);
+                        $slots = [];
+                        while ($row = oci_fetch_assoc($stid)) {
+                            $slots[] = $row;
+                        }
+                        foreach ($slots as $slot) : ?>
                             <option value="<?= htmlspecialchars($slot['SLOT_DATE'], ENT_QUOTES, 'UTF-8'); ?>">
                                 <?= date('d-M-Y', strtotime($slot['SLOT_DATE'])); ?>
                             </option>
@@ -134,15 +120,90 @@
 
                     <div class="collection-time">
                         <h3>Collection Time:</h3><br>
-                        <label><input type="radio" name="collection_time" value="10am-1pm"> 10am - 1pm</label><br>
-                        <label><input type="radio" name="collection_time" value="1pm-4pm"> 1pm - 4pm</label><br>
-                        <label><input type="radio" name="collection_time" value="4pm-7pm"> 4pm - 7pm</label>
+
+                        <label><input type="radio" name="collection_time" value="10:00" required> 10am - 1pm</label><br>
+                        <label><input type="radio" name="collection_time" value="13:00" required> 1pm - 4pm</label><br>
+                        <label><input type="radio" name="collection_time" value="16:00" required> 4pm - 7pm</label>
                     </div>
                 </div>
                 <?php $collection_time = null; ?>
+
             </div>
+
+            <!-- Specify URLs -->
+            <input type='hidden' name='cancel_return' value='http://localhost/paypal_jatin/cancel.php'>
+            <input type='hidden' name='return' value='http://localhost/teamProject/Team-project-frontend/inc/order_confirmation.php'>
+
+            <div class="terms">
+                <label>
+                    <input type="checkbox" id="terms" name="terms" required>
+                    I have read and agree to the website <a href="../terms/terms.php">Terms and Conditions</a>
+                </label>
+            </div>
+
+            <button name='submit' type="submit" class="btn">Confirm Order</button>
         </form>
     </div>
 </body>
+
+<?php
+if (isset($_POST['submit'])) {
+    $collection_time = $_POST['collection_time'];
+    $date = $_POST['date'];
+    $sql = "select count(*) from \"ORDER\" where collection_slot_id in (select collection_slot_id from collection_slot where slot_date = '$date' and start_time = '$collection_time')";
+    $stid = oci_parse($connection, $sql);
+    oci_execute($stid);
+    $count = null;
+    if ($row = oci_fetch_assoc($stid)) {
+        $count = $row["COUNT(*)"];
+    }
+    if ($count == 20) {
+        echo "<script>alert('Collection slot is full!!! Select another slot.')</script>";
+        exit;
+    }
+
+?>
+
+    <form id="paypalForm" action="<?php echo $paypalURL; ?>" method="post">
+        <input type="hidden" name="business" value="<?php echo $paypalID; ?>">
+        <input type="hidden" name="cmd" value="_cart">
+        <input type="hidden" name="upload" value="1">
+        <input type="hidden" name="currency_code" value="GBP">
+        <?php
+        $sn = 1;
+        $total = 0;
+        $sql = "select p.product_id, p.name, p.image, p.price, ci.quantity, p.max_order
+                                    from cart c
+                                    inner join cart_item ci on ci.cart_id = c.cart_id
+                                    inner join product p on p.product_id = ci.product_id
+                                    where c.user_id = '$user_id'";
+
+        $stid = oci_parse($connection, $sql);
+        oci_execute($stid);
+        while ($row = oci_fetch_assoc($stid)) {
+            $name = htmlspecialchars($row['NAME'], ENT_QUOTES, 'UTF-8');
+            $item_number = htmlspecialchars($row['PRODUCT_ID'], ENT_QUOTES, 'UTF-8');
+            $amount = htmlspecialchars($row['PRICE'], ENT_QUOTES, 'UTF-8');
+            $quantity = htmlspecialchars($row['QUANTITY'], ENT_QUOTES, 'UTF-8');
+            $sub_total = $amount * $quantity;
+            $total += $sub_total;
+
+            echo "<input type='hidden' name='item_name_{$sn}' value='{$name}'>";
+            echo "<input type='hidden' name='item_number_{$sn}' value='{$item_number}'>";
+            echo "<input type='hidden' name='amount_{$sn}' value='{$amount}'>";
+            echo "<input type='hidden' name='quantity_{$sn}' value='{$quantity}'>";
+            $sn++;
+        }
+        ?>
+        <input type="hidden" name="cancel_return" value="http://localhost/paypal_jatin/cancel.php">
+        <input type="hidden" name="return" value="http://localhost/teamProject/Team-project-frontend/inc/order_confirmation.php">
+
+        <script>
+            document.getElementById("paypalForm").submit();
+        </script>
+    </form>
+<?php
+}
+?>
 
 </html>
