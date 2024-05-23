@@ -15,10 +15,13 @@
     include("../connection.php");
     require('../inc/header1.php');
     echo "<br><br>";
+
+    $savedUsername = isset($_COOKIE['rememberedUser']) ? $_COOKIE['rememberedUser'] : '';
     $error = ''; // Initialize the error message variable
     if (isset($_POST['btnSignInLogin'])) {
         $username = $_POST['emailLogin'];
         $password = $_POST['passwordLogin'];
+        $rememberMe = isset($_POST['rememberMeLogin']);
 
         $sql = "SELECT user_id, role FROM \"USER\" WHERE (username = :username OR email = :username) AND password = password_encrypt(:password)";
         $stid = oci_parse($connection, $sql);
@@ -38,68 +41,77 @@
             $error = 'Invalid username/email or password.';
         }
 
-        if ($role == "C") {
-            $sql = "SELECT status FROM customer WHERE user_id = $user_id";
-            $stid = oci_parse($connection, $sql);
-            oci_execute($stid);
-            $status = null;
-            if ($row = oci_fetch_assoc($stid)) {
-                $status = $row['STATUS'];
+        if ($user_id) {
+            // Set or clear the cookie based on the "Remember Me" checkbox
+            if ($rememberMe) {
+                setcookie('rememberedUser', $username, time() + (86400 * 30), "/"); // Set cookie for 30 days
             } else {
-                echo "<script>alert('Something! went wrong')</script>";
+                setcookie('rememberedUser', '', time() - 3600, "/"); // Clear the cookie
             }
-            if ($status == '1') {
-                $_SESSION["user"] = $username;
-                $_SESSION['userID'] = $user_id;
+    
+            if ($role == "C") {
+                $sql = "SELECT status FROM customer WHERE user_id = $user_id";
+                $stid = oci_parse($connection, $sql);
+                oci_execute($stid);
+                $status = null;
+                if ($row = oci_fetch_assoc($stid)) {
+                    $status = $row['STATUS'];
+                } else {
+                    echo "<script>alert('Something went wrong!')</script>";
+                }
+                if ($status == '1') {
+                    $_SESSION["user"] = $username;
+                    $_SESSION['userID'] = $user_id;
+                    $_SESSION["loggedinUser"] = TRUE;
+                    $sql = "update \"USER\" set LAST_LOGGEDIN_DATE = sysdate where user_id = '$user_id'";
+                    $stid = oci_parse($connection, $sql);
+                    $exe = oci_execute($stid);
+                    if ($exe) {
+                        header("Location: ../index.php");
+                        exit;
+                    } else {
+                        echo "<script>alert('Error logging in.')</script>";
+                    }
+                } else {
+                    echo "<script>alert('Your account has been removed!')</script>";
+                }
+            } elseif ($role == "T") {
+                $_SESSION["traderUser"] = $username;
+                $_SESSION["loggedinTrader"] = TRUE;
+                $_SESSION['traderID'] = $user_id;
+                $sql = "select shop_id from shop where user_id = '$user_id'";
+                $stid = oci_parse($connection, $sql);
+                $exe = oci_execute($stid);
+                $shop_id = null;
+                if ($row = oci_fetch_assoc($stid)) {
+                    $shop_id = $row["SHOP_ID"];
+                }
+                $_SESSION['shopID'] = $shop_id;
+                $sql = "update \"USER\" set LAST_LOGGEDIN_DATE = sysdate where user_id = '$user_id'";
+                $stid = oci_parse($connection, $sql);
+                $exe = oci_execute($stid);
+                if ($exe) {
+                    header("Location: ../traderdashboard");
+                    exit();
+                } else {
+                    echo "<script>alert('Error logging in.')</script>";
+                }
+            } elseif ($role == "A") {
+                $_SESSION["admin"] = $username;
+                $_SESSION["admin_id"] = $user_id;
                 $_SESSION["loggedinUser"] = TRUE;
                 $sql = "update \"USER\" set LAST_LOGGEDIN_DATE = sysdate where user_id = '$user_id'";
                 $stid = oci_parse($connection, $sql);
                 $exe = oci_execute($stid);
                 if ($exe) {
-                    header("Location: ../index.php");
-                    exit;
+                    header("Location: ../admin");
+                    exit();
                 } else {
-                    echo "<script>alert('Error! Logging in.')</script>";
+                    echo "<script>alert('Error logging in.')</script>";
                 }
-            } else {
-                echo "<script>alert('Your account has been removed!!!')</script>";
-            }
-        } elseif ($role == "T") {
-            $_SESSION["traderUser"] = $username;
-            $_SESSION["loggedinTrader"] = TRUE;
-            $_SESSION['traderID'] = $user_id;
-            $sql = "select shop_id from shop where user_id = '$user_id'";
-            $stid = oci_parse($connection, $sql);
-            $exe = oci_execute($stid);
-            $shop_id = null;
-            if ($row = oci_fetch_assoc($stid)) {
-                $shop_id = $row["SHOP_ID"];
-            }
-            $_SESSION['shopID'] = $shop_id;
-            $sql = "update \"USER\" set LAST_LOGGEDIN_DATE = sysdate where user_id = '$user_id'";
-            $stid = oci_parse($connection, $sql);
-            $exe = oci_execute($stid);
-            if ($exe) {
-                header("Location: ../traderdashboard");
-                exit;
-            } else {
-                echo "<script>alert('Error! Logging in.')</script>";
-            }
-        } elseif ($role == "A") {
-            $_SESSION["admin"] = $username;
-            $_SESSION["admin_id"] = $user_id;
-            $_SESSION["loggedinUser"] = TRUE;
-            $sql = "update \"USER\" set LAST_LOGGEDIN_DATE = sysdate where user_id = '$user_id'";
-            $stid = oci_parse($connection, $sql);
-            $exe = oci_execute($stid);
-            if ($exe) {
-                header("Location: ../admin");
-                exit;
-            } else {
-                echo "<script>alert('Error! Logging in.')</script>";
             }
         }
-
+    
         oci_close($connection);
     }
     ?>
@@ -115,7 +127,7 @@
             <form action="login.php" method="POST">
                 <div class="inputBx">
                     <label for="emailLogin">Email/Username</label>
-                    <input type="text" id="emailLogin" name="emailLogin" required>
+                    <input type="text" id="emailLogin" name="emailLogin" value="<?php echo htmlspecialchars($savedUsername); ?>"  required>
                 </div>
                 <div class="inputBx">
                     <label for="passwordLogin">Password</label>
