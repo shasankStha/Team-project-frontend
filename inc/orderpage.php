@@ -43,7 +43,7 @@
 
     ?>
     <div class="container">
-        <h2>Please choose your collection time</h2>
+
         <form action="<?php echo $paypalURL; ?>" method="post">
             <div class="row">
 
@@ -128,7 +128,8 @@
 
 
                 <div class="collection-slot">
-                    <h2>Collection Slot</h2><br>
+                    <h2>Please choose your collection time</h2>
+                    <br>
                     <label for="date">Select Date:</label>
                     <select id="date" name="date">
                         <?php foreach ($slots as $slot) : ?>
