@@ -592,7 +592,7 @@ if (isset($_SESSION['search'])) {
               <span>$name</span>
             </div>
             <div class=\"price-wrapper\">
-              <span>£ $price</span>
+              <span>£ $price</span> <span>per unit</span>
               <i class=\"fas fa-trash\" onclick=\"removeItem(this)\"></i>
             </div>
           </div>";
