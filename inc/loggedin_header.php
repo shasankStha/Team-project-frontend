@@ -592,7 +592,7 @@ if (isset($_SESSION['search'])) {
               <span>$name</span>
             </div>
             <div class=\"price-wrapper\">
-              <span>£ $calc</span>
+              <span>£ $price</span>
               <i class=\"fas fa-trash\" onclick=\"removeItem(this)\"></i>
             </div>
           </div>";
@@ -653,7 +653,6 @@ if (isset($_SESSION['search'])) {
         quantity++;
         quantityElement.textContent = quantity;
         updateQuantity(cartItem.dataset.productId, quantity);
-        updateSubtotal();
       } else {
         alert(`You can order a maximum of ${maxOrder} units for this product.`);
       }
@@ -667,7 +666,6 @@ if (isset($_SESSION['search'])) {
         quantity--;
         quantityElement.textContent = quantity;
         updateQuantity(cartItem.dataset.productId, quantity);
-        updateSubtotal();
       }
     }
 
@@ -680,7 +678,7 @@ if (isset($_SESSION['search'])) {
       xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
           console.log('Quantity updated');
-
+          updateSubtotal();
         }
       };
       xhr.send('action=update_quantity&product_id=' + productId + '&quantity=' + quantity);
