@@ -34,6 +34,10 @@
                             <a class="nav-link text-white" href="users.php">Customers</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-white" href="orders.php">Orders
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-white" href="userqueries.php">Contact Us Messages</a>
                         </li>
                         
