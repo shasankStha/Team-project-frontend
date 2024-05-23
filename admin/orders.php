@@ -18,7 +18,7 @@
   $adminUser = $_SESSION["admin"];
   ?>
 
-  <div class="container-fluid" id="main-content">
+<div class="container-fluid" id="main-content">
     <div class="row">
       <div class="col-lg-10 ms-auto p-4 overflow-hidden">
         <h3 class="mb-4">ORDER HISTORY</h3>
@@ -43,8 +43,7 @@
                   INNER JOIN shop s ON s.user_id = t.user_id
                   INNER JOIN product p ON p.shop_id = s.shop_id
                   INNER JOIN order_item oi on oi.product_id = p.product_id
-                  INNER JOIN \"ORDER\" o on o.order_id=oi.order_id
-                  WHERE u.username = '$adminUser' or u.email='$adminUser' ";
+                  INNER JOIN \"ORDER\" o on o.order_id=oi.order_id";
                   $stid = oci_parse($connection, $query);
                   if (!oci_execute($stid)) {
                     $err = oci_error($stid);
