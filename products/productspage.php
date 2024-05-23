@@ -344,7 +344,10 @@
         if (isset($_POST['submit'])) {
             $review = $_POST['review'];
             $userId = $loggedInUserID;
-            $rating = $_POST['rating'] || 1;
+            if ($rating == null || empty($rating))
+                $rating = 1;
+            else
+                $rating = $_POST['rating'];
 
             if (empty($userId) || $userId == null) {
                 echo "<script>alert('You have to be logged in!!!');</script>";
