@@ -22,10 +22,6 @@
         require('inc/header.php');
     }
     ?>
-    <?php
-    $paypalURL = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-    $paypalID = 'sb-l3squ30556079@business.example.com'; //Business Email
-    ?>
     <div class="container">
 
 
@@ -62,10 +58,10 @@
                             $sn = 1;
                             $total = 0;
                             while ($row = oci_fetch_assoc($stid)) {
-                                $name = htmlspecialchars($row['NAME'], ENT_QUOTES, 'UTF-8');
-                                $item_number = htmlspecialchars($row['PRODUCT_ID'], ENT_QUOTES, 'UTF-8');
-                                $amount = htmlspecialchars($row['PRICE'], ENT_QUOTES, 'UTF-8');
-                                $quantity = htmlspecialchars($row['QUANTITY'], ENT_QUOTES, 'UTF-8');
+                                $name = $row['NAME'];
+                                $item_number = $row['PRODUCT_ID'];
+                                $amount = $row['PRICE'];
+                                $quantity = $row['QUANTITY'];
                                 $sub_total = $amount * $quantity;
                                 $total += $sub_total;
 
@@ -76,12 +72,6 @@
                                 echo "<td style='padding: 8px; border-bottom: 1px solid #ddd; text-align: center'>" . $quantity . "</td>";
                                 echo "<td style='padding: 8px; border-bottom: 1px solid #ddd; text-align: center'>£ " . $sub_total . "</td>";
                                 echo "</tr>";
-
-                                // PayPal input fields for each item
-                                echo "<input type='hidden' name='item_name_{$sn}' value='{$name}'>";
-                                echo "<input type='hidden' name='item_number_{$sn}' value='{$item_number}'>";
-                                echo "<input type='hidden' name='amount_{$sn}' value='{$amount}'>";
-                                echo "<input type='hidden' name='quantity_{$sn}' value='{$quantity}'>";
                                 $sn++;
                             }
                             ?>
@@ -162,6 +152,20 @@ if (isset($_POST['submit'])) {
         exit;
     }
 
+    $sql = "select collection_slot_id from collection_slot where slot_date = '$date' and start_time = '$collection_time'";
+    $stid = oci_parse($connection, $sql);
+    oci_execute($stid);
+    $id = null;
+    if ($row = oci_fetch_assoc($stid)) {
+        $id = $row["COLLECTION_SLOT_ID"];
+    }
+    $sql = "insert into \"ORDER\" values(null,sysdate,null,'0','$user_id','$id')";
+    $stid = oci_parse($connection, $sql);
+    oci_execute($stid);
+
+    $paypalURL = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+    $paypalID = 'sb-p4q6930555431@business.example.com'; //Business Email
+
 ?>
 
     <form id="paypalForm" action="<?php echo $paypalURL; ?>" method="post">
@@ -181,10 +185,10 @@ if (isset($_POST['submit'])) {
         $stid = oci_parse($connection, $sql);
         oci_execute($stid);
         while ($row = oci_fetch_assoc($stid)) {
-            $name = htmlspecialchars($row['NAME'], ENT_QUOTES, 'UTF-8');
-            $item_number = htmlspecialchars($row['PRODUCT_ID'], ENT_QUOTES, 'UTF-8');
-            $amount = htmlspecialchars($row['PRICE'], ENT_QUOTES, 'UTF-8');
-            $quantity = htmlspecialchars($row['QUANTITY'], ENT_QUOTES, 'UTF-8');
+            $name = $row['NAME'];
+            $item_number = $row['PRODUCT_ID'];
+            $amount = $row['PRICE'];
+            $quantity = $row['QUANTITY'];
             $sub_total = $amount * $quantity;
             $total += $sub_total;
 
@@ -195,8 +199,8 @@ if (isset($_POST['submit'])) {
             $sn++;
         }
         ?>
-        <input type="hidden" name="cancel_return" value="http://localhost/paypal_jatin/cancel.php">
-        <input type="hidden" name="return" value="http://localhost/teamProject/Team-project-frontend/inc/order_confirmation.php">
+        <input type="hidden" name="cancel_return" value="http://localhost/cleckshophub/homepage/homepage.php">
+        <input type="hidden" name="return" value="http://localhost/cleckshophub/inc/order_confirmation.php">
 
         <script>
             document.getElementById("paypalForm").submit();
