@@ -128,7 +128,7 @@
 
         <section>
             <h2>Delivery Options</h2>
-            <p>CleckShopHub does not offer delivery services for customers. Customers must collect their orders from the designated collection point on Thursdays, Fridays, and Saturdays of each week.</p>
+            <p>CleckShopHub does not offer delivery services for customers. Customers must collect their orders from the designated collection slot on Wednesdays, Thursdays and Fridays of each week.</p>
         </section>
 
         <section>

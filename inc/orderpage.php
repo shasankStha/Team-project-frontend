@@ -44,8 +44,89 @@
     ?>
     <div class="container">
         <h2>Please choose your collection time</h2>
-        <form method="POST">
+        <form action="<?php echo $paypalURL; ?>" method="post">
             <div class="row">
+
+
+                <div class="order-summary">
+                    <h2>Order Summary</h2><br>
+
+
+                    <input type="hidden" name="business" value="<?php echo $paypalID; ?>">
+                    <!-- Specify a Buy Now button. -->
+                    <input type="hidden" name="cmd" value="_xclick">
+
+
+                    <!-- Input fields for each item -->
+                    <table style="border-collapse: collapse; width: 100%;">
+                        <thead>
+                            <tr style="background-color:#2b2f33; color: white;">
+                                <th style="padding: 8px; border-bottom: 1px solid #ddd;">S.N</th>
+                                <th style="padding: 8px; border-bottom: 1px solid #ddd;">Product</th>
+                                <th style="padding: 8px; border-bottom: 1px solid #ddd;">Price</th>
+                                <th style="padding: 8px; border-bottom: 1px solid #ddd;">Quantity</th>
+                                <th style="padding: 8px; border-bottom: 1px solid #ddd;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $sql = "select p.product_id,p.name,p.image,p.price, ci.quantity, p.max_order
+                                from cart c
+                                inner join cart_item ci on ci.cart_id = c.cart_id
+                                inner join product p on p.product_id = ci.product_id
+                                where c.user_id = '$user_id'";
+
+
+                            $stid = oci_parse($connection, $sql);
+                            oci_execute($stid);
+                            $sn = 1;
+                            $total = 0;
+                            while ($row = oci_fetch_assoc($stid)) {
+                                $name = $row['NAME'];
+                                $item_number = $row['PRODUCT_ID'];
+                                $amount = $row['PRICE'];
+                                $quantity = $row['QUANTITY'];
+                                $sub_total = $amount * $quantity;
+                                $total += $sub_total;
+                                echo "<tr style='background-color: #f2f2f2;'>";
+                                echo "<td style='padding: 8px; border-bottom: 1px solid #ddd; text-align : center'>" . $sn++ . "</td>";
+                                echo "<td style='padding: 8px; border-bottom: 1px solid #ddd; text-align : center'>" . $name . "</td>";
+                                echo "<td style='padding: 8px; border-bottom: 1px solid #ddd; text-align : center'>£ " . $amount . "</td>";
+                                echo "<td style='padding: 8px; border-bottom: 1px solid #ddd; text-align : center'>" . $quantity . "</td>";
+                                echo "<td style='padding: 8px; border-bottom: 1px solid #ddd; text-align : center'>£ " . $sub_total . "</td>";
+                                echo "</tr>";
+                            }
+
+                            ?>
+
+                            <tr style='background-color: #f2f2f2;'>
+                                <td style='padding: 8px; border-bottom: 1px solid #ddd; text-align : center'>Total</td>
+                                <td style='padding: 8px; border-bottom: 1px solid #ddd; text-align : center'></td>
+                                <td style='padding: 8px; border-bottom: 1px solid #ddd; text-align : center'></td>
+                                <td style='padding: 8px; border-bottom: 1px solid #ddd; text-align : center'></td>
+                                <td style='padding: 8px; border-bottom: 1px solid #ddd; text-align : center'><?php echo "£ " . $total ?></td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+
+                    <!-- Specify URLs -->
+                    <input type='hidden' name='cancel_return' value='http://localhost/paypal_jatin/cancel.php'>
+                    <input type='hidden' name='return' value='http://localhost/paypal_jatin/success.php'>
+
+
+
+                    <div class="terms">
+                        <label><input type="checkbox" id="terms" name="terms" required> I have read and agree to the website <a href="../terms/terms.php">Terms and Conditions</a></label>
+                    </div>
+
+                    <button type="submit" class="btn" value="confirmBtn"> <input type='hidden' name='cancel_return' value='http://localhost/paypal_jatin/cancel.php'>
+                        <input type='hidden' name='return' value='http://localhost/paypal_jatin/success.php'>Confirm Order</button>
+                </div>
+
+
                 <div class="collection-slot">
                     <h2>Collection Slot</h2><br>
                     <label for="date">Select Date:</label>
@@ -68,61 +149,10 @@
                 $collection_time = null;
                 ?>
 
-                <!-- <div class="order-summary">
-                    <h2>Order Summary</h2><br>
-                    <label>Subtotal: £<span id="subtotal">300</span></label><br>
-
-                    <div class="terms">
-                        <label><input type="checkbox" id="terms" name="terms"> I have read and agree to the website <a href="../terms/terms.php">Terms and Conditions</a></label>
-                    </div>
-
-                    <button type="submit" class="btn" value = "confirmBtn">Confirm Order</button>
-                </div>
-            </div> -->
         </form>
-
-        <?php
-        $sql = "select p.product_id,p.name,p.image,p.price, ci.quantity, p.max_order
-        from cart c
-        inner join cart_item ci on ci.cart_id = c.cart_id
-        inner join product p on p.product_id = ci.product_id
-        where c.user_id = '$user_id'";
-
-        $stid = oci_parse($connection, $sql);
-        oci_execute($stid);
-        ?>
-
-        <form action="<?php echo $paypalURL; ?>" method="post">
-            <input type="hidden" name="business" value="<?php echo $paypalID; ?>">
-            <!-- Specify a Buy Now button. -->
-            <input type="hidden" name="cmd" value="_xclick">
-
-            <?php
-            while ($row = oci_fetch_assoc($stid)) {
-                // Item details
-                $item_name = $row['NAME'];
-                $item_number = $row['PRODUCT_ID'];
-                $amount = $row['PRICE'];
-                $quantity = $row['QUANTITY'];
-            ?>
-
-                <!-- Input fields for each item -->
-                <input type="hidden" name="item_name" value="<?php echo $item_name; ?>">
-                <input type="hidden" name="item_number" value="<?php echo $item_number; ?>">
-                <input type="hidden" name="amount" value="<?php echo $amount; ?>">
-                <input type="hidden" name="currency_code" value="GBP">
-                <input type="hidden" name="quantity" value="<?php echo $quantity; ?>">
-
-            <?php } ?>
-
-            <!-- Specify URLs -->
-            <input type='hidden' name='cancel_return' value='http://localhost/paypal_jatin/cancel.php'>
-            <input type='hidden' name='return' value='http://localhost/paypal_jatin/success.php'>
-
-            <!-- Display the payment button. -->
-            <input type="image" name="submit" border="0" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif" alt="PayPal - The safer, easier way to pay online">
-            <img alt="" border="0" width="1" height="1" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif">
         </form>
+    </div>
+
 
 
     </div>
