@@ -30,7 +30,6 @@
             color: #f2b600;
         }
 
-
         .review-popup-box {
             display: none;
             position: fixed;
@@ -45,7 +44,22 @@
             max-width: 800px;
             width: 100%;
             max-height: 80%;
+            overflow: hidden;
+        }
+
+        .reviews-container {
+            max-height: 60%;
             overflow-y: auto;
+            padding-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .sticky-review-form {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
         }
     </style>
 </head>
@@ -241,7 +255,7 @@
                         <div class=\"review-header\">
                             <div class=\"username-and-stars\">
                                 <div class=\"username\">
-                                    <img src=\"../userprofile/image/$picture\" class=\"profile-pic\" alt=\"Profile Picture\"\">
+                                    <img src=\"../userprofile/image/$picture\" class=\"profile-pic\" alt=\"Profile Picture\">
                                     $usernameReview
                                 </div>
                                 <div class=\"review-stars\">
@@ -276,75 +290,81 @@
     <div class="review-popup-box" id="review-popup" onclick="stopPropagation(event)">
         <span class="close-button" onclick="closeReviewPopup()">&times;</span>
         <h1 class="more-review-title">More Review</h1><br>
-        <?php
-        $product_id = $_GET['product_id'];
-        // Fetch products for the shop
-        $sql = "select r.review_id, r.rating,r.user_comment,r.review_date, u.first_name ||' '||u.last_name as name, c.PROFILE_PICTURE from review r
-                    inner join \"USER\" u on u.user_id = r.user_id
-                    inner join customer c on c.user_id = r.user_id where r.product_id = $product_id and r.status = '1'";
-        $stid = oci_parse($connection, $sql);
-        oci_execute($stid);
+        <div class="reviews-container">
+            <?php
+            $product_id = $_GET['product_id'];
+            // Fetch products for the shop
+            $sql = "select r.review_id, r.rating,r.user_comment,r.review_date, u.first_name ||' '||u.last_name as name, c.PROFILE_PICTURE from review r
+                        inner join \"USER\" u on u.user_id = r.user_id
+                        inner join customer c on c.user_id = r.user_id where r.product_id = $product_id and r.status = '1'";
+            $stid = oci_parse($connection, $sql);
+            oci_execute($stid);
 
-        while ($row = oci_fetch_assoc($stid)) {
-            $usernameReview = $row['NAME'];
-            $userComment = $row['USER_COMMENT'];
-            $rating = $row['RATING'];
-            $rDate = $row['REVIEW_DATE'];
-            $profile = $row['PROFILE_PICTURE'];
+            while ($row = oci_fetch_assoc($stid)) {
+                $usernameReview = $row['NAME'];
+                $userComment = $row['USER_COMMENT'];
+                $rating = $row['RATING'];
+                $rDate = $row['REVIEW_DATE'];
+                $profile = $row['PROFILE_PICTURE'];
 
 
-            echo "
-                    <div class=\"username-container\">
-                    <img src=\"../userprofile/image/$profile\" class=\"profile-pic\" alt=\"Profile Picture\">
-                    <h5 class=\"username\">$usernameReview</h5>
-                    </div>
-                    <b>
-                        <p class=\"dates\">$rDate</p>
-                    </b>
-                    <div class=\"review-stars-card\">
-            ";
+                echo "
+                        <div class=\"username-container\">
+                        <img src=\"../userprofile/image/$profile\" class=\"profile-pic\" alt=\"Profile Picture\">
+                        <h5 class=\"username\">$usernameReview</h5>
+                        </div>
+                        <b>
+                            <p class=\"dates\">$rDate</p>
+                        </b>
+                        <div class=\"review-stars-card\">
+                ";
 
-            // Display filled stars
-            for ($i = 0; $i < $rating; $i++) {
-                echo "<i class=\"fas fa-star\"></i>";
+                // Display filled stars
+                for ($i = 0; $i < $rating; $i++) {
+                    echo "<i class=\"fas fa-star\"></i>";
+                }
+
+                // Display empty stars
+                for ($i = $rating; $i < 5; $i++) {
+                    echo "<i class=\"far fa-star\"></i>";
+                }
+
+                echo "
+                        </div>
+                        <div class=\"review-border\">
+                            <p class=\"review-text\">$userComment</p>
+                        </div><br>
+                        ";
             }
-
-            // Display empty stars
-            for ($i = $rating; $i < 5; $i++) {
-                echo "<i class=\"far fa-star\"></i>";
-            }
-
-            echo "
-                    </div>
-                    <div class=\"review-border\">
-                        <p class=\"review-text\">$userComment</p>
-                    </div><br>
-                    ";
-        }
-        ?>
-
-        <form method="POST" action="">
-            <div class="star-rating" id="popup-star-rating">
-                <input type="radio" id="popup-1-star" name="rating" value="1" />
-                <label for="popup-1-star" class="star">&#9733;</label>
-                <input type="radio" id="popup-2-stars" name="rating" value="2" />
-                <label for="popup-2-stars" class="star">&#9733;</label>
-                <input type="radio" id="popup-3-stars" name="rating" value="3" />
-                <label for="popup-3-stars" class="star">&#9733;</label>
-                <input type="radio" id="popup-4-stars" name="rating" value="4" />
-                <label for="popup-4-stars" class="star">&#9733;</label>
-                <input type="radio" id="popup-5-stars" name="rating" value="5" />
-                <label for="popup-5-stars" class="star">&#9733;</label>
-            </div>
-            <textarea class="review-input" placeholder="Write your review here..." name="review"></textarea>
-            <button class="submit-button" type="submit" name="submit">Submit</button>
-        </form>
+            ?>
+        </div>
+        <div class="sticky-review-form">
+            <form method="POST" action="">
+                <div class="star-rating" id="popup-star-rating">
+                    <input type="radio" id="popup-1-star" name="rating" value="1" />
+                    <label for="popup-1-star" class="star">&#9733;</label>
+                    <input type="radio" id="popup-2-stars" name="rating" value="2" />
+                    <label for="popup-2-stars" class="star">&#9733;</label>
+                    <input type="radio" id="popup-3-stars" name="rating" value="3" />
+                    <label for="popup-3-stars" class="star">&#9733;</label>
+                    <input type="radio" id="popup-4-stars" name="rating" value="4" />
+                    <label for="popup-4-stars" class="star">&#9733;</label>
+                    <input type="radio" id="popup-5-stars" name="rating" value="5" />
+                    <label for="popup-5-stars" class="star">&#9733;</label>
+                </div>
+                <textarea class="review-input" placeholder="Write your review here..." name="review"></textarea>
+                <button class="submit-button" type="submit" name="submit">Submit</button>
+            </form>
+        </div>
 
         <?php
         if (isset($_POST['submit'])) {
             $review = $_POST['review'];
             $userId = $loggedInUserID;
-            $rating = $_POST['rating'] || 1;
+            if ($rating == null || empty($rating))
+                $rating = 1;
+            else
+                $rating = $_POST['rating'];
 
             if (empty($userId) || $userId == null) {
                 echo "<script>alert('You have to be logged in!!!');</script>";
@@ -373,11 +393,6 @@
             }
         }
         ?>
-
-    </div>
-    </div>
-    </div>
-    </div>
     </div>
 
     <div class="similar-products-section">
