@@ -226,7 +226,7 @@
 
             $productCatid = $row['CATEGORY_ID'];
         }
-        $sql = "INSERT INTO product values(null,'$productName','$imgName','$productDescription','$productPrice','$productStock', '$productMinOrder', '$productMaxOrder', '$productAllergyInfo', null, '$shop_id', '$productCatid', null)";
+        $sql = "INSERT INTO product values(null,'$productName','$imgName','$productDescription','$productPrice','$productStock', '$productMinOrder', '$productMaxOrder', '$productAllergyInfo', null, 1,'$shop_id', '$productCatid')";
         $stid = oci_parse($connection, $sql);
         oci_execute($stid);
         echo "<script>alert('Product added successfully!!!');</script>";

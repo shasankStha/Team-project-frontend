@@ -131,6 +131,21 @@
         $allergyInfo = $row['ALLERGY_INFORMATION'];
     }
 
+    $sql = "SELECT sum(rating), count(*) FROM review WHERE PRODUCT_ID = '$productId'";
+    $stid = oci_parse($connection, $sql);
+    oci_execute($stid);
+    $rating = null;
+    if ($row = oci_fetch_assoc($stid)) {
+        $c = $row["COUNT(*)"];
+        if ($c == 0)
+            $rating = null;
+        else {
+            $s = $row["SUM(RATING)"];
+            $rating = $s / $c;
+            $rating = number_format($rating, 1);
+        }
+    }
+
     $sql = "SELECT count(*) FROM favourite_item WHERE PRODUCT_ID = '$productId' and user_id = '$user_id'";
     $stid = oci_parse($connection, $sql);
     oci_execute($stid);
@@ -150,13 +165,17 @@
                     <form method="post">
                         <h1 class="product-name"><?php echo "$productName"; ?></h1>
                         <div class="product-meta-info">
-                            <p class="product-desc"><?php echo "$productDescription"; ?></p>
-                            <p class="product-price">Price: £<?php echo "$productPrice"; ?></p>
                             <p class="product-stock">Stock Available: <?php echo "$StockAvailable"; ?></p>
-                            <p class="product-min">Min-Order: <?php echo "$minOrder"; ?></p>
-                            <p class="product-max">Max-Order: <?php echo "$maxOrder"; ?></p>
-                            <p class="product-allergy">Allergy Information: <?php echo "$allergyInfo"; ?></p>
+                            <p class="product-stock">Min-Order: <?php echo "$minOrder"; ?></p>
+                            <p class="product-stock">Max-Order: <?php echo "$maxOrder"; ?></p>
+                            <p class="product-stock">Allergy Information <br> <?php echo "$allergyInfo"; ?></p>
+                            <p class="product-stock">About this item: <br> <?php echo "$productDescription"; ?></p>
+                            <p class="product-stock"> Rating: <?php echo "$rating"; ?><i class="fas fa-star"></i></p>
                         </div>
+                        <div>
+                            <p class="product-price">Price: £<?php echo "$productPrice"; ?></p>
+                        </div>
+
                         <div class="quantity-and-favorite">
                             <div class="quantity-selector">
                                 <label for="quantity" class="quantity-label">Quantity</label>
@@ -422,6 +441,20 @@
                 $pName = $row['NAME'];
                 $pPrice = $row['PRICE'];
                 $pImage = $row['IMAGE'];
+                $sql = "SELECT sum(rating), count(*) FROM review WHERE PRODUCT_ID = '$productId'";
+                $stmt = oci_parse($connection, $sql);
+                oci_execute($stmt);
+                $rating = null;
+                if ($r = oci_fetch_assoc($stmt)) {
+                    $c = $r["COUNT(*)"];
+                    if ($c == 0)
+                        $rating = null;
+                    else {
+                        $s = $r["SUM(RATING)"];
+                        $rating = $s / $c;
+                        $rating = number_format($rating, 1);
+                    }
+                }
 
                 echo "
                     <div class=\"similar-product-item\">
@@ -431,12 +464,11 @@
                             </div>
                             <div class=\"similar-product-info\">
                                 <h3 class=\"similar-product-name\">$pName</h3>
-                                <div class=\"product-rating\">
-                                <i class=\"fas fa-star\"></i>
-                                <i class=\"fas fa-star\"></i>
-                                <i class=\"fas fa-star\"></i>
-                                <i class=\"fas fa-star\"></i>
-                                <i class=\"far fa-star\"></i>
+                                <div style=\"display: inline-block;\">
+                                        $rating
+                                        <p class=\"product-rating\" style=\"display: inline; margin: 0;\"> 
+                                            <i class=\"fas fa-star\"></i>
+                                        </p>
                                 </div>
                                 <div class=\"similar-product-price\">£ $pPrice</div>
                             </div>

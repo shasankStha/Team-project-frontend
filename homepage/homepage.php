@@ -75,6 +75,20 @@
                         $price = htmlspecialchars($row['PRICE']);
                         $image = htmlspecialchars($row['IMAGE']);
                         $shopId = htmlspecialchars($row['SHOP_ID']);
+                        $sql = "SELECT sum(rating), count(*) FROM review WHERE PRODUCT_ID = '$productId'";
+                        $stmt = oci_parse($connection, $sql);
+                        oci_execute($stmt);
+                        $rating = null;
+                        if ($r = oci_fetch_assoc($stmt)) {
+                            $c = $r["COUNT(*)"];
+                            if ($c == 0)
+                                $rating = null;
+                            else {
+                                $s = $r["SUM(RATING)"];
+                                $rating = $s / $c;
+                                $rating = number_format($rating, 1);
+                            }
+                        }
 
                         echo "
                             <div class='swiper-slide'>
@@ -87,13 +101,13 @@
                                     </div>
                                     <div class='product-info'>
                                         <h3 class='product-name'>$name</h3>
-                                            <div class='product-rating'>
-                                                <i class='fas fa-star'></i>
-                                                <i class='fas fa-star'></i>
-                                                <i class='fas fa-star'></i>
-                                                <i class='fas fa-star'></i>
-                                                <i class='far fa-star'></i>
-                                            </div>
+                                        <div style=\"display: inline-block;\">
+                                        $rating
+                                        <p class=\"product-rating\" style=\"display: inline; margin: 0;\"> 
+                                            <i class=\"fas fa-star\"></i>
+                                        </p>
+                                    </div>
+                                    
                                             <div class='product-price'>£ $price</div>
                                     </div>
                                     <button class='btn btn-success btn-add-to-cart'>Add to Cart</button>
@@ -134,7 +148,22 @@
                         $name = htmlspecialchars($row['NAME']);
                         $price = htmlspecialchars($row['PRICE']);
                         $image = htmlspecialchars($row['IMAGE']);
-                        $shopId = htmlspecialchars($row['SHOP_ID']); // Assuming shop_id is part of the product table
+                        $shopId = htmlspecialchars($row['SHOP_ID']);
+                        $sql = "SELECT sum(rating), count(*) FROM review WHERE PRODUCT_ID = '$productId'";
+                        $stmt = oci_parse($connection, $sql);
+                        oci_execute($stmt);
+                        $rating = null;
+                        if ($r = oci_fetch_assoc($stmt)) {
+                            $c = $r["COUNT(*)"];
+                            if ($c == 0)
+                                $rating = null;
+                            else {
+                                $s = $r["SUM(RATING)"];
+                                $rating = $s / $c;
+                                $rating = number_format($rating, 1);
+                            }
+                        }
+
 
                         echo "
         <div class='swiper-slide'>
@@ -149,11 +178,7 @@
                     <div class='product-info'>
                         <h3 class='product-name'>$name</h3>
                         <div class='product-rating'>
-                            <i class='fas fa-star'></i>
-                            <i class='fas fa-star'></i>
-                            <i class='fas fa-star'></i>
-                            <i class='fas fa-star'></i>
-                            <i class='far fa-star'></i>
+                        <p class=\"product-stock\"> $rating <i class=\"fas fa-star\"></i></p>
                         </div>
                         <div class='product-price'>£ $price</div>
                     </div>

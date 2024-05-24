@@ -148,6 +148,83 @@ where c.user_id = '$user_id'";
   oci_execute($stid);
 
   ?>
+
+  <?php
+  $email = null;
+  $name = null;
+  $sql = "SELECT first_name || ' '|| last_name as name, EMAIL FROM \"USER\" WHERE USER_ID = $user_id";
+  $stid = oci_parse($connection, $sql);
+  oci_execute($stid);
+  if ($row = oci_fetch_assoc($stid)) {
+    $email = $row['EMAIL'];
+    $name = $row['NAME'];
+  }
+
+  $sql = "SELECT c.slot_date, c.start_time,c.end_time, c.day_of_week, o.order_date,o.total_price FROM collection_slot c inner join \"ORDER\" o on o.COLLECTION_SLOT_ID = c.COLLECTION_SLOT_ID  WHERE o.USER_ID = $user_id and o.order_id = $id";
+  $stid = oci_parse($connection, $sql);
+  oci_execute($stid);
+  $slot_date = $start_time = $end_time = $day = $order_date = $price = null;
+  if ($row = oci_fetch_assoc($stid)) {
+    $slot_date = $row['SLOT_DATE'];
+    $start_time = $row['START_TIME'];
+    $end_time = $row['END_TIME'];
+    $day = $row['DAY_OF_WEEK'];
+    $order_date = $row['ORDER_DATE'];
+    $price = $row['TOTAL_PRICE'];
+  }
+
+  use PHPMailer\PHPMailer\PHPMailer;
+  use PHPMailer\PHPMailer\Exception;
+
+  require 'phpmailer/src/Exception.php';
+  require 'phpmailer/src/PHPMailer.php';
+  require 'phpmailer/src/SMTP.php';
+
+  $mail = new PHPMailer(true);
+
+  $mail->isSMTP();
+  $mail->Host = 'smtp.gmail.com';
+  $mail->SMTPAuth = true;
+  $mail->Username = 'cleckshophub@gmail.com';
+  $mail->Password = 'wxnc kjpg ypto rzyf';
+  $mail->SMTPSecure = 'ssl';
+  $mail->Port = 465;
+
+  $mail->setFrom('cleckshophub@gmail.com');
+  $mail->addAddress($email);
+  $mail->isHTML(true);
+  $mail->Subject = "Order confirmation - Order ID : $id";
+  $message = "Dear $name,
+
+             Thank you for your purchase from CleckShopHub. We are pleased to confirm your order.
+
+             Order Details:
+            ------------------------
+            Order ID: $id
+            Total Amount: $price
+            Order Date: $order_date
+
+            Collection Time:
+            Collection Date: $slot_date
+            Time: $start_time - $end_time
+            Day: $day
+
+
+            Thank you for shopping with us!
+            
+            Best regards,
+            CleckShopHub
+            cleckshophub@gmail.com
+            9805187622 
+            ";
+  $mail->Body = $message;
+
+  $mail->send();
+
+
+
+  ?>
+
   <div class="container">
     <div class="box">
       <h1>Thank You For Your Order!</h1>
