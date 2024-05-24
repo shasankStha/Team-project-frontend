@@ -61,12 +61,11 @@ ob_start();
                     <tbody>
                         <tr>
                             <?php
-                            $query = "SELECT o.ORDER_ID, o.ORDER_DATE, o.TOTAL_PRICE FROM customer c
-                            INNER JOIN \"USER\" u on u.user_id = c.user_id
+                            $query = "SELECT distinct o.ORDER_ID, o.ORDER_DATE, o.TOTAL_PRICE FROM customer c
                             INNER JOIN \"ORDER\" o on o.user_id=c.user_id
                             INNER JOIN order_item oi on oi.order_id = o.order_id
                             INNER JOIN product p ON p.product_id = oi.product_id
-                            WHERE u.user_id = '$userID'";
+                            WHERE c.user_id = 3";
                             $stid = oci_parse($connection, $query);
                             if (!oci_execute($stid)) {
                                 $err = oci_error($stid);
@@ -78,7 +77,7 @@ ob_start();
                                     echo "    <td>" . htmlspecialchars($sn++) . "</td>\n";
                                     echo "    <td>" . htmlspecialchars($row['ORDER_ID']) . "</td>\n";
                                     echo "    <td>" . htmlspecialchars($row['ORDER_DATE']) . "</td>\n";
-                                    echo "    <td>" . htmlspecialchars($row['TOTAL_PRICE']) . "</td>\n";
+                                    echo "    <td>£ " . htmlspecialchars($row['TOTAL_PRICE']) . "</td>\n";
                                     echo "    <td><button type='button' class='btn btn-dark shadow-none btn-sm' data-bs-toggle='modal' data-bs-target='#order-modal' data-order-id='" . htmlspecialchars($row['ORDER_ID']) . "'> <i class='bi bi-pencil-square'></i> View order</button></td>\n";
                                     echo "</tr>\n";
                                 }
@@ -88,15 +87,15 @@ ob_start();
                     </tbody>
                 </table>
                 <div class="modal fade" id="order-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel">
-                    <div class="modal-dialog" style="max-width: 1200px; width: 100%;">
-                        <div class="modal-content">
+                    <div class="modal-dialog" style="max-width: 800px; width: 100%; height: 90vh; max-height: 90vh;">
+                        <div class="modal-content" style="height: 100%;">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="editModalLabel">Order</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <div class="table-responsive" style="height: 100px; overflow-y: scroll; width: 100%;">
-                                    <table class="table table-hover border text-center" style="min-width: 1500px; width: 100%;">
+                                <div class="table-responsive" style="height: calc(100% - 50px); overflow-y: scroll; width: 100%;">
+                                    <table class="table table-hover border text-center" style="min-width: 100%; width: 100%;">
                                         <thead>
                                             <tr class="bg-dark text-light">
                                                 <th scope="col">S.N</th>
@@ -104,7 +103,7 @@ ob_start();
                                                 <th scope="col">Quantity</th>
                                                 <th scope="col">Price per Unit</th>
                                                 <th scope="col">Discount</th>
-                                                <th scope="col">Total Amount</th>
+                                                <th scope="col">Total</th>
                                             </tr>
                                         </thead>
                                         <tbody id="order-details">
@@ -122,7 +121,7 @@ ob_start();
     <?php require('../inc/footer.php'); ?>
     <script>
         document.querySelectorAll('[data-bs-toggle="modal"]').forEach(button => {
-            button.addEventListener('click', function () {
+            button.addEventListener('click', function() {
                 const orderId = this.getAttribute('data-order-id');
                 fetchOrderDetails(orderId);
             });
@@ -141,9 +140,9 @@ ob_start();
                             <td>${sn++}</td>
                             <td>${row.PRODUCT_NAME}</td>
                             <td>${row.QUANTITY}</td>
-                            <td>${row.PRICE_PER_UNIT}</td>
+                            <td>£ ${row.PRICE_PER_UNIT}</td>
                             <td>${row.DISCOUNT}</td>
-                            <td>${row.TOTAL_AMOUNT}</td>
+                            <td>£ ${row.TOTAL_AMOUNT}</td>
                         `;
                         orderDetailsContainer.appendChild(tr);
                     });

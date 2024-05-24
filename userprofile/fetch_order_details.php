@@ -19,7 +19,7 @@ WHERE oi.order_id = :order_id";
   oci_execute($stid);
 
   $result = [];
-  while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+  while ($row = oci_fetch_array($stid)) {
     $result[] = $row;
   }
 

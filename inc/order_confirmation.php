@@ -113,10 +113,15 @@ inner join cart_item ci on ci.cart_id = c.cart_id
 inner join product p on p.product_id = ci.product_id
 where c.user_id = '$user_id'";
 
-  $total = 0;
   $stmt = oci_parse($connection, $sql);
-  oci_execute($stid);
-  while ($row = oci_fetch($stmt)) {
+  oci_execute($stmt, OCI_DEFAULT);
+  $name = null;
+  $product_id = null;
+  $price = null;
+  $quantity = null;
+  $cart_item_id = null;
+  $total = 0;
+  while ($row = oci_fetch_assoc($stmt)) {
     $name = $row['NAME'];
     $product_id = $row['PRODUCT_ID'];
     $price = $row['PRICE'];

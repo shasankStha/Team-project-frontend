@@ -19,13 +19,28 @@ if (isset($_GET['order_id'])) {
             WHERE o.order_id = :order_id";
 
   $stid = oci_parse($connection, $query);
+  if (!$stid) {
+    $e = oci_error($connection);
+    echo json_encode(["error" => $e['message']]);
+    exit;
+  }
+
   oci_bind_by_name($stid, ':order_id', $order_id);
-  oci_execute($stid);
+
+  $r = oci_execute($stid);
+  if (!$r) {
+    $e = oci_error($stid);
+    echo json_encode(["error" => $e['message']]);
+    exit;
+  }
 
   $result = [];
-  while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+  while ($row = oci_fetch_assoc($stid)) {
     $result[] = $row;
   }
+
+  oci_free_statement($stid);
+  oci_close($connection);
 
   echo json_encode($result);
 }

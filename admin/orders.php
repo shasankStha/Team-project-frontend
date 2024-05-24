@@ -38,8 +38,7 @@
                 </thead>
                 <tbody id="">
                   <?php
-                  $query = "SELECT o.ORDER_ID, o.ORDER_DATE, o.TOTAL_PRICE FROM trader t
-                  INNER JOIN \"USER\" u on u.user_id = t.user_id
+                  $query = "SELECT distinct o.ORDER_ID, o.ORDER_DATE, o.TOTAL_PRICE FROM trader t
                   INNER JOIN shop s ON s.user_id = t.user_id
                   INNER JOIN product p ON p.shop_id = s.shop_id
                   INNER JOIN order_item oi on oi.product_id = p.product_id
@@ -65,15 +64,15 @@
               </table>
             </div>
             <div class="modal fade" id="order-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel">
-              <div class="modal-dialog" style="max-width: 1200px; width: 100%;">
-                <div class="modal-content">
+              <div class="modal-dialog" style="max-width: 800px; width: 100%; height: 90vh; max-height: 90vh;">
+                <div class="modal-content" style="height: 100%;">
                   <div class="modal-header">
                     <h5 class="modal-title" id="editModalLabel">Order</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <div class="table-responsive" style="height: 100px; overflow-y: scroll; width: 100%;  ">
-                      <table class="table table-hover border text-center" style="min-width: 1500px;  width: 100%;">
+                    <div class="table-responsive" style="height: calc(100% - 50px); overflow-y: scroll; width: 100%;">
+                      <table class="table table-hover border text-center" style="min-width: 100%; width: 100%;">
                         <thead>
                           <tr class="bg-dark text-light">
                             <th scope="col">S.N</th>
@@ -81,11 +80,10 @@
                             <th scope="col">Quantity</th>
                             <th scope="col">Price per Unit</th>
                             <th scope="col">Discount</th>
-                            <th scope="col">Total Amount</th>
+                            <th scope="col">Total</th>
                           </tr>
                         </thead>
                         <tbody id="order-details">
-
                         </tbody>
                       </table>
                     </div>
@@ -113,22 +111,37 @@
       fetch(`../traderdashboard/fetch_order_details.php?order_id=${orderId}`)
         .then(response => response.json())
         .then(data => {
+          console.log(data); // Debug: Log the received data
           const orderDetailsContainer = document.getElementById('order-details');
-          orderDetailsContainer.innerHTML = '';
+
+          if (!orderDetailsContainer) {
+            console.error('Order details container not found');
+            return;
+          }
+
+          orderDetailsContainer.innerHTML = ''; // Clear existing content
+
           let sn = 1;
-          data.forEach(row => {
+          for (let i = 0; i < data.length; i++) {
+            const row = data[i];
             const tr = document.createElement('tr');
             tr.innerHTML = `
-              <td>${sn++}</td>
-              
-              <td>${row.PRODUCT_NAME}</td>
-              <td>${row.QUANTITY}</td>
-              <td>${row.PRICE_PER_UNIT}</td>
-              <td>${row.DISCOUNT}</td>
-              <td>${row.TOTAL_AMOUNT}</td>
-            `;
+          <td>${sn++}</td>
+          <td>${row.PRODUCT_NAME}</td>
+          <td>${row.QUANTITY}</td>
+          <td>£ ${row.PRICE_PER_UNIT}</td>
+          <td>${row.DISCOUNT}</td>
+          <td>£ ${row.TOTAL_AMOUNT}</td>
+        `;
+
+            console.log('Appending row:', tr.outerHTML); // Debug: Log each row before appending
             orderDetailsContainer.appendChild(tr);
-          });
+          }
+
+          console.log('All rows appended'); // Debug: Confirm rows are appended
+        })
+        .catch(error => {
+          console.error('Error fetching order details:', error);
         });
     }
   </script>
