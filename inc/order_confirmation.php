@@ -194,34 +194,32 @@ where c.user_id = '$user_id'";
   $mail->addAddress($email);
   $mail->isHTML(true);
   $mail->Subject = "Order confirmation - Order ID : $id";
-  $message = "Dear $name,
+  $message = "Dear $name,<br>
 
-             Thank you for your purchase from CleckShopHub. We are pleased to confirm your order.
+            Thank you for your purchase from CleckShopHub. We are pleased to confirm your order.<br><br>
 
-             Order Details:
-            ------------------------
-            Order ID: $id
-            Total Amount: $price
-            Order Date: $order_date
+            Order Details:<br>
+            ------------------------<br>
+            Order ID: $id<br>
+            Total Amount: £ $price<br>
+            Order Date: $order_date<br>
+            <br><br>
+            Collection Time:<br>
+            Collection Date: $slot_date<br>
+            Time: $start_time - $end_time<br>
+            Day: $day<br><br>
 
-            Collection Time:
-            Collection Date: $slot_date
-            Time: $start_time - $end_time
-            Day: $day
 
-
-            Thank you for shopping with us!
+            Thank you for shopping with us!<br><br>
             
-            Best regards,
-            CleckShopHub
-            cleckshophub@gmail.com
-            9805187622 
+            Best regards,<br>
+            CleckShopHub<br>
+            cleckshophub@gmail.com<br>
+            9805187622 <br>
             ";
   $mail->Body = $message;
 
   $mail->send();
-
-
 
   ?>
 
@@ -246,3 +244,8 @@ where c.user_id = '$user_id'";
 
 
 </html>
+
+<?php
+
+
+?>
