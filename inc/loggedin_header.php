@@ -518,13 +518,13 @@ if (isset($_SESSION['search'])) {
           <button type="submit" class="search-button"><i class="fa fa-search"></i></button>
         </form>
       </div>
-      <div class="notification-icon">
+      <!-- <div class="notification-icon">
         <a href="#"><i class="fas fa-bell"></i><span class="label noti">Notifications</span></a>
         <div id="notification-dropdown">
           <a href="#">Notification 1</a>
           <a href="#">Notification 2</a>
         </div>
-      </div>
+      </div> -->
       <div class="user-icon">
         <a href="#"><i class="fas fa-user"></i><span class="label">User</span></a>
         <div id="dropdown-menu">
