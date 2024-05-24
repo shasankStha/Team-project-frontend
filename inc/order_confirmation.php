@@ -140,6 +140,10 @@ where c.user_id = '$user_id'";
   $sql = "update \"ORDER\" set TOTAL_PRICE = '$total', PAYMENT_CONFIRMATION = '1' where order_id = '$id'";
   $stid = oci_parse($connection, $sql);
   oci_execute($stid);
+  $sql = "insert into payment values(null,'$total',sysdate,'$user_id','$id',1)";
+  $stid = oci_parse($connection, $sql);
+  oci_execute($stid);
+
   ?>
   <div class="container">
     <div class="box">
