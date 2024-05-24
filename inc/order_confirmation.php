@@ -107,7 +107,7 @@ include('../connection.php');
     $id = $r["MAX(ORDER_ID)"];
   }
 
-  $sql = "select p.product_id, p.name, p.image, p.price, ci.quantity, p.max_order, ci.cart_item_id
+  $sql = "select p.product_id, p.name, p.image, p.price, ci.quantity, p.max_order, ci.cart_item_id, p.discount
 from cart c
 inner join cart_item ci on ci.cart_id = c.cart_id
 inner join product p on p.product_id = ci.product_id
@@ -124,12 +124,15 @@ where c.user_id = '$user_id'";
   while ($row = oci_fetch_assoc($stmt)) {
     $name = $row['NAME'];
     $product_id = $row['PRODUCT_ID'];
-    $price = $row['PRICE'];
+    $amount = $row['PRICE'];
     $quantity = $row['QUANTITY'];
-    $sub_total = $price * $quantity;
+    $discount = $row['DISCOUNT'];
+    $sub = $amount * $quantity;
+    $dis_amt = ($sub * $discount) / 100;
+    $sub_total = $sub - $dis_amt;
     $total += $sub_total;
     $cart_item_id = $row['CART_ITEM_ID'];
-    $sql = "insert into order_item values(null,'$quantity','$price',null,'$sub_total','$id','$product_id')";
+    $sql = "insert into order_item values(null,'$quantity','$amount','$dis_amt','$sub_total','$id','$product_id')";
     $stid = oci_parse($connection, $sql);
     oci_execute($stid);
     $sql = "delete from cart_item where CART_ITEM_ID = '$cart_item_id'";

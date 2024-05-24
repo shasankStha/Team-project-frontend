@@ -45,7 +45,8 @@
                             INNER JOIN product p ON p.shop_id = s.shop_id
                             INNER JOIN order_item oi ON oi.product_id = p.product_id
                             INNER JOIN \"ORDER\" o ON o.order_id = oi.order_id
-                            WHERE u.username = '$traderUser' OR u.email = '$traderUser'";
+                            WHERE u.username = '$traderUser' OR u.email = '$traderUser'
+                            order by o.order_id desc";
                   $stid = oci_parse($connection, $query);
                   if (!oci_execute($stid)) {
                     $err = oci_error($stid);

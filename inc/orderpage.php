@@ -42,12 +42,13 @@
                                 <th style="padding: 8px; border-bottom: 1px solid #ddd;">Product</th>
                                 <th style="padding: 8px; border-bottom: 1px solid #ddd;">Price</th>
                                 <th style="padding: 8px; border-bottom: 1px solid #ddd;">Quantity</th>
-                                <th style="padding: 8px; border-bottom: 1px solid #ddd;">Total</th>
+                                <th style="padding: 8px; border-bottom: 1px solid #ddd;">Discount Amount</th>
+                                <th style="padding: 12px; border-bottom: 1px solid #ddd;">Total</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            $sql = "select p.product_id, p.name, p.image, p.price, ci.quantity, p.max_order
+                            $sql = "select p.product_id, p.name, p.image, p.price, ci.quantity, p.max_order, p.discount
                                     from cart c
                                     inner join cart_item ci on ci.cart_id = c.cart_id
                                     inner join product p on p.product_id = ci.product_id
@@ -62,7 +63,10 @@
                                 $item_number = $row['PRODUCT_ID'];
                                 $amount = $row['PRICE'];
                                 $quantity = $row['QUANTITY'];
-                                $sub_total = $amount * $quantity;
+                                $discount = $row['DISCOUNT'];
+                                $sub = $amount * $quantity;
+                                $dis_amt = ($sub * $discount) / 100;
+                                $sub_total = $sub - $dis_amt;
                                 $total += $sub_total;
 
                                 echo "<tr style='background-color: #f2f2f2;'>";
@@ -70,6 +74,7 @@
                                 echo "<td style='padding: 8px; border-bottom: 1px solid #ddd; text-align: center'>" . $name . "</td>";
                                 echo "<td style='padding: 8px; border-bottom: 1px solid #ddd; text-align: center'>£ " . $amount . "</td>";
                                 echo "<td style='padding: 8px; border-bottom: 1px solid #ddd; text-align: center'>" . $quantity . "</td>";
+                                echo "<td style='padding: 8px; border-bottom: 1px solid #ddd; text-align: center'>" . $dis_amt . "</td>";
                                 echo "<td style='padding: 8px; border-bottom: 1px solid #ddd; text-align: center'>£ " . $sub_total . "</td>";
                                 echo "</tr>";
                                 $sn++;
@@ -78,6 +83,7 @@
 
                             <tr style='background-color: #f2f2f2;'>
                                 <td style='padding: 8px; border-bottom: 1px solid #ddd; text-align: center'>Total</td>
+                                <td style='padding: 8px; border-bottom: 1px solid #ddd; text-align: center'></td>
                                 <td style='padding: 8px; border-bottom: 1px solid #ddd; text-align: center'></td>
                                 <td style='padding: 8px; border-bottom: 1px solid #ddd; text-align: center'></td>
                                 <td style='padding: 8px; border-bottom: 1px solid #ddd; text-align: center'></td>
@@ -176,7 +182,7 @@ if (isset($_POST['submit'])) {
         <?php
         $sn = 1;
         $total = 0;
-        $sql = "select p.product_id, p.name, p.image, p.price, ci.quantity, p.max_order
+        $sql = "select p.product_id, p.name, p.image, p.price, ci.quantity, p.max_order, p.discount
                                     from cart c
                                     inner join cart_item ci on ci.cart_id = c.cart_id
                                     inner join product p on p.product_id = ci.product_id
@@ -189,13 +195,17 @@ if (isset($_POST['submit'])) {
             $item_number = $row['PRODUCT_ID'];
             $amount = $row['PRICE'];
             $quantity = $row['QUANTITY'];
-            $sub_total = $amount * $quantity;
+            $discount = $row['DISCOUNT'];
+            $amt = $amount - ($amount * $discount) / 100;
+            $sub = $amount * $quantity;
+            $dis_amt = ($sub * $discount) / 100;
+            $sub_total = $sub - $dis_amt;
             $total += $sub_total;
 
             echo "<input type='hidden' name='item_name_{$sn}' value='{$name}'>";
             echo "<input type='hidden' name='item_number_{$sn}' value='{$item_number}'>";
-            echo "<input type='hidden' name='amount_{$sn}' value='{$amount}'>";
             echo "<input type='hidden' name='quantity_{$sn}' value='{$quantity}'>";
+            echo "<input type='hidden' name='amount_{$sn}' value='{$amt}'>";
             $sn++;
         }
         ?>
