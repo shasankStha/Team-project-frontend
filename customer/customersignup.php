@@ -68,7 +68,7 @@
         $username = trim($_POST['username']);
         $password = trim($_POST['password']);
         $confirmPassword = trim($_POST['confirm_password']);
-        $dob = date('d/m/Y', strtotime($_POST['date_of_birth']));
+        $dob = date('d/m/y', strtotime($_POST['date_of_birth']));
         $gender = $_POST['gender'];
         $otp = rand(100000, 999999);
         $_SESSION['otp'] = $otp;

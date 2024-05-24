@@ -226,7 +226,7 @@
 
             $productCatid = $row['CATEGORY_ID'];
         }
-        $sql = "INSERT INTO product values(null,'$productName','$imgName','$productDescription','$productPrice','$productStock', '$productMinOrder', '$productMaxOrder', '$productAllergyInfo', '1', '$shop_id', '$productCatid', null)";
+        $sql = "INSERT INTO product values(null,'$productName','$imgName','$productDescription','$productPrice','$productStock', '$productMinOrder', '$productMaxOrder', '$productAllergyInfo', null, '$shop_id', '$productCatid', null)";
         $stid = oci_parse($connection, $sql);
         oci_execute($stid);
         echo "<script>alert('Product added successfully!!!');</script>";
@@ -261,7 +261,7 @@
                                 </thead>
                                 <tbody id="users-data">
                                     <?php
-                                    $query = "SELECT PRODUCT_ID, NAME, IMAGE, PRICE, STOCK_AVAILABLE, MIN_ORDER, MAX_ORDER, DISCOUNT_ID, DESCRIPTION, ALLERGY_INFORMATION FROM PRODUCT WHERE SHOP_ID = '$shopID' and status = '1'";
+                                    $query = "SELECT PRODUCT_ID, NAME, IMAGE, PRICE, STOCK_AVAILABLE, MIN_ORDER, MAX_ORDER, DISCOUNT, DESCRIPTION, ALLERGY_INFORMATION FROM PRODUCT WHERE SHOP_ID = '$shopID' and status = '1'";
                                     $stid = oci_parse($connection, $query);
                                     oci_execute($stid);
 
@@ -275,14 +275,14 @@
                                         echo "    <td>" . htmlspecialchars($row['STOCK_AVAILABLE']) . "</td>\n";
                                         echo "    <td>" . htmlspecialchars($row['MIN_ORDER']) . "</td>\n";
                                         echo "    <td>" . htmlspecialchars($row['MAX_ORDER']) . "</td>\n";
-                                        echo "    <td>" . htmlspecialchars($row['DISCOUNT_ID']) . "</td>\n";
+                                        echo "    <td>" . htmlspecialchars($row['DISCOUNT']) . "</td>\n";
                                         echo "    <td><button type='button' class='btn btn-dark shadow-none btn-sm' data-bs-toggle='modal' data-bs-target='#edit-modal' 
                                                     data-name='" . htmlspecialchars($row['NAME']) . "' 
                                                     data-price='" . htmlspecialchars($row['PRICE']) . "'
                                                     data-stock='" . htmlspecialchars($row['STOCK_AVAILABLE']) . "'
                                                     data-minorder='" . htmlspecialchars($row['MIN_ORDER']) . "'
                                                     data-maxorder='" . htmlspecialchars($row['MAX_ORDER']) . "'
-                                                    data-discount='" . htmlspecialchars($row['DISCOUNT_ID']) . "'
+                                                    data-discount='" . htmlspecialchars($row['DISCOUNT']) . "'
                                                     data-description='" . htmlspecialchars($row['DESCRIPTION']) . "'
                                                     data-allergyinfo='" . htmlspecialchars($row['ALLERGY_INFORMATION']) . "'
                                                     data-image='" . htmlspecialchars($row['IMAGE']) . "'
@@ -430,7 +430,7 @@
                 STOCK_AVAILABLE = :stock, 
                 MIN_ORDER = :minOrder, 
                 MAX_ORDER = :maxOrder, 
-                DISCOUNT_ID = :discount, 
+                DISCOUNT = :discount, 
                 DESCRIPTION = :description, 
                 ALLERGY_INFORMATION = :allergyInfo, 
                 IMAGE = :image 
