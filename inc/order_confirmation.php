@@ -10,8 +10,6 @@ if ($isLoggedIn) {
 }
 require('../inc/links.php');
 include('../connection.php');
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,45 +22,57 @@ include('../connection.php');
     body {
       font-family: sans-serif;
       text-align: center;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     h1 {
-      font-size: 30px;
-      margin-top: 1px;
+      font-size: 2em;
+      margin-top: 1rem;
     }
 
     h3 {
-      padding-top: 1px;
+      padding-top: 0.5rem;
     }
 
     p {
       font-size: 1em;
       line-height: 1.5em;
-      margin-left: -30px;
     }
 
     .container {
       border: 3px solid black;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      width: 700px;
-      height: 355px;
+      max-width: 900px;
+      height: 100%;
+      max-height: 500px;
+      width: 100%;
       margin: 50px auto;
-      margin-top: 10em;
+      margin-top: 5em;
+      padding: 1em;
+      background-color: black;
+      border-radius: 20px;
     }
 
     .box {
+      display: flex;
+      flex-direction: column;
       align-items: center;
       background-color: white;
-      width: 500px;
-      height: 150px;
+      width: 100%;
+      max-width: 500px;
       border: 1px solid black;
-      padding: 30px 50px;
-      margin: 20px auto;
-      padding-bottom: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      background-color: white;
+      border-radius: 20px;
     }
 
     .button {
-      margin-top: 4em;
+      margin-top: 2em;
     }
 
     .button a {
@@ -72,11 +82,10 @@ include('../connection.php');
       padding: 10px 20px;
       text-align: center;
       text-decoration: none;
-      font-size: 15px;
+      font-size: 1em;
       border-radius: 10px;
       border: none;
       cursor: pointer;
-      margin-top: -50px;
     }
 
     .button a:hover {
@@ -85,14 +94,35 @@ include('../connection.php');
 
     .order_info {
       text-align: left;
-      margin-left: -10px;
+      width: 100%;
     }
 
     .order_info hr {
-      margin-left: -40px;
-      /* Adjust the negative margin to center the line */
+      margin: 0.5em 0;
       border: 1px solid rgb(149, 147, 147);
-      width: 32em;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5em;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 350px;
+        margin-top: 2em;
+      }
+
+      .box {
+        width: 100%;
+        max-width: 250px;
+        padding: 10px;
+      }
+
+      .button a {
+        font-size: 0.9em;
+        padding: 8px 15px;
+      }
     }
   </style>
 </head>
@@ -224,7 +254,7 @@ where c.user_id = '$user_id'";
   ?>
 
   <div class="container">
-    <div class="box">
+    <div class="box" >
       <h1>Thank You For Your Order!</h1>
       <h3>Please check your email for confirmation.</h3>
       <br>
@@ -241,11 +271,6 @@ where c.user_id = '$user_id'";
   </div>
 </body>
 
-
-
 </html>
-
 <?php
-
-
 ?>
