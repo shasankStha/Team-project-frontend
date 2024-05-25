@@ -135,10 +135,11 @@
     $stid = oci_parse($connection, $sql);
     oci_execute($stid);
     $rating = null;
+    $c = null;
     if ($row = oci_fetch_assoc($stid)) {
         $c = $row["COUNT(*)"];
         if ($c == 0)
-            $rating = null;
+            $rating = 0;
         else {
             $s = $row["SUM(RATING)"];
             $rating = $s / $c;
@@ -170,7 +171,7 @@
                             <p class="product-stock">Max-Order: <?php echo "$maxOrder"; ?></p>
                             <p class="product-stock">Allergy Information <br> <?php echo "$allergyInfo"; ?></p>
                             <p class="product-stock">About this item: <br> <?php echo "$productDescription"; ?></p>
-                            <p class="product-stock"> Rating: <?php echo "$rating"; ?><i class="fas fa-star"></i></p>
+                            <p class="product-stock"> Rating: <?php echo "$rating/5"; ?><i class="fas fa-star"></i> <?php echo " ($c)"; ?></p>
                         </div>
                         <div>
                             <p class="product-price">Price: £<?php echo "$productPrice"; ?></p>

@@ -206,7 +206,7 @@
         if (empty($productName) || empty($productPrice) || empty($productStock || empty($productMinOrder) || empty($productMaxOrder) || empty($productCat) || empty($productDescription) || empty($productAllergyInfo))) {
             echo "Please fill all the fields.<br>";
         } else if (empty($imgName)) {
-            echo "Please upload item image<br>";
+            // echo "Please upload item image<br>";
         } else if ($imgType == "pImage/jpeg" || $imgType == "pImage/jpg" || $imgType == "pImage/gif" || $imgType == "pImage/png") {
             echo "Unsupported file format";
         } else {
@@ -228,8 +228,12 @@
         }
         $sql = "INSERT INTO product values(null,'$productName','$imgName','$productDescription','$productPrice','$productStock', '$productMinOrder', '$productMaxOrder', '$productAllergyInfo', null, 1,'$shop_id', '$productCatid')";
         $stid = oci_parse($connection, $sql);
-        oci_execute($stid);
-        echo "<script>alert('Product added successfully!!!');</script>";
+        if (oci_error($stid)) {
+            oci_execute($stid);
+            echo "<script>alert('Product added successfully!!!');</script>";
+        } else {
+            echo "<script>alert('The product should be unique.');</script>";
+        }
     }
     ?>
 
