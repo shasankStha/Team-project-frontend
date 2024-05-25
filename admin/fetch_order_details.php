@@ -1,9 +1,11 @@
 <?php
 session_start();
-if (!isset($_SESSION["traderUser"])) {
-  header("Location: ../login/login.php");
-  exit;
+
+if (!isset($_SESSION["admin"]) || $_SESSION['loggedinUser'] === FALSE) {
+    header("Location: ../login/login.php");
+    exit;
 }
+
 require('../connection.php');
 
 if (isset($_GET['order_id'])) {
