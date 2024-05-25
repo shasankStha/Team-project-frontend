@@ -8,6 +8,10 @@
 
     <?php
     session_start();
+    if (!isset($_SESSION["traderUser"])) {
+    header("Location: ../login/login.php");
+    exit;
+    }
     include("../connection.php");
     include("traderdashboardheader.php");
     $shopID = $_SESSION['shopID'];

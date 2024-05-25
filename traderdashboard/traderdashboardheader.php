@@ -5,7 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard -CleckShopHub</title>
 
-    <?php require ('inc/links.php') ?>
+    <?php 
+    
+    if (!isset($_SESSION['traderUser']) || $_SESSION['loggedinTrader'] !== TRUE) {
+        header('Location: ../login/login.php');
+        exit;
+    }
+    
+    require ('inc/links.php') ?>
 </head>
 <style>
     :root {

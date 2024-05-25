@@ -1,4 +1,12 @@
-<?php require('inc/links.php') ?>
+<?php 
+session_start();
+
+if (!isset($_SESSION["admin"])) {
+    header("Location: ../login/login.php");
+    exit;
+}
+require('inc/links.php') ?>
+
 <?php require('../connection.php') ?>
 
 <!DOCTYPE html>

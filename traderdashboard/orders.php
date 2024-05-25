@@ -13,6 +13,10 @@
 
   <?php
   session_start();
+  if (!isset($_SESSION["traderUser"])) {
+    header("Location: ../login/login.php");
+    exit;
+  }
   require('traderdashboardheader.php');
   require('../connection.php');
   $traderUser = $_SESSION["traderUser"];
