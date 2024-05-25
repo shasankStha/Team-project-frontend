@@ -187,7 +187,7 @@
             // echo "<script>alert('" . addslashes($shop_id) . "');</script>";
         }
         $productName = $_POST['pName'];
-        $productPrice = (int) $_POST['pPrice'];
+        $productPrice = (float) $_POST['pPrice'];
         $productStock = (int) $_POST['pStock'];
         $productMinOrder = (int) $_POST['pMinOrder'];
         $productMaxOrder = (int) $_POST['pMaxOrder'];
@@ -261,7 +261,7 @@
                                 </thead>
                                 <tbody id="users-data">
                                     <?php
-                                    $query = "SELECT PRODUCT_ID, NAME, IMAGE, PRICE, STOCK_AVAILABLE, MIN_ORDER, MAX_ORDER, DISCOUNT, DESCRIPTION, ALLERGY_INFORMATION FROM PRODUCT WHERE SHOP_ID = '$shopID' and status = '1'";
+                                    $query = "SELECT PRODUCT_ID, NAME, IMAGE, PRICE, STOCK_AVAILABLE, MIN_ORDER, MAX_ORDER, DISCOUNT, DESCRIPTION, ALLERGY_INFORMATION FROM PRODUCT WHERE SHOP_ID = '$shopID' and status = '1' order by product_id";
                                     $stid = oci_parse($connection, $query);
                                     oci_execute($stid);
 
@@ -271,7 +271,7 @@
                                         echo "    <td>" . htmlspecialchars($sn++) . "</td>\n";
                                         echo "    <td>" . htmlspecialchars($row['NAME']) . "</td>\n";
                                         echo "    <td><img src='productsImages/" . htmlspecialchars($row['IMAGE']) . "' alt='Product Image' style='width:100px; height:auto;'></td>\n";
-                                        echo "    <td>" . htmlspecialchars($row['PRICE']) . "</td>\n";
+                                        echo "    <td>£ " . htmlspecialchars($row['PRICE']) . "</td>\n";
                                         echo "    <td>" . htmlspecialchars($row['STOCK_AVAILABLE']) . "</td>\n";
                                         echo "    <td>" . htmlspecialchars($row['MIN_ORDER']) . "</td>\n";
                                         echo "    <td>" . htmlspecialchars($row['MAX_ORDER']) . "</td>\n";
@@ -412,16 +412,16 @@
         }
 
         // Debugging: Print out the variables
-        echo "Product ID: $productId<br>";
-        echo "Name: $pName<br>";
-        echo "Price: $pPrice<br>";
-        echo "Stock: $pStock<br>";
-        echo "Min Order: $pMinOrder<br>";
-        echo "Max Order: $pMaxOrder<br>";
-        echo "Discount: $pDiscount<br>";
-        echo "Description: $pDescription<br>";
-        echo "Allergy Info: $pAllergyInfo<br>";
-        echo "Image: $pImage<br>";
+        // echo "Product ID: $productId<br>";
+        // echo "Name: $pName<br>";
+        // echo "Price:  $pPrice<br>";
+        // echo "Stock: $pStock<br>";
+        // echo "Min Order: $pMinOrder<br>";
+        // echo "Max Order: $pMaxOrder<br>";
+        // echo "Discount: $pDiscount<br>";
+        // echo "Description: $pDescription<br>";
+        // echo "Allergy Info: $pAllergyInfo<br>";
+        // echo "Image: $pImage<br>";
 
         // Update the product in the database
         $query = "UPDATE PRODUCT SET 

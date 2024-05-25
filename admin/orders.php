@@ -42,7 +42,8 @@
                   INNER JOIN shop s ON s.user_id = t.user_id
                   INNER JOIN product p ON p.shop_id = s.shop_id
                   INNER JOIN order_item oi on oi.product_id = p.product_id
-                  INNER JOIN \"ORDER\" o on o.order_id=oi.order_id";
+                  INNER JOIN \"ORDER\" o on o.order_id=oi.order_id
+                  order by o.order_id desc";
                   $stid = oci_parse($connection, $query);
                   if (!oci_execute($stid)) {
                     $err = oci_error($stid);
