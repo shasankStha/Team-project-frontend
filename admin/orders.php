@@ -109,7 +109,7 @@
     });
 
     function fetchOrderDetails(orderId) {
-      fetch(`../traderdashboard/fetch_order_details.php?order_id=${orderId}`)
+      fetch(`fetch_order_details.php?order_id=${orderId}`)
         .then(response => response.json())
         .then(data => {
           console.log(data); // Debug: Log the received data

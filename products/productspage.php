@@ -166,11 +166,12 @@
                     <form method="post">
                         <h1 class="product-name"><?php echo "$productName"; ?></h1>
                         <div class="product-meta-info">
+                            <p class="product-stock">About this item: <br> <?php echo "$productDescription"; ?></p>
                             <p class="product-stock">Stock Available: <?php echo "$StockAvailable"; ?></p>
                             <p class="product-stock">Min-Order: <?php echo "$minOrder"; ?></p>
                             <p class="product-stock">Max-Order: <?php echo "$maxOrder"; ?></p>
                             <p class="product-stock">Allergy Information <br> <?php echo "$allergyInfo"; ?></p>
-                            <p class="product-stock">About this item: <br> <?php echo "$productDescription"; ?></p>
+
                             <p class="product-stock"> Rating: <?php echo "$rating/5"; ?><i class="fas fa-star"></i> <?php echo " ($c)"; ?></p>
                         </div>
                         <div>

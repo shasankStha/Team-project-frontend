@@ -1,6 +1,5 @@
 <?php
 session_start();
-$user_id = $_SESSION['traderID'];
 if (!isset($_SESSION["traderUser"])) {
   header("Location: ../login/login.php");
   exit;
@@ -22,7 +21,7 @@ if (isset($_GET['order_id'])) {
             INNER JOIN product p ON p.shop_id = s.shop_id
             INNER JOIN order_item oi ON oi.product_id = p.product_id
             INNER JOIN \"ORDER\" o ON o.order_id = oi.order_id
-            WHERE o.order_id = :order_id and t.user_id = $user_id";
+            WHERE o.order_id = :order_id";
 
   $stid = oci_parse($connection, $query);
   if (!$stid) {
