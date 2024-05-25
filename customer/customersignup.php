@@ -76,7 +76,7 @@
 
 
         date_default_timezone_set('Asia/Kathmandu');
-        $dobDate = new DateTime($dob);
+        $dobDate = DateTime::createFromFormat('d/m/Y', $dob);
         $currentDate = new DateTime();
         $age = $currentDate->diff($dobDate)->y;
 

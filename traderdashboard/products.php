@@ -228,7 +228,7 @@
         }
         $sql = "INSERT INTO product values(null,'$productName','$imgName','$productDescription','$productPrice','$productStock', '$productMinOrder', '$productMaxOrder', '$productAllergyInfo', null, 1,'$shop_id', '$productCatid')";
         $stid = oci_parse($connection, $sql);
-        if (oci_error($stid)) {
+        if (!oci_error($stid)) {
             oci_execute($stid);
             echo "<script>alert('Product added successfully!!!');</script>";
         } else {
@@ -274,7 +274,7 @@
                                         echo "<tr>\n";
                                         echo "    <td>" . htmlspecialchars($sn++) . "</td>\n";
                                         echo "    <td>" . htmlspecialchars($row['NAME']) . "</td>\n";
-                                        echo "    <td><img src='productsImages/" . htmlspecialchars($row['IMAGE']) . "' alt='Product Image' style='width:100px; height:auto;'></td>\n";
+                                        echo "    <td><img src='productsImages/" . htmlspecialchars($row['IMAGE']) . "' alt='Product Image' style='width:220px; height:160px;'></td>\n";
                                         echo "    <td>£ " . htmlspecialchars($row['PRICE']) . "</td>\n";
                                         echo "    <td>" . htmlspecialchars($row['STOCK_AVAILABLE']) . "</td>\n";
                                         echo "    <td>" . htmlspecialchars($row['MIN_ORDER']) . "</td>\n";
@@ -414,18 +414,6 @@
             // Use existing image if no new image is provided
             $pImage = $existingImage;
         }
-
-        // Debugging: Print out the variables
-        // echo "Product ID: $productId<br>";
-        // echo "Name: $pName<br>";
-        // echo "Price:  $pPrice<br>";
-        // echo "Stock: $pStock<br>";
-        // echo "Min Order: $pMinOrder<br>";
-        // echo "Max Order: $pMaxOrder<br>";
-        // echo "Discount: $pDiscount<br>";
-        // echo "Description: $pDescription<br>";
-        // echo "Allergy Info: $pAllergyInfo<br>";
-        // echo "Image: $pImage<br>";
 
         // Update the product in the database
         $query = "UPDATE PRODUCT SET 

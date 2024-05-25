@@ -391,6 +391,7 @@
         if (isset($_POST['submit'])) {
             $review = $_POST['review'];
             $userId = $loggedInUserID;
+            $rating = $_POST['rating'];
             if ($rating == null || empty($rating))
                 $rating = 1;
             else
