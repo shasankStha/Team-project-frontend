@@ -34,10 +34,24 @@
 
                 <!--general settings-->
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h5>Orders, Products and Reviews Analytics</h5>
+                    <h5>Products,Orders, Payment and Reviews Analytics</h5>
                 </div>
 
                 <div class="row mb-3">
+                    <div class="col-md-3 mb-4">
+                        <div class="card text-center text-primary p-3">
+                            <h6 style="color: green;">Total Products</h6>
+                            <?php
+                            $query = "select count(*) from product p
+                            inner join shop s on p.shop_id = s.shop_id
+                            where s.user_id = $user_id";
+                            $stmp = oci_parse($connection, $query);
+                            oci_execute($stmp);
+                            $row = oci_fetch_array($stmp, OCI_ASSOC);
+                            ?>
+                            <h1 class="mt-2 mb-0" style="color: green;"><?= $row['COUNT(*)'] ?></h1>
+                        </div>
+                    </div>
                     <div class="col-md-3 mb-4">
                         <div class="card text-center text-primary p-3">
                             <h6 style="color: navy;">Total Orders</h6>
@@ -57,20 +71,7 @@
                             <h1 class="mt-2 mb-0" style="color: navy;"><?= $row['COUNT(*)'] ?></h1>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-4">
-                        <div class="card text-center text-primary p-3">
-                            <h6 style="color: green;">Total Products</h6>
-                            <?php
-                            $query = "select count(*) from product p
-                            inner join shop s on p.shop_id = s.shop_id
-                            where s.user_id = $user_id";
-                            $stmp = oci_parse($connection, $query);
-                            oci_execute($stmp);
-                            $row = oci_fetch_array($stmp, OCI_ASSOC);
-                            ?>
-                            <h1 class="mt-2 mb-0" style="color: green;"><?= $row['COUNT(*)'] ?></h1>
-                        </div>
-                    </div>
+
                     <div class="col-md-3 mb-4">
                         <div class="card text-center text-primary p-3">
                             <h6 style="color: red;">Pending Orders</h6>

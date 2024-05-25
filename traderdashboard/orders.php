@@ -42,15 +42,25 @@
                 </thead>
                 <tbody id="order-history">
                   <?php
-                  $query = "SELECT DISTINCT o.ORDER_ID, o.ORDER_DATE, o.TOTAL_PRICE 
-                            FROM trader t
-                            INNER JOIN \"USER\" u ON u.user_id = t.user_id
-                            INNER JOIN shop s ON s.user_id = t.user_id
-                            INNER JOIN product p ON p.shop_id = s.shop_id
-                            INNER JOIN order_item oi ON oi.product_id = p.product_id
-                            INNER JOIN \"ORDER\" o ON o.order_id = oi.order_id
-                            WHERE u.username = '$traderUser' OR u.email = '$traderUser'
-                            order by o.order_id desc";
+                  $query = "SELECT DISTINCT 
+                  o.ORDER_ID, 
+                  o.ORDER_DATE, 
+                  SUM(oi.TOTAL_AMOUNT) as TOTAL_PRICE 
+              FROM 
+                  trader t
+                  INNER JOIN \"USER\" u ON u.user_id = t.user_id
+                  INNER JOIN shop s ON s.user_id = t.user_id
+                  INNER JOIN product p ON p.shop_id = s.shop_id
+                  INNER JOIN order_item oi ON oi.product_id = p.product_id
+                  INNER JOIN \"ORDER\" o ON o.order_id = oi.order_id
+              WHERE 
+                  u.username = '$traderUser' 
+                  OR u.email = '$traderUser'
+              GROUP BY 
+                  o.ORDER_ID, 
+                  o.ORDER_DATE
+              ORDER BY 
+                  o.ORDER_ID DESC";
                   $stid = oci_parse($connection, $query);
                   if (!oci_execute($stid)) {
                     $err = oci_error($stid);
