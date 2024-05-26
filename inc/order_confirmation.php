@@ -18,6 +18,7 @@ include('../connection.php');
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thank You For Your Order!</title>
+  <link rel="icon" href="../Images/Logo/favicon.png" type="image/icon type">
   <style>
     body {
       font-family: sans-serif;
@@ -53,8 +54,9 @@ include('../connection.php');
       margin: 50px auto;
       margin-top: 5em;
       padding: 1em;
-      background-color: black;
+      background-color: white;
       border-radius: 20px;
+
     }
 
     .box {
@@ -256,7 +258,8 @@ where c.user_id = '$user_id'";
   ?>
 
   <div class="container">
-    <div class="box" >
+    <h1>Order Confirmation</h1>
+    <div class="box">
       <h1>Thank You For Your Order!</h1>
       <h3>Please check your email for confirmation.</h3>
       <br>

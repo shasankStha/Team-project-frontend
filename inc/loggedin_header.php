@@ -143,7 +143,8 @@ if (isset($_SESSION['search'])) {
         right: 10px;
         top: 10px;
       }
-      .ddmenu{
+
+      .ddmenu {
         z-index: 1 !important;
       }
     }
@@ -608,10 +609,26 @@ if (isset($_SESSION['search'])) {
       <span id=\"subtotal\">$total</span>
     </div>";
       ?>
-      <a href="../inc/orderpage.php"><button class="checkout">Checkout</button></a>
+      <form method='post'><button type="submit" class="checkout" name="checkout">Checkout</button></form>
     </div>
   </div>
-
+  <?php
+  if (isset($_POST['checkout'])) {
+    $sql = "select count(*) from cart_item where cart_id in (select cart_id from cart where user_id = '$user_id')";
+    $stid = oci_parse($connection, $sql);
+    oci_execute($stid);
+    $count = 0;
+    if ($row = oci_fetch_assoc($stid)) {
+      $count = $row['COUNT(*)'];
+    }
+    if ($count == 0) {
+      echo "<script>alert('Your cart is empty!!!');</script>";
+      // exit;
+    } else {
+      echo "<script>window.location.href = '../inc/orderpage.php';</script>";
+    }
+  }
+  ?>
   <?php
   if (isset($_POST['clear_cart'])) {
 
