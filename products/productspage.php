@@ -183,7 +183,7 @@
                                 <label for="quantity" class="quantity-label">Quantity</label>
                                 <div class="quantity-controls">
                                     <button type="button" class="quantity-control minus">−</button>
-                                    <input name='quantity' type="number" id="quantity" class="quantity-value" value="1">
+                                    <input name='quantity' type="number" id="quantity" class="quantity-value" value="1" min="1">
                                     <button type="button" class="quantity-control plus">+</button>
                                 </div>
                             </div>
