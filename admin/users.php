@@ -2,8 +2,8 @@
 session_start();
 
 if (!isset($_SESSION["admin"]) || $_SESSION['loggedinUser'] === FALSE) {
-    header("Location: ../login/login.php");
-    exit;
+  header("Location: ../login/login.php");
+  exit;
 }
 
 require('../connection.php');  // Include your database connection
@@ -15,13 +15,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
   // oci_execute(oci_parse($connection, 'BEGIN'));
   $error = false;
 
-  // Delete dependent records in the CART table
-  // $deleteCartQuery = "DELETE FROM CART WHERE USER_ID = :userId";
-  // $deleteCartStmt = oci_parse($connection, $deleteCartQuery);
-  // oci_bind_by_name($deleteCartStmt, ":userId", $userId);
-  // if (!oci_execute($deleteCartStmt)) {
-  //   $error = true;
-  // }
 
   // Delete dependent records in the CUSTOMER table
   $deleteCustomerQuery = "update CUSTOMER set status = '0' WHERE USER_ID = :userId";
@@ -31,19 +24,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
     $error = true;
   }
 
-  // Proceed to delete the user if no errors
-  // if (!$error) {
-  //   $deleteUserQuery = "DELETE FROM \"USER\" WHERE USER_ID = :userId";
-  //   $deleteUserStmt = oci_parse($connection, $deleteUserQuery);
-  //   oci_bind_by_name($deleteUserStmt, ":userId", $userId);
-
-  //   if (oci_execute($deleteUserStmt)) {
-  //     oci_execute(oci_parse($connection, 'COMMIT'));
-  //     $message = "User and all associated records deleted successfully.";
-  //   } else {
-  //     $error = true;
-  //   }
-  // }
 
   if ($error) {
     oci_execute(oci_parse($connection, 'ROLLBACK'));
@@ -84,6 +64,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                   <tr class="bg-dark text-light">
                     <th scope="col">S.N</th>
                     <th scope="col">Name</th>
+                    <th scope="col">Profile Picture</th>
                     <th scope="col">Username</th>
                     <th scope="col">Email</th>
                     <th scope="col">Phone no.</th>
@@ -93,19 +74,20 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                 </thead>
                 <tbody id="users-data">
                   <?php
-                  $query = "SELECT u.USER_ID, u.USERNAME, u.EMAIL, u.FIRST_NAME, u.LAST_NAME, u.CONTACT_NUMBER, u.ROLE 
+                  $query = "SELECT u.USER_ID, u.USERNAME, u.EMAIL, u.FIRST_NAME, u.LAST_NAME, u.CONTACT_NUMBER, u.ROLE ,c.profile_picture
                   FROM \"USER\" u
-                  left join customer c on c.user_id = u.user_id
+                  inner join customer c on c.user_id = u.user_id
                   where (u.ROLE = 'C' AND c.STATUS = '1')
                   ORDER BY USER_ID";
                   $stid = oci_parse($connection, $query);
                   oci_execute($stid);
 
-                  $sn = 1;  // Serial Number counter
+                  $sn = 1;
                   while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
                     echo "<tr>\n";
                     echo "    <td>" . htmlspecialchars($sn++) . "</td>\n";
                     echo "    <td>" . htmlspecialchars($row['FIRST_NAME']) . ' ' . htmlspecialchars($row['LAST_NAME']) . "</td>\n";
+                    echo "    <td><img src='../userprofile/image/" . htmlspecialchars($row['PROFILE_PICTURE']) . "' alt='User Image' style='width:100px; height:100px;border-radius: 50%;'></td>\n";
                     echo "    <td>" . htmlspecialchars($row['USERNAME']) . "</td>\n";
                     echo "    <td>" . htmlspecialchars($row['EMAIL']) . "</td>\n";
                     echo "    <td>" . htmlspecialchars($row['CONTACT_NUMBER']) . "</td>\n";
