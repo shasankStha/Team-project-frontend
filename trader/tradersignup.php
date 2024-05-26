@@ -151,7 +151,7 @@
                 </div>
             </form>
         </div>
-        <div class="image-container" style="background: url('../images/tradersignup.jpeg') center/cover no-repeat;"></div>
+        <div class="image-container" style="background: url('../images/traderregister.jpeg') center/cover no-repeat;"></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>

@@ -95,7 +95,7 @@ button:hover {
 
 .image-container {
   flex: 1 1 400px; /* similar flexibility to form container */
-  background: url("../Images/fish.jpg") center/cover no-repeat;
+  background: url("../Images/ShopDetails.jpeg") center/cover no-repeat;
 }
 
 .terms-label {
