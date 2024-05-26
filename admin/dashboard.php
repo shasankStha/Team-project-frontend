@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 
 if (!isset($_SESSION["admin"]) || $_SESSION['loggedinUser'] === FALSE) {
@@ -105,7 +105,7 @@ require('inc/links.php') ?>
                     <div class="card-body">
                         <h5 class="card-title"></h5>
                         <h4 class="card-subtitle mb-2 text-muted">Reports</h4>
-                        <p class="card-text">View Trader Reports</p>
+                        <p class="card-text">View Reports</p>
                         <div class="btn btn-dark">
                             <a href="http://localhost:8080/apex/f?p=103:LOGIN_DESKTOP" style="text-decoration: none; color: inherit;" target="blank">CLICK HERE</a>
                         </div>
