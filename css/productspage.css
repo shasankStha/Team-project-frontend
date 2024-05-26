@@ -533,7 +533,7 @@ html {
 
 .sticky-review-form {
   position: sticky;
-  bottom: 0;
+  bottom: -25px !important;
   background: white;
   padding-top: 10px;
   border-top: 1px solid #ddd;
