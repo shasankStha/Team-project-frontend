@@ -143,6 +143,9 @@ if (isset($_SESSION['search'])) {
         right: 10px;
         top: 10px;
       }
+      .ddmenu{
+        z-index: 1 !important;
+      }
     }
 
     @media (min-width: 600px) {
@@ -527,7 +530,7 @@ if (isset($_SESSION['search'])) {
       </div> -->
       <div class="user-icon">
         <a href="#"><i class="fas fa-user"></i><span class="label">User</span></a>
-        <div id="dropdown-menu">
+        <div id="dropdown-menu" class="ddmenu">
           <a href="../userprofile/userprofile.php">Profile</a>
           <a href="../logout/logout.php">Logout</a>
         </div>
