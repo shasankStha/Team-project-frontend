@@ -164,26 +164,39 @@ where c.user_id = '$user_id'";
     $sub_total = $sub - $dis_amt;
     $total += $sub_total;
     $cart_item_id = $row['CART_ITEM_ID'];
+    if(!empty($quantity) || $quantity !=0){
     $sql = "insert into order_item values(null,'$quantity','$amount','$dis_amt','$sub_total','$id','$product_id')";
     $stid = oci_parse($connection, $sql);
     oci_execute($stid);
     $sql = "delete from cart_item where CART_ITEM_ID = '$cart_item_id'";
     $stid = oci_parse($connection, $sql);
     oci_execute($stid);
+    }
   }
+  $exe=null;
   if ($total != 0) {
     $sql = "update \"ORDER\" set TOTAL_PRICE = '$total', PAYMENT_CONFIRMATION = '1' where order_id = '$id'";
     $stid = oci_parse($connection, $sql);
     oci_execute($stid);
     $sql = "insert into payment values(null,'$total',sysdate,'$user_id','$id',1)";
     $stid = oci_parse($connection, $sql);
+    $exe = oci_execute($stid);
+  }else{
+    $sql = "select TOTAL_PRICE from \"ORDER\" where order_id = '$id'";
+    $stid = oci_parse($connection, $sql);
     oci_execute($stid);
+    if($row = oci_fetch_assoc($stid)){
+      $total = $row['TOTAL_PRICE'];
+    }
   }
 
 
   ?>
 
-  <?php
+<?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+  if($exe){
   $email = null;
   $name = null;
   $sql = "SELECT first_name || ' '|| last_name as name, EMAIL FROM \"USER\" WHERE USER_ID = $user_id";
@@ -207,8 +220,6 @@ where c.user_id = '$user_id'";
     $price = $row['TOTAL_PRICE'];
   }
 
-  use PHPMailer\PHPMailer\PHPMailer;
-  use PHPMailer\PHPMailer\Exception;
 
   require 'phpmailer/src/Exception.php';
   require 'phpmailer/src/PHPMailer.php';
@@ -254,7 +265,7 @@ where c.user_id = '$user_id'";
   $mail->Body = $message;
 
   $mail->send();
-
+  }
   ?>
 
   <div class="container">
