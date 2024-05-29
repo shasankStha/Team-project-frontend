@@ -100,7 +100,7 @@
                     <label for="date">Select Date:</label>
                     <select id="date" name="date">
                         <?php
-                        $sql = "select slot_date from collection_slot where slot_date>(select sysdate+1 from dual) group by slot_date";
+                        $sql = "select slot_date from collection_slot where slot_date>(select sysdate+1 from dual) group by slot_date order by slot_date";
                         $stid = oci_parse($connection, $sql);
                         oci_execute($stid);
                         $slots = [];

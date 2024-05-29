@@ -228,7 +228,7 @@
                     </div>
                 </div>
                 <input type="text" class="form-control mb-3" name="address" placeholder="Address" value="<?php echo isset($_POST['address']) ? $_POST['address'] : NULL; ?>" required>
-                <input type="number" class="form-control mb-3" name="contact_number" placeholder="Contact Number" value="<?php echo isset($_POST['contact_number']) ? $_POST['contact_number'] : NULL; ?>" required>
+                <input type="number" class="form-control mb-3" name="contact_number" placeholder="Contact Number" value="<?php echo isset($_POST['contact_number']) ? $_POST['contact_number'] : NULL; ?>" min="1000000000" required>
                 <div class="error" style="color: red;"><?php if (!empty($error_message3)) echo "<p class='error'>$error_message3</p>"; ?></div>
                 <input type="email" class="form-control mb-3" name="email" placeholder="Email" value="<?php echo isset($_POST['email']) ? $_POST['email'] : NULL; ?>" required>
                 <div class="error" style="color: red;"><?php if (!empty($error_message2)) echo "<p class='error'>$error_message2</p>"; ?></div>
