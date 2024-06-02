@@ -268,13 +268,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
                     <a href="../shops/shoppage.php?shop_id=<?php echo urlencode($shop['SHOP_ID']); ?>"><?php echo htmlspecialchars($shop['SHOP_NAME']); ?></a>
                 <?php endforeach; ?>
             </div>
-            <!-- <div class="dropdown-menu" id="dropdown-menu">
-                <a href="../shops/shoppage.php">Fishmonger</a>
-                <a href="../shops/shoppage.php">Butcher</a>
-                <a href="../shops/shoppage.php">Greengrocer</a>
-                <a href="../shops/shoppage.php">Bakery</a>
-                <a href="../shops/shoppage.php">Delicatessen</a>
-            </div> -->
         </div>
         <a href="../contactus/contactus.php">Contact us</a>
         <a href="../aboutus/aboutus.php">About us</a>

@@ -126,13 +126,11 @@
         <br><br><br>
 
 
-        <!-- Trending items -->
         <div class="container">
             <h2 class="mt-5 pt-4 mb-5 text-leftalign fw-bold" style="padding-left: 50px;">Trending Items</h2>
             <div class="swiper card-swiper-container">
                 <div class="swiper-wrapper">
                     <?php
-                    // Fetch products for the shop
                     $sql = "select * from (select p.product_id,p.name,p.price,p.image,p.shop_id,sum(oi.quantity) from order_item oi 
                     inner join product p on oi.product_id = p.product_id
                     where p.status = '1'
@@ -187,7 +185,6 @@
         </div>";
                     }
                     ?>
-                    <!-- End of product block -->
                 </div>
                 <div class="swiper-pagination"></div>
             </div>
@@ -209,7 +206,7 @@
                     <h5>Call us</h5>
 
                     <a href="tel:+1234567890" class="d-inline-block mb-2 text-decoration-none text-dark">
-                        <i class="bi bi-telephone-fill"></i> +1234567890
+                        <i class="bi bi-telephone-fill"></i> +115547689
                     </a>
                     <br>
 

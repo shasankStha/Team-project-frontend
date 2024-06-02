@@ -11,22 +11,18 @@ require('../connection.php');  // Include your database connection
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
   $userId = $_GET['id'];
 
-  // // Start transaction
-  // oci_execute(oci_parse($connection, 'BEGIN'));
   $error = false;
 
-
-  // Delete dependent records in the CUSTOMER table
-  $deleteCustomerQuery = "update CUSTOMER set status = '0' WHERE USER_ID = :userId";
-  $deleteCustomerStmt = oci_parse($connection, $deleteCustomerQuery);
-  oci_bind_by_name($deleteCustomerStmt, ":userId", $userId);
-  if (!oci_execute($deleteCustomerStmt)) {
+  //Update customer status
+  $updateCustomerQuery = "update CUSTOMER set status = '0' WHERE USER_ID = :userId";
+  $updateCustomerStmt = oci_parse($connection, $updateCustomerQuery);
+  oci_bind_by_name($updateCustomerStmt, ":userId", $userId);
+  if (!oci_execute($updateCustomerStmt)) {
     $error = true;
   }
 
 
   if ($error) {
-    oci_execute(oci_parse($connection, 'ROLLBACK'));
     $e = oci_error();
     $message = "Error deleting user and associated records: " . $e['message'];
   }

@@ -15,8 +15,8 @@
   session_start();
 
   if (!isset($_SESSION["admin"]) || $_SESSION['loggedinUser'] === FALSE) {
-      header("Location: ../login/login.php");
-      exit;
+    header("Location: ../login/login.php");
+    exit;
   }
 
   require('admindashboardheader.php');
@@ -61,7 +61,7 @@
                       echo "    <td>" . htmlspecialchars($sn++) . "</td>\n";
                       echo "    <td>" . htmlspecialchars($row['ORDER_ID']) . "</td>\n";
                       echo "    <td>" . htmlspecialchars($row['ORDER_DATE']) . "</td>\n";
-                      echo "    <td>" . htmlspecialchars($row['TOTAL_PRICE']) . "</td>\n";
+                      echo "    <td>£ " . htmlspecialchars($row['TOTAL_PRICE']) . "</td>\n";
                       echo "    <td><button type='button' class='btn btn-dark shadow-none btn-sm' data-bs-toggle='modal' data-bs-target='#order-modal' data-order-id='" . htmlspecialchars($row['ORDER_ID']) . "'> <i class='bi bi-pencil-square'></i> View order</button></td>\n";
                       echo "</tr>\n";
                     }
@@ -118,7 +118,7 @@
       fetch(`fetch_order_details.php?order_id=${orderId}`)
         .then(response => response.json())
         .then(data => {
-          console.log(data); // Debug: Log the received data
+          console.log(data);
           const orderDetailsContainer = document.getElementById('order-details');
 
           if (!orderDetailsContainer) {
@@ -141,11 +141,10 @@
           <td>£ ${row.TOTAL_AMOUNT}</td>
         `;
 
-            console.log('Appending row:', tr.outerHTML); // Debug: Log each row before appending
+            console.log('Appending row:', tr.outerHTML);
             orderDetailsContainer.appendChild(tr);
           }
 
-          console.log('All rows appended'); // Debug: Confirm rows are appended
         })
         .catch(error => {
           console.error('Error fetching order details:', error);

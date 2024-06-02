@@ -58,8 +58,8 @@
         </div>
       </div>
       <div class="shop-info">
-        <p class="contact"><i class="fas fa-phone-alt"></i> Contact Number: <em style="font-size:20px;margin-left:12px;-webkit-text-stroke: 1px #001f3f;"><?php echo htmlspecialchars($contact_number); ?></em></p>
-        <p class="location"><i class="fas fa-map-marker-alt"></i> Location: <em style="font-size:20px;margin-left:13px;-webkit-text-stroke: 1px #001f3f;"><?php echo htmlspecialchars($location); ?></em></p>
+        <p class="contact"><i class="fas fa-phone-alt"></i> Contact Number: <em style="font-size:17px;margin-left:12px;-webkit-text-stroke: 1px #001f3f;"><?php echo htmlspecialchars($contact_number); ?></em></p>
+        <p class="location"><i class="fas fa-map-marker-alt"></i> Location: <em style="font-size:17px;margin-left:13px;-webkit-text-stroke: 1px #001f3f;"><?php echo htmlspecialchars($location); ?></em></p>
       </div>
     </div>
     <div class="products-container">
@@ -67,7 +67,7 @@
       <div class="products-grid">
         <?php
         // Fetch products for the shop
-        $sql = "select * from (SELECT * FROM PRODUCT WHERE SHOP_ID = :shop_id and status = '1') where ROWNUM <7";
+        $sql = "select * from (SELECT * FROM PRODUCT WHERE SHOP_ID = :shop_id and status = '1' order by DBMS_RANDOM.VALUE) where ROWNUM <7";
         $stid = oci_parse($connection, $sql);
         oci_bind_by_name($stid, ':shop_id', $shopId);
         oci_execute($stid);

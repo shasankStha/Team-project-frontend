@@ -96,6 +96,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $error_message2 = 'Invalid file type. Only JPEG, JPG, PNG, and GIF are allowed.';
                     }
                 }
+                if (empty($imgName)) {
+                    $imgName = $profilePicture;
+                }
+
 
                 $updateSql = 'UPDATE "USER" SET FIRST_NAME = :firstname, LAST_NAME = :lastname, USERNAME = :username, CONTACT_NUMBER = :contactnumber WHERE USER_ID = :userid';
                 $updateSql2 = 'UPDATE "CUSTOMER" SET ADDRESS = :address, PROFILE_PICTURE = :profile_picture WHERE USER_ID = :userid';

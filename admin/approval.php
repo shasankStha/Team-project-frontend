@@ -18,11 +18,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'approve' && isset($_GET['id'])
 
     // Execute the update
     if (oci_execute($stmt)) {
-        // Commit the transaction
         oci_commit($connection);
-        // $message = "Trader approved successfully.";
     } else {
-        // Roll back if update fails
         oci_rollback($connection);
         $error = oci_error($stmt);
         $message = "Failed to approve trader: " . $error['message'];
@@ -39,11 +36,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'disapprove' && isset($_GET['id
 
     // Execute the update
     if (oci_execute($stmt)) {
-        // Commit the transaction
         oci_commit($connection);
-        // $message = "Trader disapproved successfully.";
     } else {
-        // Roll back if update fails
         oci_rollback($connection);
         $error = oci_error($stmt);
         $message = "Failed to disapprove trader: " . $error['message'];
@@ -98,15 +92,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'disapprove' && isset($_GET['id
                                     $stid = oci_parse($connection, $query);
                                     oci_execute($stid);
 
-                                    $sn = 1;  // Serial Number counter
-                                    while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+                                    $sn = 1;
+                                    while ($row = oci_fetch_array($stid)) {
                                         echo "<tr>\n";
                                         echo "    <td>" . htmlspecialchars($sn++) . "</td>\n";
-                                        echo "    <td>" . htmlspecialchars($row['NAME']) . "</td>\n"; // Corrected from FIRST_NAME and LAST_NAME to NAME
+                                        echo "    <td>" . htmlspecialchars($row['NAME']) . "</td>\n";
                                         echo "    <td>" . htmlspecialchars($row['EMAIL']) . "</td>\n";
-                                        echo "    <td>" . htmlspecialchars($row['SHOP_NAME']) . "</td>\n"; // Corrected from USERNAME to SHOP_NAME
+                                        echo "    <td>" . htmlspecialchars($row['SHOP_NAME']) . "</td>\n";
                                         echo "    <td>" . htmlspecialchars($row['CONTACT_NUMBER']) . "</td>\n";
-                                        echo "    <td>" . htmlspecialchars($row['LOCATION']) . "</td>\n"; // Corrected from ROLE to LOCATION
+                                        echo "    <td>" . htmlspecialchars($row['LOCATION']) . "</td>\n";
                                         echo "    <td><a class='btn btn-danger' href='?action=disapprove&id=" . htmlspecialchars($row['USER_ID']) . "' onclick='return confirm(\"Are you sure you want to disapprove this trader?\")'>Disapprove</a></td>\n";
 
                                         echo "</tr>\n";
@@ -158,11 +152,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'disapprove' && isset($_GET['id
                                     while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
                                         echo "<tr>\n";
                                         echo "    <td>" . htmlspecialchars($sn++) . "</td>\n";
-                                        echo "    <td>" . htmlspecialchars($row['NAME']) . "</td>\n"; // Corrected from FIRST_NAME and LAST_NAME to NAME
+                                        echo "    <td>" . htmlspecialchars($row['NAME']) . "</td>\n";
                                         echo "    <td>" . htmlspecialchars($row['EMAIL']) . "</td>\n";
-                                        echo "    <td>" . htmlspecialchars($row['SHOP_NAME']) . "</td>\n"; // Corrected from USERNAME to SHOP_NAME
+                                        echo "    <td>" . htmlspecialchars($row['SHOP_NAME']) . "</td>\n";
                                         echo "    <td>" . htmlspecialchars($row['CONTACT_NUMBER']) . "</td>\n";
-                                        echo "    <td>" . htmlspecialchars($row['LOCATION']) . "</td>\n"; // Corrected from ROLE to LOCATION
+                                        echo "    <td>" . htmlspecialchars($row['LOCATION']) . "</td>\n";
                                         echo "    <td><a class='btn btn-success' href='?action=approve&id=" . htmlspecialchars($row['USER_ID']) . "' onclick='return confirm(\"Are you sure you want to approve this trader?\")'>Approve</a></td>\n";
 
                                         echo "</tr>\n";

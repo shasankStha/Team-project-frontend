@@ -9,7 +9,7 @@
     <title>Login - CleckShopHub</title>
 </head>
 
-<body style="display: flex; flex-direction: column;">
+<body>
     <?php
     session_start();
     include("../connection.php");
@@ -48,7 +48,7 @@
             } else {
                 setcookie('rememberedUser', '', time() - 3600, "/"); // Clear the cookie
             }
-    
+
             if ($role == "C") {
                 $sql = "SELECT status FROM customer WHERE user_id = $user_id";
                 $stid = oci_parse($connection, $sql);
@@ -111,7 +111,7 @@
                 }
             }
         }
-    
+
         oci_close($connection);
     }
     ?>
@@ -127,7 +127,7 @@
             <form action="login.php" method="POST">
                 <div class="inputBx">
                     <label for="emailLogin">Email/Username</label>
-                    <input type="text" id="emailLogin" name="emailLogin" value="<?php echo htmlspecialchars($savedUsername); ?>"  required>
+                    <input type="text" id="emailLogin" name="emailLogin" value="<?php echo htmlspecialchars($savedUsername); ?>" required>
                 </div>
                 <div class="inputBx">
                     <label for="passwordLogin">Password</label>
