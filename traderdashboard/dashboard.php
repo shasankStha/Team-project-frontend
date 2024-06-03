@@ -56,14 +56,23 @@
                         <div class="card text-center text-primary p-3">
                             <h6 style="color: navy;">Total Orders</h6>
                             <?php
-                            $query = "select distinct count(*)
-                            from trader t
-                          INNER JOIN \"USER\" u on u.user_id = t.user_id
-                          INNER JOIN shop s ON s.user_id = t.user_id
-                          INNER JOIN product p ON p.shop_id = s.shop_id
-                          INNER JOIN order_item oi on oi.product_id = p.product_id
-                          INNER JOIN \"ORDER\" o on o.order_id=oi.order_id
-                          WHERE u.user_id = $user_id";
+                            $query = "select count (*) from (SELECT DISTINCT
+                            o.ORDER_ID, 
+                            o.ORDER_DATE, 
+                            SUM(oi.TOTAL_AMOUNT) as TOTAL_PRICE 
+                        FROM 
+                            trader t
+                            INNER JOIN \"USER\" u ON u.user_id = t.user_id
+                            INNER JOIN shop s ON s.user_id = t.user_id
+                            INNER JOIN product p ON p.shop_id = s.shop_id
+                            INNER JOIN order_item oi ON oi.product_id = p.product_id
+                            INNER JOIN \"ORDER\" o ON o.order_id = oi.order_id
+                        WHERE  t.user_id = $user_id
+                        GROUP BY 
+                            o.ORDER_ID, 
+                            o.ORDER_DATE
+                        ORDER BY 
+                            o.ORDER_ID DESC)";
                             $stmp = oci_parse($connection, $query);
                             oci_execute($stmp);
                             $row = oci_fetch_array($stmp, OCI_ASSOC);
