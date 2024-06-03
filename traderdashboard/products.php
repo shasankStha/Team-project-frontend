@@ -9,8 +9,8 @@
     <?php
     session_start();
     if (!isset($_SESSION["traderUser"])) {
-    header("Location: ../login/login.php");
-    exit;
+        header("Location: ../login/login.php");
+        exit;
     }
     include("../connection.php");
     include("traderdashboardheader.php");
@@ -34,7 +34,7 @@
     if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
         $productID = $_GET['id'];
         $newProductName = "delete " . $productID;
-        $sql = "UPDATE product SET STATUS = 0, name = '$newProductName' WHERE PRODUCT_ID = :productID";
+        $sql = "UPDATE product SET STATUS = '-1', name = '$newProductName' WHERE PRODUCT_ID = :productID";
         $stid = oci_parse($connection, $sql);
         oci_bind_by_name($stid, ':productID', $productID);
         oci_execute($stid);

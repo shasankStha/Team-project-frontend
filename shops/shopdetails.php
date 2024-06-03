@@ -65,29 +65,40 @@
         $description = $_POST['description'];
         $_SESSION['shop_data'] = $_POST;
 
+
         if (strlen($contactnumber) != 10) {
             $error_message = "Contact number should have 10 digits.";
         } else {
-            $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+            $sql = "select count(*) from shop where UPPER(shop_name) = UPPER('$shopname') or contact_number = '$contactnumber'";
+            $stid = oci_parse($connection, $sql);
+            $exe = oci_execute($stid);
+            $count = 0;
+            if ($row = oci_fetch_assoc($stid)) {
+                $count = $row['COUNT(*)'];
+            }
+            if ($count > 0) {
+                $error_message = "Shop Name or Contact Number already exists!!!";
+            } else {
+                $mail = new PHPMailer\PHPMailer\PHPMailer(true);
 
-            try {
-                $mail->isSMTP();
-                $mail->Host = 'smtp.gmail.com';
-                $mail->SMTPAuth = true;
-                $mail->Username = 'cleckshophub@gmail.com';
-                $mail->Password = 'wxnc kjpg ypto rzyf';
-                $mail->SMTPSecure = 'ssl';
-                $mail->Port = 465;
+                try {
+                    $mail->isSMTP();
+                    $mail->Host = 'smtp.gmail.com';
+                    $mail->SMTPAuth = true;
+                    $mail->Username = 'cleckshophub@gmail.com';
+                    $mail->Password = 'wxnc kjpg ypto rzyf';
+                    $mail->SMTPSecure = 'ssl';
+                    $mail->Port = 465;
 
-                $mail->setFrom('cleckshophub@gmail.com');
-                $mail->addAddress($email);
-                $mail->isHTML(true);
-                $mail->Subject = "OTP verification code.";
-                $mail->Body = "This is your OTP verification code $otp";
+                    $mail->setFrom('cleckshophub@gmail.com');
+                    $mail->addAddress($email);
+                    $mail->isHTML(true);
+                    $mail->Subject = "OTP verification code.";
+                    $mail->Body = "This is your OTP verification code $otp";
 
-                if ($mail->send()) {
-                    $_SESSION['otp'] = $otp;
-                    echo "<div id='popup' class='popup' style='display: block;'>
+                    if ($mail->send()) {
+                        $_SESSION['otp'] = $otp;
+                        echo "<div id='popup' class='popup' style='display: block;'>
                             <div class='popup-content'>
                                 <form method='POST'>
                                     <p>Please enter the OTP to verify.</p>
@@ -96,11 +107,12 @@
                                 </form>
                             </div>
                         </div>";
-                } else {
-                    $error_message = "Email could not be sent.";
+                    } else {
+                        $error_message = "Email could not be sent.";
+                    }
+                } catch (Exception $e) {
+                    $error_message = "Mailer Error: " . $mail->ErrorInfo;
                 }
-            } catch (Exception $e) {
-                $error_message = "Mailer Error: " . $mail->ErrorInfo;
             }
         }
     }
@@ -121,6 +133,8 @@
             $contactnumber = $shop_data['contact_number'];
             $location = $shop_data['location'];
             $description = $shop_data['description'];
+
+
 
             try {
                 $sql = "INSERT INTO \"USER\" (User_id, Username, Password, Email, First_name, Last_name, Contact_number, Role, Created_date, Last_loggedin_date)

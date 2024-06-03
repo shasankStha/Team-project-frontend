@@ -206,7 +206,7 @@
 
                 echo "<script>window.location.href = '../login/login.php';</script>";
             } else {
-                echo "OTP did not match.";
+                echo "<script>alert('OTP did not match')</script>";
             }
         } catch (Exception $e) {
             echo "<div class='error' style='color: red;'>Error: " . $e->getMessage() . "</div>";
