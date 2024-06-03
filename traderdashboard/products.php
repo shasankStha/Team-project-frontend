@@ -127,11 +127,11 @@
 
                                         <div class="mb-3">
                                             <label class="form-label">Min Order</label>
-                                            <input type="number" class="form-control shadown-none" name="pMinOrder" required>
+                                            <input type="number" class="form-control shadown-none" name="pMinOrder" min="1" required>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Max order</label>
-                                            <input type="number" class="form-control shadown-none" name="pMaxOrder" required>
+                                            <input type="number" class="form-control shadown-none" name="pMaxOrder" min="1" required>
                                         </div>
 
                                         <div class="mb-3">
@@ -232,11 +232,11 @@
         }
         $sql = "INSERT INTO product values(null,'$productName','$imgName','$productDescription','$productPrice','$productStock', '$productMinOrder', '$productMaxOrder', '$productAllergyInfo', null, 1,'$shop_id', '$productCatid')";
         $stid = oci_parse($connection, $sql);
-        if (!oci_error($stid)) {
-            oci_execute($stid);
+        if (oci_execute($stid)) {
             echo "<script>alert('Product added successfully!!!');</script>";
         } else {
             echo "<script>alert('The product should be unique.');</script>";
+            echo "<script>window.location.href=window.location.href;</script>";
         }
     }
     ?>
@@ -332,11 +332,11 @@
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Min Order:</label>
-                                            <input type="number" class="form-control shadow-none" name="pMinOrder" required>
+                                            <input type="number" class="form-control shadow-none" name="pMinOrder" min="1" required>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Max Order:</label>
-                                            <input type="number" class="form-control shadow-none" name="pMaxOrder" required>
+                                            <input type="number" class="form-control shadow-none" name="pMaxOrder" min="1" required>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Image file:</label>
