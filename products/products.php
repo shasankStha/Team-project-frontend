@@ -108,9 +108,9 @@
                 <?php
                 $sql = "select p.product_id, p.name, p.price, p.image, p.shop_id,
                 case 
-                    when p.name like '%' || :search || '%' then 3
-                    when c.category_name like '%' || :search || '%' then 2
-                    when s.shop_name like '%' || :search || '%' then 1
+                    when UPPER(p.name) like '%' || UPPER(:search) || '%' then 3
+                    when UPPER(c.category_name) like '%' || UPPER(:search) || '%' then 2
+                    when UPPERs.shop_name) like '%' || UPPER(:search) || '%' then 1
                     else 0
                 end as relevance_score
                 from 
